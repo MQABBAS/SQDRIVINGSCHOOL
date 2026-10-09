@@ -14,7 +14,7 @@
     phoneIntl: "+447352932003",
     wa: "447352932003",
     portalStudent: "https://www.drivesq.co.uk/student.html",
-    portalInstructor: "https://www.drivesq.co.uk/portal.html",
+    portalInstructor: "https://www.drivesq.co.uk/dashboard.html",
     prices: {
       single: 40, // one-off 1 hour session
       hourly: 35, // standard rate (2 hour minimum)
