@@ -62,6 +62,8 @@ NAV = [
 
 MOBILE_EXTRA = [
     ("book.html", "Book in 60 Seconds"),
+    ("automatic-driving-lessons-manchester.html", "Automatic Lessons"),
+    ("manual-driving-lessons-manchester.html", "Manual Lessons"),
     ("gift-vouchers.html", "Gift Vouchers"),
     ("comfort.html", "Comfort Zone"),
     ("intensive.html", "Intensive Courses"),
@@ -197,6 +199,8 @@ def footer(root):
           <li><a href="{root}gift-vouchers.html">Gift vouchers</a></li>
           <li><a href="{root}first-lesson.html">Your first lesson</a></li>
           <li><a href="{root}comfort.html">Comfort Zone (nervous drivers)</a></li>
+          <li><a href="{root}automatic-driving-lessons-manchester.html">Automatic lessons Manchester</a></li>
+          <li><a href="{root}manual-driving-lessons-manchester.html">Manual lessons Manchester</a></li>
           <li><a href="{root}lessons.html">Driving lessons</a></li>
           <li><a href="{root}intensive.html">Intensive courses</a></li>
           <li><a href="{root}prices.html">Prices &amp; package builder</a></li>

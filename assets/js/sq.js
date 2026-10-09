@@ -1535,6 +1535,32 @@
     }
   }
 
+
+  /* ------------------------------------------------------
+     MANUAL OR AUTOMATIC? quiz
+     ------------------------------------------------------ */
+  function gearboxQuiz() {
+    $$("[data-tool='gearbox'] form").forEach(function (form) {
+      var out = $(".result", form);
+      var base = (document.querySelector("link[rel='stylesheet'][href*='assets/css']") || { getAttribute: function () { return "assets/css/sq.css"; } }).getAttribute("href").replace("assets/css/sq.css", "");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var groups = {}, score = 0, answered = 0;
+        $$("input[type='radio']", form).forEach(function (r) { groups[r.name] = true; if (r.checked) { score += parseInt(r.value, 10); answered++; } });
+        out.className = "result is-visible";
+        if (answered < Object.keys(groups).length) { out.classList.add("result--warn"); out.innerHTML = "Answer all five questions to see your recommendation."; return; }
+        var pick = score >= 2 ? "manual" : score <= -2 ? "automatic" : "either";
+        out.classList.add("result--ok");
+        var msg = {
+          automatic: "<span class='tag tag--green'>WE RECOMMEND</span><div class='result__big'>Automatic</div><p>Fewer controls, no stalling and perfect for electric cars — a great fit for how you want to learn.</p><a class='btn btn--red' href='" + base + "automatic-driving-lessons-manchester.html'>Automatic lessons</a>",
+          manual: "<span class='tag tag--green'>WE RECOMMEND</span><div class='result__big'>Manual</div><p>A manual licence covers manual and automatic cars — ideal for the cars you'll be driving.</p><a class='btn btn--red' href='" + base + "manual-driving-lessons-manchester.html'>Manual lessons</a>",
+          either: "<span class='tag tag--green'>GOOD NEWS</span><div class='result__big'>Either suits you</div><p>Both would work well. Automatic is quicker to pick up; manual gives you a licence for both. Same price with SQ.</p><div class='btn-row'><a class='btn btn--red' href='" + base + "automatic-driving-lessons-manchester.html'>Automatic</a><a class='btn btn--ghost' href='" + base + "manual-driving-lessons-manchester.html'>Manual</a></div>"
+        }[pick];
+        out.innerHTML = msg;
+      });
+    });
+  }
+
   /* ------------------------------------------------------
      YEAR + INIT
      ------------------------------------------------------ */
@@ -1571,6 +1597,7 @@
     wizard();
     voucher();
     knowledge();
+    gearboxQuiz();
     comfortPlan();
     breathing();
     var lang = store.get("sq-lang");

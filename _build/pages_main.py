@@ -256,7 +256,7 @@ def index():
   <div class="container">
     <div class="section__head center"><div class="eyebrow">Simple pricing</div><h2 data-split>Every price. Right here.</h2><p class="lead">No "rates vary". No small print. Manual and automatic.</p></div>
     {price_cards(root)}
-    <div class="center mt-3"><a class="btn btn--ghost" href="prices.html">Full price list &amp; package builder {icon('arrow')}</a></div>
+    <div class="center mt-3"><a class="btn btn--ghost" href="prices.html">Full price list &amp; package builder {icon('arrow')}</a> <a class="btn btn--ghost" href="automatic-driving-lessons-manchester.html">Automatic lessons</a> <a class="btn btn--ghost" href="manual-driving-lessons-manchester.html">Manual lessons</a></div>
   </div>
 </section>
 <section class="section">

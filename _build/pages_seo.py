@@ -204,7 +204,7 @@ def neighbourhood_page(n, all_n):
 </div></section>
 {(prices_sec + tips_sec + faq_sec) if h % 2 else (tips_sec + faq_sec + prices_sec)}
 <section class="section section--alt"><div class="container"><div class="tool neon-border" data-reveal="up" style="max-width:820px;margin:0 auto">{postcode_form(True, "Check your exact postcode")}</div>
-<div class="mt-3"><h3>Lessons in {bname}</h3><div class="hero__badges">{svc_html}</div></div>
+<div class="mt-3"><h3>Manual &amp; automatic in {n['name']}</h3><div class="hero__badges"><a class="chip chip--red" href="{root}automatic-driving-lessons/{n['slug']}.html">Automatic lessons in {n['name']}</a><a class="chip chip--red" href="{root}manual-driving-lessons/{n['slug']}.html">Manual lessons in {n['name']}</a></div></div><div class="mt-3"><h3>Lessons in {bname}</h3><div class="hero__badges">{svc_html}</div></div>
 <div class="mt-3"><h3>Nearby areas</h3><div class="hero__badges">{sib_html}<a class="chip" href="{root}areas/{bslug}.html">All of {bname}</a></div></div></div></section>
 {cta(root, f"Start driving in {n['name']}.")}"""
     schema = [{"@context": "https://schema.org", "@type": "Service", "serviceType": "Driving lessons", "name": f"Driving lessons in {n['name']}",
@@ -225,6 +225,9 @@ def service_hub(s, all_n):
     body = page_hero("Greater Manchester", f"{name}.", intro, [f'<a href="{root}services.html">Services</a>', name], root,
                      f'<div class="btn-row mt-2" data-reveal="up"><a class="btn btn--red" href="{root}book.html">{icon("calendar")} Book in 60 seconds</a><a class="btn btn--ghost" data-wa="Hi! I\'m interested in {name.lower()}." href="https://wa.me/{WA}">{icon("wa")} WhatsApp</a></div>')
     body += reassure()
+    if slug in ("automatic-driving-lessons", "manual-driving-lessons"):
+        k = slug.split("-")[0]
+        body += f'<section class="section--tight"><div class="container"><div class="callout callout--ok" data-reveal="up"><b>Looking for {k} lessons near you?</b> See <a href="{root}{k}-driving-lessons-manchester.html">{k} driving lessons in Manchester</a> — with every area A–Z and a manual-or-automatic quiz.</div></div></section>'
     body += f"""<section class="section"><div class="container split"><div data-reveal="left"><div class="card__icon">{icon(ic)}</div><h2 data-split>What's included.</h2></div><ul class="ticks" data-reveal="right">{bl}</ul></div></section>
 <section class="section section--alt"><div class="container"><div class="section__head"><div class="eyebrow">Choose your borough</div><h2 data-split>{name} across Greater Manchester.</h2></div><div class="grid grid--3" data-stagger=".04">{bor}</div></div></section>
 <section class="section"><div class="container" style="max-width:900px"><div class="faq">{faq_html}</div></div></section>
@@ -238,7 +241,8 @@ def service_borough(s, b, all_n):
     bslug, bname, bcodes, districts, roads, centres = b
     root = "../"
     hoods = [x for x in all_n if x["borough"] == bname]
-    hl = "".join(f'<a class="chip" href="{root}driving-lessons/{x["slug"]}.html">{x["name"]}</a>' for x in hoods)
+    gear = slug if slug in ("automatic-driving-lessons", "manual-driving-lessons") else None
+    hl = "".join(f'<a class="chip" href="{root}{gear}/{x["slug"]}.html">{name} {x["name"]}</a>' if gear else f'<a class="chip" href="{root}driving-lessons/{x["slug"]}.html">{x["name"]}</a>' for x in hoods)
     others = "".join(f'<a class="chip" href="{x[0]}-{bslug}.html">{x[1]}</a>' for x in SERVICES if x[0] != slug)
     bl = "".join(f"<li><span>{x}</span></li>" for x in bullets)
     offer = [c for c in bcodes if c in OFFER]

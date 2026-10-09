@@ -1,7 +1,7 @@
 import os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from layout import SITE
-import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO, pages_knowledge as KN, pages_postcodes as PCD
+import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO, pages_knowledge as KN, pages_postcodes as PCD, pages_gearbox as GB
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 pages = {
@@ -38,6 +38,10 @@ for e in CODES:
     pages[f"postcodes/{e[0].lower()}.html"] = PCD.postcode_page(e, CODES, HOODS)
 pages["postcodes.html"] = PCD.postcode_index(CODES, HOODS)
 pages["driving-lessons-near-me.html"] = PCD.near_me_page(CODES, HOODS)
+for kind in ("automatic", "manual"):
+    pages[f"{kind}-driving-lessons-manchester.html"] = GB.pillar(kind, HOODS)
+    for n in HOODS:
+        pages[f"{kind}-driving-lessons/{n['slug']}.html"] = GB.gearbox_area_page(kind, n, HOODS)
 pages["knowledge.html"] = KN.hub()
 pages["knowledge/greater-manchester-driving-test-centres.html"] = KN.centres_overview()
 for a in KN.ARTICLES:
