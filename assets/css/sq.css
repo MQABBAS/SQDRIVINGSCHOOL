@@ -1102,3 +1102,14 @@ input, select, textarea { max-width: 100%; min-width: 0; }
 .bot-launch:hover b, .bot-launch:focus-visible b { opacity: 1; transform: translate(0, -50%); }
 .bot-launch.is-peek b { animation: label-peek 5s var(--ease) 1.2s both; }
 @keyframes label-peek { 0% { opacity: 0; transform: translate(8px, -50%); } 10%, 85% { opacity: 1; transform: translate(0, -50%); } 100% { opacity: 0; transform: translate(8px, -50%); } }
+
+/* Cookie consent banner */
+.consent {
+  position: fixed; left: 20px; bottom: var(--dock-b); z-index: 1020; width: min(430px, calc(100vw - 110px));
+  padding: 18px 20px; border-radius: 20px; background: var(--bg-2); color: var(--white); border: 1px solid var(--line-2);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.45); font-size: 0.9rem; animation: pop-in 0.5s var(--ease);
+}
+.consent p { margin: 0 0 12px; color: var(--grey); }
+.consent b { color: var(--white); }
+.consent .btn-row { gap: 8px; }
+@media (max-width: 760px) { .consent { left: 12px; width: calc(100vw - 92px); bottom: var(--dock-b); padding: 14px 16px; } }

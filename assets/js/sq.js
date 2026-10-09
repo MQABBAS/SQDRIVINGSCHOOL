@@ -1561,6 +1561,47 @@
     });
   }
 
+
+  /* ------------------------------------------------------
+     COOKIE CONSENT (Google Consent Mode v2) + CONVERSION EVENTS
+     ------------------------------------------------------ */
+  function track(name, params) {
+    try { if (typeof window.gtag === "function") window.gtag("event", name, params || {}); } catch (e) {}
+  }
+  SQ.track = track;
+  function setConsent(granted) {
+    var v = granted ? "granted" : "denied";
+    store.set("sq-consent", v);
+    try { if (typeof window.gtag === "function") window.gtag("consent", "update", { ad_storage: v, ad_user_data: v, ad_personalization: v, analytics_storage: v }); } catch (e) {}
+  }
+  function consentBanner(force) {
+    if (!force && store.get("sq-consent")) return;
+    var old = $(".consent"); if (old) old.remove();
+    var root = (document.querySelector("link[rel='stylesheet'][href*='assets/css']") || { getAttribute: function () { return "assets/css/sq.css"; } }).getAttribute("href").replace("assets/css/sq.css", "");
+    var el = document.createElement("div");
+    el.className = "consent"; el.setAttribute("role", "dialog"); el.setAttribute("aria-label", "Cookie choices");
+    el.innerHTML = "<p><b>Cookies?</b> We'd like to use Google Analytics cookies to see how our site is used and which adverts work. They're off unless you accept. <a class='red' href='" + root + "privacy.html'>Privacy policy</a></p>" +
+      "<div class='btn-row'><button type='button' class='btn btn--red btn--sm js-accept'>Accept</button><button type='button' class='btn btn--ghost btn--sm js-reject'>Reject</button></div>";
+    document.body.appendChild(el);
+    $(".js-accept", el).addEventListener("click", function () { setConsent(true); el.remove(); });
+    $(".js-reject", el).addEventListener("click", function () { setConsent(false); el.remove(); });
+  }
+  function conversions() {
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest("a, button");
+      if (!a) return;
+      var href = a.getAttribute("href") || "";
+      var page = location.pathname;
+      if (a.classList.contains("js-wsend")) track("generate_lead", { method: "booking_wizard", page: page });
+      else if (a.classList.contains("js-vsend")) track("voucher_request", { page: page });
+      else if (href.indexOf("wa.me/") > -1) track("whatsapp_click", { page: page, link_text: (a.textContent || "").trim().slice(0, 60) });
+      else if (href.indexOf("tel:") === 0) track("phone_click", { page: page });
+      else if (/book\.html/.test(href)) track("book_now_click", { page: page });
+      if (a.hasAttribute("data-cookie-settings")) { e.preventDefault(); consentBanner(true); }
+    });
+    $$("[data-tool='contact']").forEach(function (f) { f.addEventListener("submit", function () { track("generate_lead", { method: "contact_form", page: location.pathname }); }); });
+  }
+
   /* ------------------------------------------------------
      YEAR + INIT
      ------------------------------------------------------ */
@@ -1598,6 +1639,8 @@
     voucher();
     knowledge();
     gearboxQuiz();
+    conversions();
+    consentBanner(false);
     comfortPlan();
     breathing();
     var lang = store.get("sq-lang");

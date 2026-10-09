@@ -117,6 +117,16 @@ def head(title, desc, path, root, schema=None, noindex=False):
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
+<!-- Google tag (gtag.js) with Consent Mode v2: analytics stays off until the visitor accepts -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('consent', 'default', {{ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied', wait_for_update: 500}});
+  try {{ if (localStorage.getItem('sq-consent') === 'granted') gtag('consent', 'update', {{ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted'}}); }} catch (e) {{}}
+  gtag('js', new Date());
+  gtag('config', 'G-CQP798G5TW');
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CQP798G5TW"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title}</title>
 <meta name="description" content="{desc}">
@@ -235,6 +245,7 @@ def footer(root):
           <li><a href="{INSTRUCTOR}" target="_blank" rel="noopener">Instructor login ↗</a></li>
           <li><a href="{root}privacy.html">Privacy</a></li>
           <li><a href="{root}review-policy.html">Review policy</a></li>
+          <li><a href="#" data-cookie-settings>Cookie settings</a></li>
         </ul>
       </div>
     </div>

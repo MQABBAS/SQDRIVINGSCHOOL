@@ -377,11 +377,14 @@ def privacy_page():
     body = page_hero("Privacy", "Privacy policy.", "Short and clear: this website doesn't collect your personal data.", ["Privacy"], root)
     body += f"""<section class="section--tight"><div class="container prose">
 <h2>Who we are</h2><p>SQ Driving School is a brand owned and managed by DriveSQ. Contact: WhatsApp or phone {PHONE}.</p>
-<h2>What this website collects</h2><p>This website has no accounts, no tracking cookies and no analytics. The tools (postcode checker, calculators, quiz and games) run entirely in your browser — nothing you type is sent to us.</p>
-<p>Your browser may remember your chosen theme (light or dark) and language using local storage on your own device. You can clear this at any time in your browser settings.</p>
+<h2>What this website collects</h2><p>The tools on this website (postcode checker, calculators, quiz and games) run entirely in your browser — nothing you type into them is sent to us.</p>
+<p>Your browser may remember your chosen theme, language and accessibility settings using local storage on your own device. You can clear this at any time in your browser settings.</p>
+<h2>Cookies and Google Analytics</h2><p>With your permission, we use <b>Google Analytics</b> and Google Ads measurement to understand how visitors use the site and which adverts work — for example, how many people open the booking form or tap our WhatsApp or call buttons. Google may set cookies and process your IP address and device information to do this.</p>
+<p>These cookies are <b>off by default</b>. They're only switched on if you choose "Accept" on our cookie banner. If you choose "Reject", or ignore the banner, Google Analytics runs without cookies in a restricted mode. You can change your choice at any time with the "Cookie settings" link in the footer.</p>
+<p>Google's own privacy policy explains how it uses data: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
 <h2>Contact forms and WhatsApp</h2><p>When you use our contact form or chat assistant, your message opens in WhatsApp for you to send. Once you send it, we receive it via WhatsApp and use it only to reply to your enquiry and arrange lessons. WhatsApp's own privacy policy applies to messages sent through WhatsApp.</p>
 <h2>The DriveSQ Student Portal</h2><p>The Student Portal is operated by DriveSQ at drivesq.co.uk. Its own privacy policy applies when you use it.</p>
-<h2>Third-party services</h2><p>This website loads fonts from Google Fonts, which may receive your IP address when fonts load.</p>
+<h2>Third-party services</h2><p>This website loads fonts from Google Fonts and the Google tag from Google, which may receive your IP address when they load.</p>
 <h2>Your rights</h2><p>Under UK GDPR you can ask what information we hold about you and ask us to correct or delete it. Message us on {PHONE}.</p>
 </div></section>"""
     return page("privacy.html", "Privacy Policy | SQ Driving School", "SQ Driving School privacy policy.", body, root)
