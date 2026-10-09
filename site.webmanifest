@@ -1,0 +1,10 @@
+{
+  "name": "SQ Driving School",
+  "short_name": "SQ Driving",
+  "description": "Driving lessons across Greater Manchester. Powered by DriveSQ.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#050506",
+  "theme_color": "#ff1f1f",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

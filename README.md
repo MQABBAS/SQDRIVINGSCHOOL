@@ -1,0 +1,21 @@
+# SQ Driving School — sqdrivingschool.com
+
+Website for **SQ Driving School**, a brand owned and managed by **DriveSQ**.
+Crafted by Mohammed Qaim Abbas · Built by [SQ Websites](https://www.sqwebsites.co.uk).
+
+Static site (plain HTML/CSS/JS) — ready for GitHub Pages. `CNAME` points to `www.sqdrivingschool.com`.
+
+## Editing prices, discounts and contact details
+All prices used by the tools, package builder and chat assistant live at the top of
+`assets/js/sq.js` in the `SQ` config object (`prices`, `offerPostcodes`, `phone`, `wa`, portal links).
+Prices written in page text appear in the HTML files as well — update both when prices change.
+
+## Structure
+- `index.html` — home page
+- `lessons`, `prices`, `discounts`, `offer-m16-m18-m19`, `intensive` — lessons & pricing
+- `tools`, `postcode-checker`, `theory-quiz`, `hazard-game`, `road-signs`, `dashboard-lights` — interactive tools
+- `student-portal` — DriveSQ Student & Instructor Portal
+- `areas/` — one page per Greater Manchester borough
+- `guides/` — learner driver guides
+- `assets/css/sq.css` — design system & animations
+- `assets/js/sq.js` — animations, tools, quiz, hazard game, flashcards and SQ Assistant chatbot
