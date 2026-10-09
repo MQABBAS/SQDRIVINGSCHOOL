@@ -57,7 +57,7 @@ NAV = [
     ("tools.html", "Tools", "nav.tools"),
     ("student-portal.html", "Student Portal", "nav.portal"),
     ("areas.html", "Areas", "nav.areas"),
-    ("contact.html", "Contact", "nav.contact"),
+    ("knowledge.html", "Learn", None),
 ]
 
 MOBILE_EXTRA = [
@@ -74,13 +74,14 @@ MOBILE_EXTRA = [
     ("dashboard-lights.html", "Dashboard Lights"),
     ("guides.html", "Learner Guides"),
     ("test-centres.html", "Test Centres"),
+    ("contact.html", "Contact"),
     ("services.html", "All Lesson Types"),
     ("faq.html", "FAQ"),
     ("about.html", "About"),
 ]
 
 
-WAVE_PATH = "M0,30 C240,70 480,10 720,40 C960,70 1200,10 1440,50 L1440,100 L0,100 Z"
+WAVE_PATH = "M0,30 C240,70 480,10 720,40 C960,70 1200,10 1440,50 L1440,104 L0,104 Z"
 
 
 def wave_down():
@@ -212,7 +213,8 @@ def footer(root):
           <li><a href="{root}road-signs.html">Road sign flashcards</a></li>
           <li><a href="{root}dashboard-lights.html">Dashboard lights</a></li>
           <li><a href="{root}guides.html">Learner guides</a></li>
-          <li><a href="{root}test-centres.html">Test centre guide</a></li>
+          <li><a href="{root}knowledge.html">Greater Manchester knowledge hub</a></li>
+          <li><a href="{root}knowledge/greater-manchester-driving-test-centres.html">Test centre guides</a></li>
           <li><a href="{root}student-portal.html">DriveSQ Student Portal</a></li>
         </ul>
       </div>

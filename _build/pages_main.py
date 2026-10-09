@@ -274,6 +274,17 @@ def index():
     <div class="grid grid--4" data-stagger=".06">{tool_cards}</div>
   </div>
 </section>
+<section class="section section--alt">
+  <div class="container">
+    <div class="section__head"><div class="eyebrow">Greater Manchester Knowledge Hub</div><h2 data-split>Know the local rules before your test.</h2><p class="lead">Fact-checked guides you won't find elsewhere — written for Greater Manchester learners.</p></div>
+    <div class="grid grid--3" data-stagger=".06">
+      <a class="card" href="knowledge/driving-test-booking-rules-2026.html" data-reveal="up"><div class="card__icon">{icon('calendar')}</div><span class="k-cat">Tests &amp; booking</span><h3 class="mt-1">The 2026 test booking rules</h3><p class="mb-0">Two changes per booking, learner-only booking and the three-centre rule.</p></a>
+      <a class="card" href="knowledge/bus-lanes-and-bus-gates-manchester.html" data-reveal="up"><div class="card__icon">{icon('flag')}</div><span class="k-cat">Manchester roads</span><h3 class="mt-1">Bus lanes &amp; the Oxford Road bus gate</h3><p class="mb-0">Read the signs, avoid a £70 fine and a test fault.</p></a>
+      <a class="card" href="knowledge/greater-manchester-driving-test-centres.html" data-reveal="up"><div class="card__icon">{icon('pin')}</div><span class="k-cat">Test centres</span><h3 class="mt-1">Every Greater Manchester test centre</h3><p class="mb-0">Which centre serves your area and how to choose.</p></a>
+    </div>
+    <div class="center mt-3"><a class="btn btn--ghost" href="knowledge.html">Explore the knowledge hub {icon('arrow')}</a></div>
+  </div>
+</section>
 <section class="section">
   <div class="container split">
     <div data-reveal="left">

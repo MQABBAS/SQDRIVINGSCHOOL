@@ -1059,6 +1059,7 @@
       "<div class='bot__foot'>Automated answers. For bookings, a real person replies on WhatsApp.</div>";
     document.body.appendChild(launch);
     document.body.appendChild(box);
+    if (!store.sget("sq-bot-peek")) { launch.classList.add("is-peek"); store.sset("sq-bot-peek", "1"); }
     var log = $(".bot__log", box), chips = $(".bot__chips", box), form = $(".bot__form", box), input = $("input", box);
     var started = false, awaitingPostcode = false;
 
@@ -1506,6 +1507,34 @@
     });
   }
 
+
+  /* ------------------------------------------------------
+     KNOWLEDGE HUB — live search filter + table of contents highlight
+     ------------------------------------------------------ */
+  function knowledge() {
+    $$("[data-tool='kfilter']").forEach(function (root) {
+      var input = $("input", root), cards = $$(".k-card"), cats = $$("[data-kcat]", root), count = $(".js-kcount", root), cat = "all";
+      function run() {
+        var q = input.value.trim().toLowerCase(), n = 0;
+        cards.forEach(function (c) {
+          var ok = (cat === "all" || c.getAttribute("data-cat") === cat) && (!q || c.textContent.toLowerCase().indexOf(q) > -1);
+          c.hidden = !ok; if (ok) n++;
+        });
+        count.textContent = n + " guide" + (n === 1 ? "" : "s");
+      }
+      input.addEventListener("input", run);
+      cats.forEach(function (b) { b.addEventListener("click", function () { cat = b.getAttribute("data-kcat"); cats.forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); x.classList.toggle("btn--red", x === b); x.classList.toggle("btn--ghost", x !== b); }); run(); }); });
+      run();
+    });
+    var toc = $$(".toc a");
+    if (toc.length && "IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) toc.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("href") === "#" + e.target.id); }); });
+      }, { rootMargin: "-20% 0px -70% 0px" });
+      $$(".prose h2[id]").forEach(function (h) { io.observe(h); });
+    }
+  }
+
   /* ------------------------------------------------------
      YEAR + INIT
      ------------------------------------------------------ */
@@ -1541,6 +1570,7 @@
     a11y();
     wizard();
     voucher();
+    knowledge();
     comfortPlan();
     breathing();
     var lang = store.get("sq-lang");

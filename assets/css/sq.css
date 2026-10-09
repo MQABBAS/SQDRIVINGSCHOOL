@@ -883,7 +883,7 @@ main, header, footer, section { position: relative; z-index: 2; }
 .wave { display: block; width: 100%; height: clamp(40px, 6vw, 90px); margin-top: -1px; position: relative; z-index: 3; }
 .wave path { fill: var(--wave, var(--bg)); }
 .wave--anim path { animation: wave-move 9s ease-in-out infinite alternate; }
-@keyframes wave-move { to { d: path("M0,40 C240,10 480,70 720,40 C960,10 1200,70 1440,30 L1440,100 L0,100 Z"); } }
+@keyframes wave-move { to { d: path("M0,40 C240,10 480,70 720,40 C960,10 1200,70 1440,30 L1440,104 L0,104 Z"); } }
 
 /* Hand-drawn highlight */
 .scribble { position: relative; display: inline-block; white-space: nowrap; }
@@ -1058,3 +1058,47 @@ input, select, textarea { max-width: 100%; min-width: 0; }
   .brand__sub { display: none; }
 }
 .bot, .a11y-panel { z-index: 1010; }
+
+/* =========================================================
+   KNOWLEDGE HUB — article layout
+   ========================================================= */
+.article-grid { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 50px; align-items: start; }
+.article-grid > aside { position: sticky; top: 100px; }
+@media (max-width: 1000px) { .article-grid { grid-template-columns: minmax(0, 1fr); } .article-grid > aside { position: static; order: -1; } }
+.toc { padding: 22px; border-radius: 22px; background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.toc h4 { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 12px; }
+.toc ol { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; font-size: 0.92rem; }
+.toc a { color: var(--grey); } .toc a:hover, .toc a.is-active { color: var(--red); }
+.takeaways { padding: 24px 26px; border-radius: 22px; background: linear-gradient(135deg, var(--red-soft), var(--panel)); border: 1px solid rgba(227, 20, 28, 0.25); margin-bottom: 30px; }
+.takeaways h3 { font-size: 1.1rem; margin-bottom: 10px; }
+.takeaways ul { margin: 0; padding-left: 1.1em; color: var(--white); display: grid; gap: 6px; }
+.callout { padding: 18px 22px; border-left: 4px solid var(--red); border-radius: 0 16px 16px 0; background: var(--panel-2); margin: 22px 0; color: var(--white); }
+.callout--info { border-left-color: #1f3fbf; }
+.callout--ok { border-left-color: var(--green); }
+.article-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--grey); letter-spacing: 0.06em; margin-top: 18px; }
+.sources { font-size: 0.88rem; }
+.sources li { margin-bottom: 4px; }
+.prose h2 { scroll-margin-top: 110px; }
+.prose table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 0.95rem; }
+.prose th, .prose td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.prose th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey); }
+.prose td { color: var(--grey); }
+.k-filter { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 26px; }
+.k-filter input { flex: 1; min-width: 220px; }
+.k-card[hidden] { display: none !important; }
+.k-cat { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); }
+@media (max-width: 380px) {
+  .nav .theme-toggle { display: none; }
+  .nav__inner { gap: 10px; }
+  .nav__actions { gap: 6px; }
+  .sq-logo--nav { font-size: 1.65rem; }
+  .brand { gap: 8px; }
+  .brand__name { font-size: 0.8rem; }
+}
+.wave { margin-bottom: -2px; overflow: visible; }
+
+/* Assistant label: peek on load, then only on hover/focus */
+.bot-launch b { opacity: 0; transform: translate(8px, -50%); }
+.bot-launch:hover b, .bot-launch:focus-visible b { opacity: 1; transform: translate(0, -50%); }
+.bot-launch.is-peek b { animation: label-peek 5s var(--ease) 1.2s both; }
+@keyframes label-peek { 0% { opacity: 0; transform: translate(8px, -50%); } 10%, 85% { opacity: 1; transform: translate(0, -50%); } 100% { opacity: 0; transform: translate(8px, -50%); } }

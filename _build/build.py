@@ -1,7 +1,7 @@
 import os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from layout import SITE
-import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO
+import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO, pages_knowledge as KN
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 pages = {
@@ -32,6 +32,12 @@ for sv in SEO.SERVICES:
         pages[f"services/{sv[0]}-{b[0]}.html"] = SEO.service_borough(sv, b, HOODS)
 for g in X.GUIDES:
     pages[f"guides/{g[0]}.html"] = X.guide_page(g)
+pages["knowledge.html"] = KN.hub()
+pages["knowledge/greater-manchester-driving-test-centres.html"] = KN.centres_overview()
+for a in KN.ARTICLES:
+    pages[f"knowledge/{a['slug']}.html"] = KN.article_page(a)
+for c in KN.CENTRES:
+    pages[f"knowledge/test-centre-{c[0]}.html"] = KN.centre_page(c)
 for path, html in pages.items():
     full = os.path.join(OUT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
