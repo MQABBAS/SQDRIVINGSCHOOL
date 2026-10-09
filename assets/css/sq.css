@@ -986,3 +986,75 @@ html.a11y-still .hero h1 .line > span { transform: none; }
 @media (max-width: 900px) { .lesson-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hero__visual { padding-bottom: 110px; } }
 @media (max-width: 560px) { .lesson-steps { grid-template-columns: 1fr; } }
 @media (min-width: 901px) and (max-width: 1280px) { .hero .mascot { width: 120px; right: 0.5%; } .mascot__bubble { max-width: 170px; font-size: 0.82rem; } }
+
+/* =========================================================
+   FLOATING DOCK — WhatsApp, SQ Assistant and accessibility
+   stacked neatly bottom-right on every device
+   ========================================================= */
+:root {
+  --dock-r: max(20px, calc(env(safe-area-inset-right) + 14px));
+  --dock-b: max(20px, calc(env(safe-area-inset-bottom) + 14px));
+}
+.road-rail { right: auto; left: 14px; }
+
+.wa-float { left: auto; right: var(--dock-r); bottom: var(--dock-b); width: 58px; height: 58px; }
+.bot-launch {
+  left: auto; right: var(--dock-r); bottom: calc(var(--dock-b) + 70px);
+  width: 58px; height: 58px; padding: 0; border-radius: 50%; justify-content: center; gap: 0;
+}
+.bot-launch__logo { width: 50px; height: 50px; font-size: 1.05rem; }
+.bot-launch__dot { left: auto; right: 4px; top: 4px; }
+.bot-launch b {
+  position: absolute; right: calc(100% + 12px); top: 50%; transform: translateY(-50%); white-space: nowrap;
+  padding: 8px 14px; border-radius: 999px; background: var(--bg-2); color: var(--white); border: 1px solid var(--line-2);
+  box-shadow: var(--shadow); font-size: 0.85rem; pointer-events: none; transition: opacity 0.3s, transform 0.3s var(--ease);
+}
+.bot-launch[aria-expanded="true"] b { opacity: 0; transform: translate(8px, -50%); }
+.a11y-btn { left: auto; right: calc(var(--dock-r) + 5px); bottom: calc(var(--dock-b) + 140px); width: 48px; height: 48px; }
+
+.bot {
+  left: auto; right: var(--dock-r); bottom: calc(var(--dock-b) + 140px); transform-origin: bottom right;
+  height: min(620px, calc(100svh - var(--dock-b) - 170px));
+}
+.a11y-panel { left: auto; right: var(--dock-r); bottom: calc(var(--dock-b) + 200px); transform-origin: bottom right; max-height: calc(100svh - var(--dock-b) - 220px); overflow-y: auto; }
+
+@media (max-width: 1100px) { .bot-launch b { display: none; } }
+
+@media (max-width: 760px) {
+  :root { --dock-r: max(14px, calc(env(safe-area-inset-right) + 10px)); --dock-b: calc(80px + env(safe-area-inset-bottom)); }
+  .wa-float { right: var(--dock-r); bottom: var(--dock-b); width: 54px; height: 54px; }
+  .wa-float svg { width: 28px; height: 28px; }
+  .bot-launch { left: auto; right: var(--dock-r); bottom: calc(var(--dock-b) + 64px); width: 54px; height: 54px; padding: 0; }
+  .bot-launch__logo { width: 46px; height: 46px; }
+  .a11y-btn { left: auto; right: calc(var(--dock-r) + 5px); bottom: calc(var(--dock-b) + 128px); width: 44px; height: 44px; }
+  .bot { left: 12px; right: 12px; width: auto; bottom: calc(var(--dock-b) - 4px); height: min(600px, calc(100svh - var(--dock-b) - 80px)); }
+  .a11y-panel { left: 12px; right: 12px; width: auto; bottom: calc(var(--dock-b) - 4px); max-height: calc(100svh - var(--dock-b) - 80px); }
+}
+@media (max-height: 560px) and (min-width: 761px) {
+  .bot { height: calc(100svh - var(--dock-b) - 150px); }
+}
+@media (max-width: 760px) {
+  [data-reveal="left"], [data-reveal="right"] { transform: translateY(36px); }
+  [data-reveal="flip"] { transform: translateY(36px); }
+}
+
+/* Responsive hardening — never let content widen the page on any device */
+html, body { overflow-x: hidden; }
+@supports (overflow: clip) { html, body { overflow-x: clip; } }
+.grid > *, .split > * { min-width: 0; }
+@media (max-width: 1000px) { .grid--4, .grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .grid--2, .grid--3, .grid--4 { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 900px) { .split { grid-template-columns: minmax(0, 1fr); } }
+.seg label, .choice label { overflow-wrap: anywhere; }
+.summary td:first-child { overflow-wrap: anywhere; padding-right: 10px; }
+.table-wrap { -webkit-overflow-scrolling: touch; }
+img, svg, video, canvas, iframe { max-width: 100%; }
+input, select, textarea { max-width: 100%; min-width: 0; }
+@media (max-width: 380px) {
+  .container { padding: 0 14px; }
+  .btn { padding: 13px 18px; font-size: 0.92rem; white-space: normal; text-align: center; }
+  .tool, .card { padding: 22px 18px; }
+  .price { font-size: 2.8rem; }
+  .brand__sub { display: none; }
+}
+.bot, .a11y-panel { z-index: 1010; }
