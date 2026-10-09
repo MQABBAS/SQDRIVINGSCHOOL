@@ -98,6 +98,18 @@ SERVICES = [
      "Just passed? Pass Plus is extra training after your test covering town, all-weather, rural, night, dual carriageway and motorway driving.",
      ["Six modules of post-test training", "Builds real-world confidence", "Ask us about course details and pricing", "Available across Greater Manchester"],
      [("Who is Pass Plus for?", "Newly qualified drivers who want extra training and confidence."), ("How do I book Pass Plus?", "Message us on WhatsApp and we'll explain the course and pricing.")]),
+    ("adult-driving-lessons", "Driving Lessons for Adults", "users",
+     "It's never too late to learn. Whether you're 25 or 65, a parent, a career changer or new to the UK, our patient instructors teach adults at a comfortable pace with no pressure.",
+     ["Lessons around work and family life", "Calm, respectful teaching for mature learners", "Manual or automatic — same price", "Free DriveSQ Student Portal to track progress"],
+     [("Am I too old to learn to drive?", "No — there's no upper age limit. Many adults learn in their 30s, 40s and beyond."), ("Do adults need more lessons?", "Everyone's different. Adults often bring good road awareness from being a passenger or cyclist.")]),
+    ("failed-driving-test-lessons", "Lessons After a Failed Test", "target",
+     "Failed your driving test? It happens to lots of learners. Bring your test report and we'll focus lessons on exactly the faults that cost you, then build your confidence for the retest.",
+     ["Lessons focused on your test report faults", "A full mock test before your retest", "Test route-style practice around your centre", "10-hour blocks £350 · £320 NHS & students"],
+     [("How soon can I retake my test?", "You have to wait at least 10 working days before taking another practical test."), ("Can I switch to you after failing with another school?", "Yes — bring your test report and we'll start from where you are.")]),
+    ("theory-test-support", "Theory Test Support", "quiz",
+     "Struggling with the theory test? Every SQ learner gets the DriveSQ Student Portal with a theory library and full 50-question mock tests, plus our free Highway Code quiz, hazard game and road sign flashcards.",
+     ["Theory library covering every DVSA topic", "Unlimited 50-question mock theory tests", "Free hazard perception practice game", "Help if you have dyslexia or exam anxiety"],
+     [("What's the theory test pass mark?", "43 out of 50 for multiple choice and 44 out of 75 for hazard perception."), ("Can I get extra time?", "You can ask the DVSA for support, such as extra time, when you book.")]),
 ]
 
 
@@ -225,6 +237,10 @@ def service_hub(s, all_n):
     body = page_hero("Greater Manchester", f"{name}.", intro, [f'<a href="{root}services.html">Services</a>', name], root,
                      f'<div class="btn-row mt-2" data-reveal="up"><a class="btn btn--red" href="{root}book.html">{icon("calendar")} Book in 60 seconds</a><a class="btn btn--ghost" data-wa="Hi! I\'m interested in {name.lower()}." href="https://wa.me/{WA}">{icon("wa")} WhatsApp</a></div>')
     body += reassure()
+    if slug in ("nhs-driving-lessons", "student-driving-lessons"):
+        hub = "nhs-driving-lessons.html" if slug.startswith("nhs") else "student-driving-lessons-manchester.html"
+        label = "your hospital" if slug.startswith("nhs") else "your university or college"
+        body += f'<section class="section--tight"><div class="container"><div class="callout callout--ok" data-reveal="up"><b>Find {label}:</b> see <a href="{root}{hub}">the full list and offer details</a>.</div></div></section>'
     if slug in ("automatic-driving-lessons", "manual-driving-lessons"):
         k = slug.split("-")[0]
         body += f'<section class="section--tight"><div class="container"><div class="callout callout--ok" data-reveal="up"><b>Looking for {k} lessons near you?</b> See <a href="{root}{k}-driving-lessons-manchester.html">{k} driving lessons in Manchester</a> — with every area A–Z and a manual-or-automatic quiz.</div></div></section>'

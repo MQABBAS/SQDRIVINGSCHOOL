@@ -65,6 +65,8 @@ MOBILE_EXTRA = [
     ("automatic-driving-lessons-manchester.html", "Automatic Lessons"),
     ("manual-driving-lessons-manchester.html", "Manual Lessons"),
     ("gift-vouchers.html", "Gift Vouchers"),
+    ("nhs-driving-lessons.html", "NHS Staff Discount"),
+    ("student-driving-lessons-manchester.html", "Student Discount"),
     ("comfort.html", "Comfort Zone"),
     ("intensive.html", "Intensive Courses"),
     ("first-lesson.html", "Your First Lesson"),
@@ -107,6 +109,14 @@ def wa_url(msg):
     return f"https://wa.me/{WA}?text={quote(msg)}"
 
 
+ORG_SCHEMA = json.dumps([
+    {"@context": "https://schema.org", "@type": "Organization", "@id": SITE + "/#org", "name": "SQ Driving School", "url": SITE + "/", "logo": SITE + "/favicon.svg",
+     "telephone": "+44 7352 932003", "parentOrganization": {"@type": "Organization", "name": "DriveSQ", "url": "https://www.drivesq.co.uk"},
+     "areaServed": "Greater Manchester", "contactPoint": {"@type": "ContactPoint", "telephone": "+44 7352 932003", "contactType": "customer service", "areaServed": "GB", "availableLanguage": "English"}},
+    {"@context": "https://schema.org", "@type": "WebSite", "@id": SITE + "/#website", "name": "SQ Driving School", "url": SITE + "/", "publisher": {"@id": SITE + "/#org"}, "inLanguage": "en-GB"},
+], ensure_ascii=False)
+
+
 def head(title, desc, path, root, schema=None, noindex=False):
     canon = SITE + "/" + ("" if path == "index.html" else path)
     sch = ""
@@ -146,9 +156,14 @@ def head(title, desc, path, root, schema=None, noindex=False):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{root}assets/css/sq.css">
+<noscript><style>[data-reveal],.split-chars .char{{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}}.hero h1 .line>span{{transform:none!important}}</style></noscript>
+<script type="application/ld+json">{ORG_SCHEMA}</script>
 <script>try{{var t=localStorage.getItem("sq-theme");if(t)document.documentElement.setAttribute("data-theme",t)}}catch(e){{}}</script>
 {sch}</head>
 """
+
+
+PRELOADER = '<div class="preloader" aria-hidden="true"><div class="preloader__inner"><div class="sq-logo">SQ</div><div class="preloader__bar"><span></span></div><div class="preloader__label">Starting engine…</div></div></div>'
 
 
 def header(active, root):
@@ -161,7 +176,7 @@ def header(active, root):
     mob += "".join(f'<a href="{root}{h}">{l}</a>' for h, l in MOBILE_EXTRA)
     return f"""<body>
 <a class="skip-link" href="#main">Skip to content</a>
-<div class="preloader" aria-hidden="true"><div class="preloader__inner"><div class="sq-logo">SQ</div><div class="preloader__bar"><span></span></div><div class="preloader__label">Starting engine…</div></div></div>
+{PRELOADER if active == "index.html" else ""}
 <canvas class="fx-canvas" aria-hidden="true"></canvas>
 <div class="noise" aria-hidden="true"></div>
 <div class="scroll-progress" aria-hidden="true"><span></span></div>
@@ -214,7 +229,8 @@ def footer(root):
           <li><a href="{root}lessons.html">Driving lessons</a></li>
           <li><a href="{root}intensive.html">Intensive courses</a></li>
           <li><a href="{root}prices.html">Prices &amp; package builder</a></li>
-          <li><a href="{root}discounts.html">NHS &amp; student discounts</a></li>
+          <li><a href="{root}nhs-driving-lessons.html">NHS staff discount</a></li>
+          <li><a href="{root}student-driving-lessons-manchester.html">Student discount</a></li>
           <li><a href="{root}offer-m16-m18-m19.html">M16 · M18 · M19 offer</a></li>
           <li><a href="{root}services.html">All lesson types</a></li>
           <li><a href="{root}areas.html">Areas we cover</a></li>

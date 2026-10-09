@@ -1,7 +1,7 @@
 import os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from layout import SITE
-import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO, pages_knowledge as KN, pages_postcodes as PCD, pages_gearbox as GB
+import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO, pages_knowledge as KN, pages_postcodes as PCD, pages_gearbox as GB, pages_niche as NI
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 pages = {
@@ -42,6 +42,12 @@ for kind in ("automatic", "manual"):
     pages[f"{kind}-driving-lessons-manchester.html"] = GB.pillar(kind, HOODS)
     for n in HOODS:
         pages[f"{kind}-driving-lessons/{n['slug']}.html"] = GB.gearbox_area_page(kind, n, HOODS)
+pages["nhs-driving-lessons.html"] = NI.nhs_hub()
+pages["student-driving-lessons-manchester.html"] = NI.students_hub()
+for h in NI.HOSPITALS:
+    pages[f"nhs/{NI.slugify(h[0])}.html"] = NI.hospital_page(h, HOODS)
+for c in NI.COLLEGES:
+    pages[f"students/{NI.slugify(c[0])}.html"] = NI.college_page(c, HOODS)
 pages["knowledge.html"] = KN.hub()
 pages["knowledge/greater-manchester-driving-test-centres.html"] = KN.centres_overview()
 for a in KN.ARTICLES:
