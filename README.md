@@ -3,7 +3,7 @@
 Website for **SQ Driving School**, a brand owned and managed by **DriveSQ**.
 Crafted by Mohammed Qaim Abbas · Built by [SQ Websites](https://www.sqwebsites.co.uk).
 
-Static site (plain HTML/CSS/JS) — ready for GitHub Pages. `CNAME` points to `www.sqdrivingschool.com`.
+Static site (plain HTML/CSS/JS) — ready for GitHub Pages. `CNAME` points to `sqdrivingschool.com`.
 
 ## Editing prices, discounts and contact details
 All prices used by the tools, package builder and chat assistant live at the top of

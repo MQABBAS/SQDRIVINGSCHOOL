@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.sqdrivingschool.com/sitemap.xml
+Sitemap: https://sqdrivingschool.com/sitemap.xml

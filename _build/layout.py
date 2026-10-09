@@ -1,7 +1,7 @@
 """Shared layout for SQ Driving School pages."""
 import json
 
-SITE = "https://www.sqdrivingschool.com"
+SITE = "https://sqdrivingschool.com"
 PHONE = "07352 932003"
 TEL = "+447352932003"
 WA = "447352932003"
