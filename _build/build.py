@@ -1,7 +1,7 @@
 import os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from layout import SITE
-import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO, pages_knowledge as KN
+import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO, pages_knowledge as KN, pages_postcodes as PCD
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 pages = {
@@ -20,7 +20,8 @@ for b in R.BOROUGHS:
     svcs = "".join(f'<a class="chip" href="../services/{x[0]}-{b[0]}.html">{x[1]}</a>' for x in SEO.SERVICES)
     marker = '<div class="mt-3"><h3>Other areas</h3>'
     assert marker in html
-    html = html.replace(marker, f'<div class="mt-3"><h3>Neighbourhoods in {b[1]}</h3><div class="hero__badges">{hoods}</div></div><div class="mt-3"><h3>Lessons in {b[1]}</h3><div class="hero__badges">{svcs}</div></div>' + marker)
+    pcs = "".join(f'<a class="chip" href="../postcodes/{c[0].lower()}.html">{c[0]}</a>' for c in PCD.postcode_list(SEO.load_postcodes) if c[1] == b[1])
+    html = html.replace(marker, f'<div class="mt-3"><h3>Postcodes in {b[1]}</h3><div class="hero__badges">{pcs}</div></div><div class="mt-3"><h3>Neighbourhoods in {b[1]}</h3><div class="hero__badges">{hoods}</div></div><div class="mt-3"><h3>Lessons in {b[1]}</h3><div class="hero__badges">{svcs}</div></div>' + marker)
     pages[f"areas/{b[0]}.html"] = html
 pages["areas.html"] = SEO.areas_index(HOODS)
 pages["services.html"] = SEO.services_index()
@@ -32,6 +33,11 @@ for sv in SEO.SERVICES:
         pages[f"services/{sv[0]}-{b[0]}.html"] = SEO.service_borough(sv, b, HOODS)
 for g in X.GUIDES:
     pages[f"guides/{g[0]}.html"] = X.guide_page(g)
+CODES = PCD.postcode_list(SEO.load_postcodes)
+for e in CODES:
+    pages[f"postcodes/{e[0].lower()}.html"] = PCD.postcode_page(e, CODES, HOODS)
+pages["postcodes.html"] = PCD.postcode_index(CODES, HOODS)
+pages["driving-lessons-near-me.html"] = PCD.near_me_page(CODES, HOODS)
 pages["knowledge.html"] = KN.hub()
 pages["knowledge/greater-manchester-driving-test-centres.html"] = KN.centres_overview()
 for a in KN.ARTICLES:
@@ -42,6 +48,17 @@ for path, html in pages.items():
     full = os.path.join(OUT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
     open(full, "w", encoding="utf-8").write(html)
-urls = "".join(f"  <url><loc>{SITE}/{'' if p == 'index.html' else p}</loc></url>\n" for p in pages if p != "404.html")
-open(os.path.join(OUT, "sitemap.xml"), "w").write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
+LASTMOD = "2026-10-09"
+groups = {}
+for p in pages:
+    if p == "404.html":
+        continue
+    sec = p.split("/")[0] if "/" in p else "main"
+    groups.setdefault(sec, []).append(p)
+index = ""
+for sec, plist in sorted(groups.items()):
+    urls = "".join(f"  <url><loc>{SITE}/{'' if p == 'index.html' else p}</loc><lastmod>{LASTMOD}</lastmod></url>\n" for p in sorted(plist))
+    open(os.path.join(OUT, f"sitemap-{sec}.xml"), "w").write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
+    index += f"  <sitemap><loc>{SITE}/sitemap-{sec}.xml</loc><lastmod>{LASTMOD}</lastmod></sitemap>\n"
+open(os.path.join(OUT, "sitemap.xml"), "w").write(f'<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{index}</sitemapindex>\n')
 print(len(pages), "pages")

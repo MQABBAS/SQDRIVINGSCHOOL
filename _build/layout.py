@@ -75,6 +75,8 @@ MOBILE_EXTRA = [
     ("guides.html", "Learner Guides"),
     ("test-centres.html", "Test Centres"),
     ("contact.html", "Contact"),
+    ("driving-lessons-near-me.html", "Lessons Near Me"),
+    ("postcodes.html", "All Postcodes"),
     ("services.html", "All Lesson Types"),
     ("faq.html", "FAQ"),
     ("about.html", "About"),
@@ -174,6 +176,7 @@ def header(active, root):
 
 
 def footer(root):
+    FOOTER_AREAS = " · ".join(f'<a href="{root}areas/{sl}.html">{nm}</a>' for sl, nm in [("manchester", "Manchester"), ("salford", "Salford"), ("trafford", "Trafford"), ("stockport", "Stockport"), ("tameside", "Tameside"), ("oldham", "Oldham"), ("rochdale", "Rochdale"), ("bury", "Bury"), ("bolton", "Bolton"), ("wigan", "Wigan")]) + f' · <a href="{root}postcodes.html">All postcodes</a> · <a href="{root}driving-lessons-near-me.html">Lessons near me</a> · <a href="{root}areas.html">All neighbourhoods</a>'
     return f"""</main>
 {wave_up()}
 <footer class="footer zone-dark" style="margin-top:0">
@@ -230,6 +233,10 @@ def footer(root):
           <li><a href="{root}review-policy.html">Review policy</a></li>
         </ul>
       </div>
+    </div>
+    <div class="footer__areas" style="margin-top:44px;padding-top:26px;border-top:1px solid var(--line)">
+      <h4>Driving lessons across Greater Manchester</h4>
+      <p style="font-size:.9rem;line-height:2">{FOOTER_AREAS}</p>
     </div>
     <div class="footer__own">
       <span data-i18n="footer.owned"><b>SQ Driving School</b> is a brand owned and managed by <a href="https://www.drivesq.co.uk" target="_blank" rel="noopener"><b>DriveSQ</b></a>.</span>
@@ -301,6 +308,13 @@ def phone_mock():
 
 
 def page(path, title, desc, body, root="", active=None, schema=None, noindex=False):
+    for cut in (" | Manual & Automatic", " | Manual &amp; Automatic"):
+        if len(title) > 62:
+            title = title.replace(cut, "")
+    if len(title) > 62:
+        title = title.replace(" | SQ Driving School", " | SQ Driving")
+    if len(title) > 62:
+        title = title.replace(" | SQ Driving", "")
     return head(title, desc, path, root, schema, noindex) + header(active or path, root) + body + footer(root)
 
 

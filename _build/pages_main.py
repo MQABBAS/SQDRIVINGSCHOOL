@@ -91,7 +91,9 @@ def index():
         "@context": "https://schema.org", "@type": "DrivingSchool", "name": "SQ Driving School", "url": SITE,
         "telephone": "+44 7352 932003", "priceRange": "£35–£350", "logo": SITE + "/favicon.svg",
         "description": "Fast, modern driving lessons across Greater Manchester. Manual & automatic. NHS & student discounts. Powered by DriveSQ.",
-        "areaServed": [{"@type": "AdministrativeArea", "name": n} for n in ["Manchester", "Salford", "Trafford", "Stockport", "Tameside", "Oldham", "Rochdale", "Bury", "Bolton", "Wigan"]],
+        "areaServed": [{"@type": "AdministrativeArea", "name": "Greater Manchester"}] + [{"@type": "AdministrativeArea", "name": n} for n in ["Manchester", "Salford", "Trafford", "Stockport", "Tameside", "Oldham", "Rochdale", "Bury", "Bolton", "Wigan"]]
+            + [{"@type": "Place", "name": h["name"]} for h in __import__("pages_seo").neighbourhoods()]
+            + [{"@type": "PostalAddress", "postalCode": c[0], "addressCountry": "GB"} for c in __import__("pages_postcodes").postcode_list(__import__("pages_seo").load_postcodes)],
         "parentOrganization": {"@type": "Organization", "name": "DriveSQ", "url": "https://www.drivesq.co.uk"},
         "makesOffer": [
             {"@type": "Offer", "name": "2-hour driving lesson", "price": "70", "priceCurrency": "GBP"},

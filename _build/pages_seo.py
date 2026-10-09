@@ -38,6 +38,14 @@ def neighbourhoods():
                     seen[key]["codes"].append(code)
                 continue
             seen[key] = {"slug": key, "name": name, "codes": [code], "borough": borough}
+    from pages_postcodes import EXTRA_HOODS
+    for name, code, borough in EXTRA_HOODS:
+        key = slugify(name)
+        if key in seen:
+            if code not in seen[key]["codes"]:
+                seen[key]["codes"].append(code)
+            continue
+        seen[key] = {"slug": key, "name": name, "codes": [code], "borough": borough}
     return list(seen.values())
 
 
@@ -191,7 +199,7 @@ def neighbourhood_page(n, all_n):
     {same_pc_html}
     <p>Every lesson is logged in the free <a href="{root}student-portal.html">DriveSQ Student Portal</a>, so you can see your progress between lessons.</p></div>
   <div data-reveal="right"><div class="card"><div class="card__icon">{icon('pin')}</div><h3>{n['name']} at a glance</h3>
-    <table class="summary"><tr><td>Postcode{'s' if len(n['codes']) > 1 else ''}</td><td>{codes}</td></tr><tr><td>Borough</td><td>{bname}</td></tr><tr><td>Nearby test centres</td><td>{', '.join(centres)}</td></tr><tr><td>Lessons</td><td>Manual &amp; automatic</td></tr><tr><td>10-hour block</td><td>{'£320 (offer area)' if offer else '£350 · £320 NHS/students'}</td></tr></table>
+    <table class="summary"><tr><td>Postcode{'s' if len(n['codes']) > 1 else ''}</td><td>{", ".join(f'<a href="{root}postcodes/{c.lower()}.html">{c}</a>' for c in n["codes"])}</td></tr><tr><td>Borough</td><td>{bname}</td></tr><tr><td>Nearby test centres</td><td>{', '.join(centres)}</td></tr><tr><td>Lessons</td><td>Manual &amp; automatic</td></tr><tr><td>10-hour block</td><td>{'£320 (offer area)' if offer else '£350 · £320 NHS/students'}</td></tr></table>
     <a class="btn btn--red btn--block mt-1" href="{root}book.html">Book in {n['name']}</a></div></div>
 </div></section>
 {(prices_sec + tips_sec + faq_sec) if h % 2 else (tips_sec + faq_sec + prices_sec)}
