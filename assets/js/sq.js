@@ -48,7 +48,7 @@
   var savedTheme = store.get("sq-theme");
   if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
   function toggleTheme() {
-    var next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", next);
     store.set("sq-theme", next);
   }
@@ -114,7 +114,7 @@
       store.sset("sq-loaded", "1");
       setTimeout(function () { pl.remove(); }, 800);
     };
-    setTimeout(done, 1700);
+    setTimeout(done, 950);
   }
 
   /* ------------------------------------------------------
@@ -232,7 +232,7 @@
   }
 
   function reveal() {
-    var els = $$("[data-reveal], .split-chars, [data-count], .phone, [data-gauge]");
+    var els = $$("[data-reveal], .split-chars, [data-count], .phone, [data-gauge], .scribble");
     if (!("IntersectionObserver" in window)) {
       els.forEach(function (el) { el.classList.add("is-in"); });
       return;
@@ -311,7 +311,7 @@
           var r = b.getBoundingClientRect();
           var x = e.clientX - r.left - r.width / 2;
           var y = e.clientY - r.top - r.height / 2;
-          b.style.transform = "translate(" + x * 0.18 + "px," + y * 0.25 + "px)";
+          b.style.transform = "translate(" + x * 0.08 + "px," + y * 0.12 + "px)";
         });
         b.addEventListener("pointerleave", function () { b.style.transform = ""; });
       });
@@ -366,7 +366,7 @@
       if (!href || href.charAt(0) === "#" || /^(https?:|mailto:|tel:|sms:)/.test(href) || a.hasAttribute("download")) return;
       e.preventDefault();
       wipe.classList.add("is-in");
-      setTimeout(function () { window.location.href = href; }, 420);
+      setTimeout(function () { window.location.href = href; }, 180);
     });
     window.addEventListener("pageshow", function () { wipe.classList.remove("is-in"); });
   }
@@ -385,7 +385,7 @@
       h = c.height = window.innerHeight * dpr;
       c.style.width = window.innerWidth + "px";
       c.style.height = window.innerHeight + "px";
-      var n = Math.min(70, Math.floor(window.innerWidth / 22));
+      var n = Math.min(30, Math.floor(window.innerWidth / 45));
       parts = [];
       for (var i = 0; i < n; i++) parts.push({ x: Math.random() * w, y: Math.random() * h, r: (Math.random() * 1.8 + 0.4) * dpr, vx: (Math.random() - 0.5) * 0.15 * dpr, vy: -(Math.random() * 0.35 + 0.05) * dpr, a: Math.random() * 0.6 + 0.15 });
     }
@@ -399,7 +399,7 @@
       requestAnimationFrame(frame);
       if (!visible) return;
       ctx.clearRect(0, 0, w, h);
-      if (Math.random() < 0.02 && streaks.length < 4) {
+      if (Math.random() < 0.006 && streaks.length < 2) {
         streaks.push({ x: -200 * dpr, y: Math.random() * h, len: (Math.random() * 200 + 120) * dpr, v: (Math.random() * 10 + 8) * dpr, a: Math.random() * 0.35 + 0.15 });
       }
       streaks = streaks.filter(function (s) {
@@ -431,7 +431,7 @@
   function speedLines() {
     $$(".speed-lines").forEach(function (wrap) {
       if (reduceMotion) return;
-      for (var i = 0; i < 14; i++) {
+      for (var i = 0; i < 6; i++) {
         var l = document.createElement("i");
         l.style.top = Math.random() * 100 + "%";
         l.style.animationDuration = Math.random() * 2.5 + 1.5 + "s";
@@ -1087,7 +1087,7 @@
         chips.appendChild(b);
       });
     }
-    var DEFAULT_CHIPS = ["💷 Prices", "🏥 NHS discount", "🎓 Student discount", "📍 Check my postcode", "⚡ Intensive", "📱 Student Portal", "📅 Book a lesson"];
+    var DEFAULT_CHIPS = ["😟 I'm nervous", "🚗 First lesson", "💷 Prices", "🏥 NHS discount", "🎓 Student discount", "📍 Check my postcode", "⚡ Intensive", "📱 Student Portal", "📅 Book a lesson"];
     var wa = function (msg, label) { return "<a href='" + SQ.waLink(msg) + "' target='_blank' rel='noopener'>" + (label || "Message us on WhatsApp") + "</a>"; };
     var link = function (href, label) { return "<a href='" + root + href + "'>" + label + "</a>"; };
 
@@ -1110,7 +1110,8 @@
       { k: ["theory", "hazard perception", "mock"], r: function () { return "📚 For your theory test: try our free " + link("theory-quiz.html", "Highway Code quiz") + " and " + link("hazard-game.html", "spot-the-hazard game") + ". SQ learners also get full 50-question mock tests in the DriveSQ Student Portal. Book the real test on <a href='https://www.gov.uk/book-theory-test' target='_blank' rel='noopener'>GOV.UK</a>."; } },
       { k: ["test", "book my test", "test centre", "test center", "practical", "exam"], r: function () { return "🏁 You book your practical test yourself on <a href='https://www.gov.uk/book-driving-test' target='_blank' rel='noopener'>GOV.UK</a>. Our " + link("test-centres.html", "test centre guide") + " covers every Greater Manchester centre. We can provide the car and a warm-up lesson on test day."; } },
       { k: ["how many hours", "how many lessons", "how many", "hours do i need"], r: function () { return "🧮 Most learners need roughly 40–45 hours of lessons — but it depends on you. Try our " + link("tools.html#lessons", "lesson calculator") + " for a personal estimate in 5 questions."; } },
-      { k: ["nervous", "anxious", "scared", "anxiety", "afraid"], r: function () { return "💙 You're in good hands. We go at your pace, start on quiet roads, and your portal shows your progress so you can see how far you've come. Many people feel exactly the same at the start."; } },
+      { w: 2, k: ["nervous", "anxious", "scared", "anxiety", "afraid", "worried", "panic"], r: function () { return "💙 You're in exactly the right place. Lots of our learners start out nervous. We go at your pace, start on quiet roads, explain everything before you do it, and you can take a break whenever you need.<br>Try our " + link("comfort.html", "Comfort Zone") + " for a personal comfort plan and a calm-breathing coach."; }, chips: ["🚗 First lesson", "📅 Book a lesson", "💷 Prices"] },
+      { w: 2, k: ["first lesson", "first time", "what happens", "never driven", "beginner"], r: function () { return "🚗 <b>Your first lesson, step by step:</b><br>1. We confirm your time &amp; pick-up on WhatsApp<br>2. Quick licence &amp; eyesight check<br>3. We drive you somewhere quiet<br>4. Controls explained — no rush<br>5. Your first drive on calm roads<br>6. Chat about how it went + portal set-up<br>" + link("first-lesson.html", "See the full guide →"); }, chips: ["😟 I'm nervous", "📅 Book a lesson"] },
       { k: ["fail", "failed"], r: function () { return "That's frustrating — but very common. Bring your test report and we'll focus your lessons on those faults. Try a 10-hour block to get test-sharp again."; } },
       { k: ["motorway"], r: function () { return "🛣️ Yes — learners can have motorway lessons with an approved instructor in a dual-controlled car. Ask us to add one to your package."; } },
       { k: ["pay", "payment", "card", "cash", "bank"], r: function () { return "💳 " + wa("Hi! How can I pay for lessons?", "Message us") + " and we'll explain payment options. Block bookings are paid in advance."; } },
@@ -1231,6 +1232,280 @@
     });
   }
 
+
+  /* ------------------------------------------------------
+     MASCOT — the SQ guide drops in on a rope and waves
+     ------------------------------------------------------ */
+  var MASCOT_SVG = '<svg viewBox="0 0 160 270" aria-hidden="true">' +
+    '<path d="M108 98 C118 70 100 30 86 10" stroke="#e3141c" stroke-width="15" stroke-linecap="round" fill="none"/>' +
+    '<circle cx="85" cy="9" r="9" fill="#f2c39c"/>' +
+    '<rect x="62" y="210" width="15" height="40" rx="7" fill="#232733"/><rect x="84" y="210" width="15" height="40" rx="7" fill="#232733"/>' +
+    '<ellipse cx="66" cy="252" rx="13" ry="7" fill="#111"/><ellipse cx="95" cy="252" rx="13" ry="7" fill="#111"/>' +
+    '<path d="M46 110 Q46 88 80 88 Q114 88 114 110 L114 205 Q114 215 104 215 L56 215 Q46 215 46 205 Z" fill="#e3141c"/>' +
+    '<path d="M80 88 L70 112 L80 126 L90 112 Z" fill="#fff"/>' +
+    '<text x="80" y="170" font-family="Russo One, Arial Black, sans-serif" font-style="italic" font-size="26" fill="#fff" text-anchor="middle">SQ</text>' +
+    '<g class="arm-wave"><path d="M52 100 C34 92 24 70 26 52" stroke="#e3141c" stroke-width="15" stroke-linecap="round" fill="none"/><circle cx="26" cy="48" r="9" fill="#f2c39c"/></g>' +
+    '<rect x="72" y="76" width="16" height="14" fill="#f2c39c"/>' +
+    '<circle cx="80" cy="54" r="28" fill="#f2c39c"/>' +
+    '<path d="M52 50 Q52 24 80 24 Q108 24 108 50 Z" fill="#e3141c"/><rect x="50" y="46" width="62" height="8" rx="4" fill="#b80f15"/><path d="M104 50 Q122 50 124 56 L104 56 Z" fill="#b80f15"/>' +
+    '<text x="80" y="44" font-family="Russo One, Arial Black, sans-serif" font-style="italic" font-size="13" fill="#fff" text-anchor="middle">SQ</text>' +
+    '<ellipse class="blink" cx="70" cy="60" rx="3.4" ry="4.2" fill="#2a1a12"/><ellipse class="blink" cx="90" cy="60" rx="3.4" ry="4.2" fill="#2a1a12"/>' +
+    '<circle cx="63" cy="69" r="4.5" fill="#ff8f8f" opacity=".5"/><circle cx="97" cy="69" r="4.5" fill="#ff8f8f" opacity=".5"/>' +
+    '<path d="M70 70 Q80 80 90 70" stroke="#2a1a12" stroke-width="3" stroke-linecap="round" fill="none"/>' +
+    '</svg>';
+  function mascot() {
+    $$("[data-mascot]").forEach(function (m) {
+      m.classList.add("mascot");
+      m.innerHTML = '<div class="mascot__rope"></div><div class="mascot__body" role="button" tabindex="0" aria-label="Chat with the SQ guide">' + MASCOT_SVG + '</div>' +
+        '<div class="mascot__bubble" role="button" tabindex="0">' + (m.getAttribute("data-say") || "Hi! 👋 Nervous? <b>You're in the right place.</b>") + '</div>';
+      var go = function () { if (SQ.openBot) SQ.openBot(); };
+      $$(".mascot__body, .mascot__bubble", m).forEach(function (el) {
+        el.addEventListener("click", go);
+        el.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+      });
+      if (reduceMotion) { m.classList.add("is-landed"); return; }
+      m.style.visibility = "hidden";
+      var delay = $(".preloader") ? 1100 : 350;
+      setTimeout(function () {
+        m.style.visibility = "";
+        m.classList.add("is-dropping");
+        m.addEventListener("animationend", function onEnd(e) {
+          if (e.animationName !== "drop") return;
+          m.removeEventListener("animationend", onEnd);
+          m.classList.remove("is-dropping");
+          m.classList.add("is-landed");
+        });
+      }, delay);
+    });
+  }
+
+  /* ------------------------------------------------------
+     COMFORT PLAN — personal first-lesson plan from your worries
+     ------------------------------------------------------ */
+  var WORRIES = {
+    traffic: "We start on quiet residential roads and only move to busier roads when you say you're ready.",
+    roundabouts: "Roundabouts are introduced step by step — first a quiet mini-roundabout, then bigger ones, with your instructor talking you through each one.",
+    judged: "No shouting, no sighing, no judgement. Mistakes are how everyone learns — your instructor has seen it all before.",
+    stalling: "Stalling is normal and harmless. We'll practise clutch control somewhere quiet until it feels natural (or choose automatic and skip it entirely).",
+    parking: "Manoeuvres come later, in an empty car park or quiet street, broken into small steps.",
+    forget: "Everything you learn is written up in your DriveSQ Student Portal, so you can re-read it between lessons.",
+    test: "You'll only book your test when your portal readiness checklist says you're ready — and we'll do a mock test first.",
+    instructor: "You can message your instructor before your first lesson on WhatsApp, so you know who's coming."
+  };
+  function comfortPlan() {
+    $$("[data-tool='comfort']").forEach(function (form) {
+      var out = $(".result", form);
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var picked = $$("input[name='worry']:checked", form).map(function (c) { return c.value; });
+        var exp = ($("input[name='cexp']:checked", form) || {}).value || "none";
+        var pace = ($("input[name='cpace']:checked", form) || {}).value || "gentle";
+        var items = picked.map(function (w) { return WORRIES[w]; });
+        if (exp === "none") items.unshift("Your instructor drives you to a quiet spot first — your first drive is on calm, empty roads.");
+        if (pace === "gentle") items.push("We'll keep the pace gentle: short drives, regular breaks, and lots of recap.");
+        else items.push("We'll keep things moving while checking in with you regularly.");
+        items.push("2-hour lessons give you time to settle in before trying anything new.");
+        var labels = $$("input[name='worry']:checked", form).map(function (c) { return c.getAttribute("data-label"); });
+        out.className = "result is-visible result--ok";
+        out.innerHTML = "<span class='tag tag--green'>YOUR COMFORT PLAN</span><h3 class='mt-1'>Here's how we'll make you feel at ease</h3><ul class='plan-list'>" +
+          items.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul>" +
+          "<a class='btn btn--red mt-2' target='_blank' rel='noopener' href='" + SQ.waLink("Hi SQ! I'm a bit nervous about learning to drive." + (labels.length ? " My main worries are: " + labels.join(", ") + "." : "") + " Can we take it slowly?") + "'>Send my plan to SQ on WhatsApp</a>";
+        out.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "nearest" });
+      });
+    });
+  }
+
+  /* ------------------------------------------------------
+     BREATHING COACH — box breathing 4·4·4·4
+     ------------------------------------------------------ */
+  function breathing() {
+    $$("[data-tool='breathe']").forEach(function (root) {
+      var circle = $(".breathe__circle", root), label = $(".breathe__label", root), count = $(".breathe__count", root), btn = $(".js-breathe", root);
+      var timers = [], running = false, rounds = 0;
+      var PHASES = [["Breathe in", "in"], ["Hold", "hold-in"], ["Breathe out", "out"], ["Hold", "hold-out"]];
+      function clear() { timers.forEach(clearTimeout); timers = []; }
+      function phase(i) {
+        if (!running) return;
+        var ph = PHASES[i];
+        label.textContent = ph[0];
+        circle.classList.toggle("is-in", ph[1] === "in" || ph[1] === "hold-in");
+        var sec = 4;
+        (function tick() {
+          count.textContent = ph[0] + " · " + sec;
+          if (--sec >= 0) timers.push(setTimeout(tick, 1000));
+        })();
+        timers.push(setTimeout(function () {
+          if (i === 3) { rounds++; count.textContent = rounds + " round" + (rounds > 1 ? "s" : "") + " done"; if (rounds === 4) { stop(); label.textContent = "Well done 💙"; count.textContent = "4 rounds complete — you're ready."; return; } }
+          phase((i + 1) % 4);
+        }, 4000));
+      }
+      function stop() { running = false; clear(); circle.classList.remove("is-in"); btn.textContent = "Start breathing"; }
+      btn.addEventListener("click", function () {
+        if (running) { stop(); label.textContent = "Ready?"; return; }
+        running = true; rounds = 0; btn.textContent = "Stop"; phase(0);
+      });
+    });
+  }
+
+
+  /* ------------------------------------------------------
+     HERO CAR — drives in and parks under the logo
+     ------------------------------------------------------ */
+  function heroCar() {
+    $$("[data-hero-car]").forEach(function (el) {
+      el.classList.add("hero-car");
+      el.innerHTML = '<div class="hero-car__beam"></div><svg viewBox="0 0 320 120" aria-hidden="true">' +
+        '<path d="M16 82c0-14 10-22 26-24l34-24c8-6 18-8 28-8h68c12 0 22 4 30 12l24 20 50 8c16 2 24 12 24 24v10H16z" fill="#e3141c"/>' +
+        '<path d="M90 34l-26 22h68V30h-24c-6 0-12 2-18 4zM144 30v26h80l-24-18c-6-5-12-8-20-8z" fill="#141418"/>' +
+        '<rect x="292" y="70" width="16" height="9" rx="3" fill="#fff6c8"/><rect x="14" y="74" width="10" height="8" rx="2" fill="#ff5a5a"/>' +
+        '<text x="160" y="84" font-family="Russo One, Arial Black, sans-serif" font-style="italic" font-size="22" fill="#fff" text-anchor="middle">SQ</text>' +
+        '<rect x="56" y="92" width="44" height="6" rx="3" fill="#b80f15"/>' +
+        '<g class="wheel"><circle cx="80" cy="96" r="20" fill="#0b0b0d"/><circle cx="80" cy="96" r="9" fill="#9a9aa2"/><path d="M80 87v18M71 96h18" stroke="#0b0b0d" stroke-width="3"/></g>' +
+        '<g class="wheel"><circle cx="246" cy="96" r="20" fill="#0b0b0d"/><circle cx="246" cy="96" r="9" fill="#9a9aa2"/><path d="M246 87v18M237 96h18" stroke="#0b0b0d" stroke-width="3"/></g>' +
+        '</svg>';
+      if (reduceMotion) { el.classList.add("is-parked"); return; }
+      el.style.visibility = "hidden";
+      setTimeout(function () {
+        el.style.visibility = "";
+        el.classList.add("is-driving");
+        setTimeout(function () { el.classList.add("is-parked"); }, 1700);
+      }, $(".preloader") ? 1000 : 250);
+    });
+  }
+
+  /* ------------------------------------------------------
+     ACCESSIBILITY PANEL
+     ------------------------------------------------------ */
+  function a11y() {
+    if ($(".a11y-btn")) return;
+    var OPTS = [["readable", "🔤", "Readable font"], ["spacing", "↕️", "Line spacing"], ["contrast", "◐", "High contrast"], ["links", "🔗", "Underline links"], ["still", "⏸️", "Pause animations"], ["dark", "🌙", "Dark mode"]];
+    var btn = document.createElement("button");
+    btn.type = "button"; btn.className = "a11y-btn"; btn.setAttribute("aria-label", "Accessibility options"); btn.setAttribute("aria-expanded", "false");
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="4" r="2"/><path d="M19 8.5c-2.3.6-4.6.9-7 .9s-4.7-.3-7-.9l-.5 1.9c1.9.5 3.8.8 5.5.9V14l-2 7h2.1l1.9-5.6 1.9 5.6H16l-2-7v-2.7c1.7-.1 3.6-.4 5.5-.9z"/></svg>';
+    var panel = document.createElement("div");
+    panel.className = "a11y-panel"; panel.setAttribute("role", "dialog"); panel.setAttribute("aria-label", "Accessibility options");
+    panel.innerHTML = '<h3>Accessibility <button type="button" class="icon-btn js-a11y-close" aria-label="Close" style="width:34px;height:34px">✕</button></h3><div class="a11y-grid">' +
+      '<div class="a11y-size"><span>Text size</span><button type="button" class="js-size" data-d="-1" aria-label="Smaller text">A−</button><b class="js-size-val">100%</b><button type="button" class="js-size" data-d="1" aria-label="Bigger text">A+</button></div>' +
+      OPTS.map(function (o) { return '<button type="button" class="a11y-opt" data-opt="' + o[0] + '" aria-pressed="false"><span>' + o[1] + '</span><span>' + o[2] + '</span></button>'; }).join("") +
+      '</div><button type="button" class="btn btn--ghost btn--sm btn--block mt-2 js-a11y-reset">Reset all</button>';
+    document.body.appendChild(btn); document.body.appendChild(panel);
+    var html = document.documentElement;
+    var state = {};
+    try { state = JSON.parse(store.get("sq-a11y") || "{}"); } catch (e) { state = {}; }
+    function apply() {
+      OPTS.forEach(function (o) {
+        var on = !!state[o[0]];
+        if (o[0] === "dark") { if (state.dark !== undefined) { html.setAttribute("data-theme", on ? "dark" : "light"); store.set("sq-theme", on ? "dark" : "light"); } on = html.getAttribute("data-theme") === "dark"; }
+        else html.classList.toggle("a11y-" + o[0], on);
+        var b = $('[data-opt="' + o[0] + '"]', panel); if (b) b.setAttribute("aria-pressed", String(on));
+      });
+      var size = state.size || 100;
+      html.style.fontSize = size === 100 ? "" : size + "%";
+      $(".js-size-val", panel).textContent = size + "%";
+      store.set("sq-a11y", JSON.stringify(state));
+    }
+    $$(".a11y-opt", panel).forEach(function (b) {
+      b.addEventListener("click", function () {
+        var k = b.getAttribute("data-opt");
+        state[k] = k === "dark" ? html.getAttribute("data-theme") !== "dark" : !state[k];
+        apply();
+      });
+    });
+    $$(".js-size", panel).forEach(function (b) {
+      b.addEventListener("click", function () { state.size = Math.max(90, Math.min(140, (state.size || 100) + parseInt(b.getAttribute("data-d"), 10) * 10)); apply(); });
+    });
+    $(".js-a11y-reset", panel).addEventListener("click", function () { state = {}; html.removeAttribute("data-theme"); store.set("sq-theme", "light"); apply(); });
+    function toggle(open) { panel.classList.toggle("is-open", open); btn.setAttribute("aria-expanded", String(open)); if (open) $(".a11y-opt", panel).focus(); }
+    btn.addEventListener("click", function () { toggle(!panel.classList.contains("is-open")); });
+    $(".js-a11y-close", panel).addEventListener("click", function () { toggle(false); btn.focus(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && panel.classList.contains("is-open")) { toggle(false); btn.focus(); } });
+    apply();
+  }
+
+  /* ------------------------------------------------------
+     BOOKING WIZARD — "Book in 60 seconds"
+     ------------------------------------------------------ */
+  function wizard() {
+    $$("[data-tool='wizard']").forEach(function (root) {
+      var steps = $$(".wizard__step", root), bar = $(".wizard__bar span", root), back = $(".js-back", root), next = $(".js-next", root);
+      var pcOut = $(".js-wpc", root), summary = $(".wizard__summary", root), send = $(".js-wsend", root), stepNum = $(".js-stepnum", root);
+      var i = 0;
+      function val(n) { var el = $("[name='" + n + "']:checked", root); return el ? el.value : ""; }
+      function pcInfo() { return SQ.checkPostcode($("[name='wpostcode']", root).value); }
+      function show(n, dir) {
+        steps.forEach(function (s, k) { s.classList.toggle("is-active", k === n); s.classList.toggle("is-back", dir < 0); });
+        bar.style.width = ((n + 1) / steps.length) * 100 + "%";
+        stepNum.textContent = "Step " + (n + 1) + " of " + steps.length;
+        back.style.visibility = n === 0 ? "hidden" : "visible";
+        next.classList.toggle("hide", n === steps.length - 1);
+        if (n === steps.length - 1) buildSummary();
+        var f = $("input, button", steps[n]); if (f && n > 0) setTimeout(function () { f.focus({ preventScroll: true }); }, 50);
+      }
+      function valid() {
+        var s = steps[i];
+        if ($("[name='wpostcode']", s)) { var r = pcInfo(); if (r.status === "empty" || r.status === "invalid") { pcOut.innerHTML = "<span class='red'>Please enter a valid postcode.</span>"; return false; } }
+        if ($("[name='wname']", s) && !$("[name='wname']", s).value.trim()) { $("[name='wname']", s).focus(); return false; }
+        var radios = $$("input[type='radio']", s);
+        if (radios.length && !radios.some(function (r) { return r.checked; })) { s.classList.remove("shake"); void s.offsetWidth; s.style.animation = "shake .4s"; setTimeout(function () { s.style.animation = ""; }, 400); return false; }
+        return true;
+      }
+      $("[name='wpostcode']", root).addEventListener("input", function () {
+        var r = pcInfo();
+        pcOut.innerHTML = r.status === "covered" ? (r.offer ? "🎉 <b>" + r.area + "</b> — you unlock <b>10 hours for £" + SQ.prices.blockDiscount + "</b>!" : "✅ We cover <b>" + r.area + "</b>, " + r.borough + ".") :
+          r.status === "partial" ? "🤔 Edge of our area — we'll confirm." : r.status === "outside" ? "😕 Looks outside Greater Manchester — send it anyway and we'll check." : "";
+      });
+      function priceText() {
+        var pkg = val("wpkg"), r = pcInfo(), disc = val("wdisc");
+        var discounted = (r.status === "covered" && r.offer) || disc === "NHS" || disc === "Student";
+        if (pkg === "2-hour lessons") return "£" + SQ.prices.twoHour + " per 2-hour lesson";
+        if (pkg === "10-hour block") return discounted ? "£" + SQ.prices.blockDiscount + " (discounted)" : "£" + SQ.prices.block;
+        if (pkg === "Single 1-hour session") return "£" + SQ.prices.single;
+        if (pkg === "Intensive course") return "From £" + SQ.prices.hourly + "/hr — we'll build your course";
+        return "We'll help you choose";
+      }
+      function buildSummary() {
+        var r = pcInfo();
+        var times = $$("[name='wtime']:checked", root).map(function (c) { return c.value; });
+        var rows = [["Name", $("[name='wname']", root).value.trim()], ["Gearbox", val("wtrans")], ["Postcode", (r.outward || "") + (r.area ? " · " + r.area : "")],
+          ["Experience", val("wexp")], ["Package", val("wpkg")], ["Discount", r.offer ? "M16/M18/M19 offer" : (val("wdisc") || "None")], ["Best times", times.join(", ") || "Flexible"],
+          ["Nervous?", $("[name='wnervous']", root).checked ? "Yes — please take it slow" : "No"], ["Estimated price", priceText()]];
+        summary.innerHTML = rows.map(function (x) { return "<div><span>" + x[0] + "</span><b></b></div>"; }).join("");
+        $$("b", summary).forEach(function (b, k) { b.textContent = rows[k][1] || "—"; });
+        send.href = SQ.waLink("Hi SQ Driving School! I'd like to book lessons:\n" + rows.map(function (x) { return "• " + x[0] + ": " + (x[1] || "—"); }).join("\n"));
+      }
+      next.addEventListener("click", function () { if (!valid()) return; i = Math.min(steps.length - 1, i + 1); show(i, 1); });
+      back.addEventListener("click", function () { i = Math.max(0, i - 1); show(i, -1); });
+      $$(".choice input[type='radio']", root).forEach(function (r) {
+        r.addEventListener("change", function () { if (!$("input[type='checkbox'], input[type='text']", steps[i])) setTimeout(function () { next.click(); }, 260); });
+      });
+      root.addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.tagName === "INPUT" && e.target.type === "text") { e.preventDefault(); next.click(); } });
+      show(0, 1);
+    });
+  }
+
+  /* ------------------------------------------------------
+     GIFT VOUCHER DESIGNER
+     ------------------------------------------------------ */
+  function voucher() {
+    $$("[data-tool='voucher']").forEach(function (root) {
+      var card = $(".voucher", root), amt = $(".js-vamt", root), to = $(".js-vto", root), msg = $(".js-vmsg", root), from = $(".js-vfrom", root), send = $(".js-vsend", root);
+      function update() {
+        var opt = $("[name='vval']:checked", root);
+        var label = opt ? opt.getAttribute("data-label") : "";
+        amt.textContent = opt ? "£" + opt.value : "";
+        $(".js-vlabel", root).textContent = label;
+        to.textContent = $("[name='vto']", root).value.trim() || "Someone special";
+        from.textContent = $("[name='vfrom']", root).value.trim() || "Me";
+        msg.textContent = $("[name='vmsg']", root).value.trim() || "Happy driving! 🚗";
+        card.classList.remove("is-bump"); void card.offsetWidth; card.classList.add("is-bump");
+        send.href = SQ.waLink("Hi SQ Driving School! I'd like to buy a gift voucher:\n• Value: £" + (opt ? opt.value : "") + " (" + label + ")\n• For: " + to.textContent + "\n• From: " + from.textContent + "\n• Message: " + msg.textContent);
+      }
+      root.addEventListener("input", update);
+      root.addEventListener("change", update);
+      update();
+    });
+  }
+
   /* ------------------------------------------------------
      YEAR + INIT
      ------------------------------------------------------ */
@@ -1261,6 +1536,13 @@
     flashcards();
     dashLights();
     chatbot();
+    mascot();
+    heroCar();
+    a11y();
+    wizard();
+    voucher();
+    comfortPlan();
+    breathing();
     var lang = store.get("sq-lang");
     if (lang && lang !== "en") applyLang(lang);
   }
