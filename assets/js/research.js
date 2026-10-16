@@ -227,6 +227,7 @@
         });
     });
   }
+
   function init() {
     $$("[data-rx=sun]").forEach(sun); $$("[data-rx=odds]").forEach(odds); $$("[data-rx=earn]").forEach(earn); $$("[data-rx=cite]").forEach(cite); $$("[data-rx=stop]").forEach(stopping); $$("[data-rx=testday]").forEach(testday); $$("[data-rx=timeline]").forEach(timeline); $$("[data-rx=hazard]").forEach(hazard); $$("[data-rx=glossary]").forEach(glossary); $$("form[data-rx=feedback]").forEach(feedback);
   }

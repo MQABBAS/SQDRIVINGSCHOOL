@@ -6,6 +6,7 @@ SECTIONS = [
     ("main", "Main pages", "The essentials: lessons, prices, booking and contact."),
     ("learner-toolkit", "Learner toolkit", "Free interactive calculators and planners."),
     ("driving", "Toolkit pages", "Stopping distances, test-day planning, eyesight, hazard perception and more."),
+    ("solihull", "Solihull (new)", "Driving lessons, test centres and guides across Solihull."),
     ("test-routes", "Driving test routes", "Road-by-road guides to every Greater Manchester test centre."),
     ("test-faults", "Driving test faults", "The most common reasons for failing, explained and fixed."),
     ("research", "Driving Data Lab", "Original research and statistics."),
@@ -33,7 +34,7 @@ def html_sitemap(pages):
     for p, html in pages.items():
         if p in ("404.html", "sitemap.html"):
             continue
-        sec = p.split("/")[0] if "/" in p else ("learner-toolkit" if p == "learner-toolkit.html" else "test-routes" if p == "test-routes.html" else "test-faults" if p == "test-faults.html" else "research" if p == "research.html" else "knowledge" if p == "knowledge.html" else "main")
+        sec = p.split("/")[0] if "/" in p else ("learner-toolkit" if p == "learner-toolkit.html" else "test-routes" if p == "test-routes.html" else "test-faults" if p == "test-faults.html" else "research" if p == "research.html" else "knowledge" if p == "knowledge.html" else "solihull" if p == "driving-lessons-solihull.html" else "main")
         groups.setdefault(sec, []).append((p, _title(html)))
     total = sum(len(v) for v in groups.values())
     nav = "".join(f'<a class="chip" href="#s-{k}">{n} ({len(groups.get(k, []))})</a>' for k, n, d in SECTIONS if groups.get(k))

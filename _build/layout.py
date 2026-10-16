@@ -112,7 +112,7 @@ def wa_url(msg):
 ORG_SCHEMA = json.dumps([
     {"@context": "https://schema.org", "@type": "Organization", "@id": SITE + "/#org", "name": "SQ Driving School", "url": SITE + "/", "logo": SITE + "/favicon.svg",
      "telephone": "+44 7352 932003", "parentOrganization": {"@type": "Organization", "name": "DriveSQ", "url": "https://www.drivesq.co.uk"},
-     "areaServed": "Greater Manchester", "contactPoint": {"@type": "ContactPoint", "telephone": "+44 7352 932003", "contactType": "customer service", "areaServed": "GB", "availableLanguage": "English"}},
+     "areaServed": [{"@type": "AdministrativeArea", "name": "Greater Manchester"}, {"@type": "AdministrativeArea", "name": "Metropolitan Borough of Solihull"}], "contactPoint": {"@type": "ContactPoint", "telephone": "+44 7352 932003", "contactType": "customer service", "areaServed": "GB", "availableLanguage": "English"}},
     {"@context": "https://schema.org", "@type": "WebSite", "@id": SITE + "/#website", "name": "SQ Driving School", "url": SITE + "/", "publisher": {"@id": SITE + "/#org"}, "inLanguage": "en-GB"},
 ], ensure_ascii=False)
 
@@ -204,6 +204,7 @@ def header(active, root):
 
 def footer(root):
     FOOTER_AREAS = " · ".join(f'<a href="{root}areas/{sl}.html">{nm}</a>' for sl, nm in [("manchester", "Manchester"), ("salford", "Salford"), ("trafford", "Trafford"), ("stockport", "Stockport"), ("tameside", "Tameside"), ("oldham", "Oldham"), ("rochdale", "Rochdale"), ("bury", "Bury"), ("bolton", "Bolton"), ("wigan", "Wigan")]) + f' · <a href="{root}postcodes.html">All postcodes</a> · <a href="{root}driving-lessons-near-me.html">Lessons near me</a> · <a href="{root}areas.html">All neighbourhoods</a>'
+    FOOTER_AREAS += f' · <a href="{root}driving-lessons-solihull.html"><b>Solihull</b> (new)</a>'
     return f"""</main>
 {wave_up()}
 <footer class="footer zone-dark" style="margin-top:0">
@@ -271,7 +272,7 @@ def footer(root):
       </div>
     </div>
     <div class="footer__areas" style="margin-top:44px;padding-top:26px;border-top:1px solid var(--line)">
-      <h4>Driving lessons across Greater Manchester</h4>
+      <h4>Driving lessons across Greater Manchester &amp; Solihull</h4>
       <p style="font-size:.9rem;line-height:2">{FOOTER_AREAS}</p>
     </div>
     <div class="footer__own">

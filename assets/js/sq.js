@@ -551,9 +551,10 @@
     SK14: [B.TAM, "Hyde"], SK15: [B.TAM, "Stalybridge"], SK16: [B.TAM, "Dukinfield"],
     WA14: [B.TRA, "Altrincham"], WA15: [B.TRA, "Hale / Timperley"],
     WN1: [B.WIG, "Wigan Centre"], WN2: [B.WIG, "Hindley / Ince"], WN3: [B.WIG, "Wigan South"], WN4: [B.WIG, "Ashton-in-Makerfield"],
-    WN5: [B.WIG, "Orrell / Pemberton"], WN6: [B.WIG, "Standish / Shevington"], WN7: [B.WIG, "Leigh"]
+    WN5: [B.WIG, "Orrell / Pemberton"], WN6: [B.WIG, "Standish / Shevington"], WN7: [B.WIG, "Leigh"],
+    B36: ["Solihull", "Castle Bromwich / Smith's Wood"], B37: ["Solihull", "Chelmsley Wood / Marston Green"], B40: ["Solihull", "NEC / Bickenhill"], B90: ["Solihull", "Shirley / Monkspath"], B91: ["Solihull", "Solihull Town Centre"], B92: ["Solihull", "Olton / Elmdon"], B93: ["Solihull", "Knowle / Dorridge"], B94: ["Solihull", "Hockley Heath / Earlswood"]
   };
-  var PARTIAL = { WA3: "Golborne / Lowton (Wigan)", WN8: "Upholland", SK12: "Poynton / Disley", SK9: "Wilmslow", OL13: "Bacup", OL14: "Todmorden", WA13: "Lymm" };
+  var PARTIAL = { CV7: "Balsall Common / Meriden (Solihull)", B26: "Sheldon (Solihull border)", B27: "Acocks Green (Solihull border)", B28: "Hall Green (Solihull border)", B33: "Kitts Green (Solihull border)", B34: "Shard End (Solihull border)", WA3: "Golborne / Lowton (Wigan)", WN8: "Upholland", SK12: "Poynton / Disley", SK9: "Wilmslow", OL13: "Bacup", OL14: "Todmorden", WA13: "Lymm" };
   SQ.postcodes = PC;
   SQ.checkPostcode = function (raw) {
     var s = String(raw || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
@@ -613,7 +614,7 @@
             "<a class='btn btn--wa' target='_blank' rel='noopener' href='" + SQ.waLink("Hi! Do you cover postcode " + r.outward + "?") + "'>Ask on WhatsApp</a>";
         } else {
           out.classList.add("result--bad");
-          out.innerHTML = "<span class='tag'>OUTSIDE AREA</span><div class='result__big'>" + r.outward + "</div><p>That postcode is outside Greater Manchester. If you can get to a Manchester pick-up point, message us and we'll see what we can do.</p>";
+          out.innerHTML = "<span class='tag'>OUTSIDE AREA</span><div class='result__big'>" + r.outward + "</div><p>That postcode is outside Greater Manchester and Solihull. If you can get to a Manchester pick-up point, message us and we'll see what we can do.</p>";
         }
       });
     });
@@ -1190,7 +1191,7 @@
       if (r.status === "covered" && r.offer) return "🎉 <b>" + r.outward + "</b> (" + r.area + ") — we cover you <b>and</b> you unlock the special offer: 10 hours for <b>£" + P.blockDiscount + "</b>!<br>" + wa("Hi! My postcode is " + r.outward + " — I'd like the 10 hours for £320 offer.", "Claim on WhatsApp");
       if (r.status === "covered") return "✅ Yes! We cover <b>" + r.outward + "</b> — " + r.area + ", " + r.borough + ". Lessons are £" + P.twoHour + " for 2 hours.<br>" + wa("Hi! My postcode is " + r.outward + " and I'd like to book lessons.", "Book on WhatsApp");
       if (r.status === "partial") return "🤔 <b>" + r.outward + "</b> (" + r.area + ") is on the edge of our area. " + wa("Hi! Do you cover " + r.outward + "?", "Ask us on WhatsApp") + " and we'll confirm.";
-      if (r.status === "outside") return "😕 <b>" + r.outward + "</b> looks outside Greater Manchester. If you can get to a Manchester pick-up point, " + wa("Hi! I'm in " + r.outward + " — could you pick me up somewhere in Manchester?", "message us") + ".";
+      if (r.status === "outside") return "😕 <b>" + r.outward + "</b> looks outside Greater Manchester and Solihull. If you can get to a Manchester pick-up point, " + wa("Hi! I'm in " + r.outward + " — could you pick me up somewhere in Manchester?", "message us") + ".";
       return null;
     }
 
@@ -1523,7 +1524,7 @@
       $("[name='wpostcode']", root).addEventListener("input", function () {
         var r = pcInfo();
         pcOut.innerHTML = r.status === "covered" ? (r.offer ? "🎉 <b>" + r.area + "</b> — you unlock <b>10 hours for £" + SQ.prices.blockDiscount + "</b>!" : "✅ We cover <b>" + r.area + "</b>, " + r.borough + ".") :
-          r.status === "partial" ? "🤔 Edge of our area — we'll confirm." : r.status === "outside" ? "😕 Looks outside Greater Manchester — send it anyway and we'll check." : "";
+          r.status === "partial" ? "🤔 Edge of our area — we'll confirm." : r.status === "outside" ? "😕 Looks outside our areas (Greater Manchester &amp; Solihull) — send it anyway and we'll check." : "";
       });
       function priceText() {
         var pkg = val("wpkg"), r = pcInfo(), disc = val("wdisc");

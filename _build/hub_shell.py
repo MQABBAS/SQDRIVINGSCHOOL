@@ -21,6 +21,17 @@ def booking_block(heading="Book a lesson in 60 seconds", sub="Tell us what you n
 </div></section>"""
 
 
+def wm_portals():
+    return f"""<div class="rx-portals" data-stagger=".08"><div class="rx-portal" data-reveal="up"><div class="eyebrow">Free with every SQ lesson</div><h3>DriveSQ Student Portal</h3>
+<p>Every SQ Driving School learner — in Solihull as well as Greater Manchester — gets the DriveSQ Student Portal free, so you always know exactly how close you are to test standard.</p>
+<ul><li>23 driving skills tracked after every lesson</li><li>Theory library and 50-question mock tests</li><li>Test-readiness checklist and instructor messaging</li></ul>
+<div class="btn-row"><a class="btn btn--red btn--sm" href="{ROOT}student-portal.html">How it works</a><a class="btn btn--ghost btn--sm" href="{RS.STUDENT_PORTAL}" target="_blank" rel="noopener">Student login ↗</a></div></div>
+<div class="rx-portal" data-reveal="up" data-delay=".1"><div class="eyebrow">Instructors wanted · Solihull</div><h3>DriveSQ Instructor Portal</h3>
+<p>DriveSQ is growing in Solihull and taking on more ADIs. New learners are matched to you by postcode, and your whole diary runs in the DriveSQ Instructor Portal.</p>
+<ul><li>New Solihull learners matched by postcode</li><li>Bookings, progress and messaging in one place</li><li>Part of DriveSQ — an established Manchester driving school</li></ul>
+<div class="btn-row"><a class="btn btn--red btn--sm" href="https://www.drivesq.co.uk/driving-instructor-jobs-solihull.html">Teach in Solihull</a><a class="btn btn--ghost btn--sm" href="{RS.INSTRUCTOR_PORTAL}" target="_blank" rel="noopener">Instructor login ↗</a></div></div></div>"""
+
+
 def schema(path, title, desc, faqs, crumbs, kind="Article", extra=None):
     items = [{"@type": "ListItem", "position": 1, "name": "Home", "item": SITE + "/"}]
     for i, (n, href) in enumerate(crumbs):
@@ -40,7 +51,7 @@ def schema(path, title, desc, faqs, crumbs, kind="Article", extra=None):
 
 
 def shell(path, seo_title, cat, crumbs, title, desc, hero_stats, takeaways, body, faqs, sources, related, side_title="Learn with SQ",
-          portal_mode="student", booking_heading=None, kind="Article", extra_schema=None, after_body=""):
+          portal_mode="student", booking_heading=None, kind="Article", extra_schema=None, after_body="", booking_html=None, active="knowledge.html", side_html=None, root=ROOT):
     """crumbs: [(label, href-from-site-root)], last one is this page."""
     body, toc = RS._ids(body)
     mins = RS._minutes(body)
@@ -58,7 +69,7 @@ def shell(path, seo_title, cat, crumbs, title, desc, hero_stats, takeaways, body
   <article>
     <div class="takeaways" data-reveal="up"><h3>Key points</h3><ul>{tk}</ul></div>
     <div class="prose">{body}
-      {RS._portals(portal_mode).replace('href="become-a-driving', 'href="../research/become-a-driving')}
+      {wm_portals() if portal_mode == "wm" else RS._portals(portal_mode).replace('href="become-a-driving', 'href="../research/become-a-driving')}
       {after_body}
       <h2 id="faq">Frequently asked questions</h2><div class="faq">{faq_html}</div>
       <h2 id="sources">Sources</h2><ul class="sources">{src}</ul>
@@ -67,14 +78,16 @@ def shell(path, seo_title, cat, crumbs, title, desc, hero_stats, takeaways, body
   </article>
   <aside>
     <nav class="toc" aria-label="On this page"><h4>On this page</h4><ol>{toc_html}<li><a href="#faq">FAQ</a></li><li><a href="#book">Book a lesson</a></li></ol></nav>
-    <div class="card mt-2"><span class="rx-badge" style="color:var(--red);background:var(--red-soft)"><i></i>SQ · DriveSQ</span><h3 style="font-size:1.1rem;margin-top:10px">{side_title}</h3><p>£35/hr manual or automatic · 10 hours £350 (£320 NHS, students, M16/M18/M19) · free DriveSQ Student Portal.</p><a class="btn btn--red btn--block" href="#book">{icon('calendar')} Book in 60 seconds</a><a class="btn btn--ghost btn--block mt-1" href="https://wa.me/{WA}" data-wa="Hi SQ Driving School! I found you on {title}." target="_blank" rel="noopener">{icon('wa')} WhatsApp us</a></div>
+    <div class="card mt-2"><span class="rx-badge" style="color:var(--red);background:var(--red-soft)"><i></i>SQ · DriveSQ</span><h3 style="font-size:1.1rem;margin-top:10px">{side_title}</h3>{side_html or f'<p>£35/hr manual or automatic · 10 hours £350 (£320 NHS, students, M16/M18/M19) · free DriveSQ Student Portal.</p><a class="btn btn--red btn--block" href="#book">{icon("calendar")} Book in 60 seconds</a>'}<a class="btn btn--ghost btn--block mt-1" href="https://wa.me/{WA}" data-wa="Hi SQ Driving School! I found you on {title}." target="_blank" rel="noopener">{icon('wa')} WhatsApp us</a></div>
   </aside>
 </div></section>
-{booking_block(booking_heading) if booking_heading else booking_block()}
+{booking_html or (booking_block(booking_heading) if booking_heading else booking_block())}
 <section class="section"><div class="container"><div class="section__head"><div class="eyebrow">Keep reading</div><h2 data-split>Related guides.</h2></div><div class="grid grid--3" data-stagger=".06">{rel}</div></div></section>
 {cta(ROOT)}
 <link rel="stylesheet" href="{ROOT}assets/css/research.css"><script src="{ROOT}assets/js/research.js" defer></script>"""
-    return page(path, seo_title, desc, html, ROOT, active="knowledge.html", schema=schema(path, title, desc, faqs, crumbs, kind, extra_schema))
+    if root == "":
+        html = html.replace('href="../', 'href="').replace('src="../', 'src="')
+    return page(path, seo_title, desc, html, root, active=active, schema=schema(path, title, desc, faqs, crumbs, kind, extra_schema))
 
 
 def hub_page(path, seo_title, eyebrow, title, desc, cards, intro_html="", stats=None):
