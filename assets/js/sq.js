@@ -58,11 +58,36 @@
   };
   SQ.phoneOk = function (v) { var d = String(v || "").replace(/\D/g, ""); if (d.indexOf("44") === 0) d = "0" + d.slice(2); return /^0\d{9,10}$/.test(d); };
   SQ.emailOk = function (v) { v = String(v || "").trim(); return !v || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); };
+  /* where the visitor came from — shown in DriveSQ admin → Enquiries ("Source:" / "Landing:" lines) */
+  SQ.source = (function () {
+    var KEY = "sq_src_v1", DAYS = 30;
+    function host(u) { try { return new URL(u).hostname.replace(/^www\./, "").toLowerCase(); } catch (e) { return ""; } }
+    function detect() {
+      var q; try { q = new URLSearchParams(location.search); } catch (e) { q = { get: function () { return null; } }; }
+      var med = (q.get("utm_medium") || "").toLowerCase(), src = (q.get("utm_source") || "").toLowerCase(), ref = host(document.referrer || ""), self = location.hostname.replace(/^www\./, "").toLowerCase();
+      if (q.get("gclid") || q.get("gbraid") || q.get("wbraid") || /^(cpc|ppc|paid|paidsearch|pmax)$/.test(med)) return "Google Ads";
+      if (/^(gbp|google_business|googlemybusiness|gmb)$/.test(src) || /maps\.google|google\.[a-z.]+\/maps/.test(document.referrer || "")) return "Google Maps";
+      if (src) { if (/chatgpt|openai|perplexity|copilot|gemini|claude/.test(src)) return "AI assistant"; if (/instagram|facebook|fb|tiktok|snapchat|youtube/.test(src)) return "Social"; return "Campaign: " + src; }
+      if (!ref || ref === self) return "Direct";
+      if (/(^|\.)google\./.test(ref)) return "Google search";
+      if (/bing\.|duckduckgo\.|yahoo\.|ecosia\./.test(ref)) return "Other search";
+      if (/chatgpt\.com|openai\.com|perplexity\.ai|copilot\.microsoft|gemini\.google|claude\.ai/.test(ref)) return "AI assistant";
+      if (/instagram\.|facebook\.|fb\.|tiktok\.|t\.co$|twitter\.|x\.com|snapchat\.|youtube\.|whatsapp\./.test(ref)) return "Social";
+      return "Referral: " + ref;
+    }
+    var now = Date.now(), found = detect(), prev = null;
+    try { prev = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) {}
+    var fresh = prev && prev.t && now - prev.t < DAYS * 864e5;
+    var rec = (found === "Direct" && fresh) ? prev : (fresh && prev.s === found && prev.l) ? prev : { s: found, l: location.pathname, t: now };
+    try { localStorage.setItem(KEY, JSON.stringify(rec)); } catch (e) {}
+    return rec;
+  })();
   SQ.sendBooking = function (d) {
     var B = SQ.booking, H = { "Content-Type": "application/json", apikey: B.sbKey, Authorization: "Bearer " + B.sbKey, Prefer: "return=minimal" };
     var gear = /auto/i.test(d.gearbox || "") ? "Automatic" : "Manual";
     var notes = ["[WEB][SQ DRIVING SCHOOL] " + d.source + " — sqdrivingschool.com" + location.pathname].concat(d.lines || [],
-      ["Gearbox: " + (d.gearbox || "Not sure"), d.postcode ? "Postcode: " + d.postcode : "", d.email ? "Email: " + d.email : "", d.message ? "Message from learner: " + String(d.message).replace(/\s*\n+\s*/g, " · ").slice(0, 500) : ""]).filter(Boolean).join("\n");
+      ["Gearbox: " + (d.gearbox || "Not sure"), d.postcode ? "Postcode: " + d.postcode : "", d.email ? "Email: " + d.email : "", d.message ? "Message from learner: " + String(d.message).replace(/\s*\n+\s*/g, " · ").slice(0, 500) : "",
+       "Source: " + SQ.source.s, "Landing: sqdrivingschool.com" + SQ.source.l]).filter(Boolean).join("\n");
     var row = { student_name: d.name || null, student_phone: d.phone || null, postcode: d.postcode || null, lesson_type: gear, notes: notes, status: "waiting", created_at: new Date().toISOString() };
     var base = { student_name: row.student_name, student_phone: row.student_phone, notes: notes, status: "waiting" };
     var tries = [row, Object.assign({}, base, { postcode: row.postcode, lesson_type: gear }), Object.assign({}, base, { postcode: row.postcode }), base];
@@ -77,13 +102,13 @@
     [["Name", d.name], ["Phone", d.phone], ["Email", d.email], ["Postcode", d.postcode], ["Gearbox", d.gearbox]].concat((d.lines || []).map(function (l) { var i = l.indexOf(": "); return [l.slice(0, i), l.slice(i + 2)]; })).concat([["Message", d.message]])
       .forEach(function (x) { if (x[1]) fd.append(x[0], x[1]); });
     fd.append("_subject", "New SQ Driving School booking — " + (d.name || "website") + " (" + d.source + ")");
-    fd.append("Source", "sqdrivingschool.com" + location.pathname);
+    fd.append("Source", "sqdrivingschool.com" + location.pathname + " (" + SQ.source.s + ")");
     var mail = fetch(B.formspree, { method: "POST", body: fd, headers: { Accept: "application/json" } }).then(function (r) { if (!r.ok) throw new Error("email " + r.status); return true; });
     return Promise.allSettled([admin, mail]).then(function (res) {
       var ok = res.some(function (x) { return x.status === "fulfilled"; });
       if (ok) {
         try { fetch(B.sbUrl + "/functions/v1/send-push", { method: "POST", keepalive: true, headers: { "Content-Type": "application/json", Authorization: "Bearer " + B.sbKey },
-          body: JSON.stringify({ instructor_id: B.adminId, title: "📅 New SQ Driving School booking", body: (d.name || "New learner") + " · " + (d.postcode || "") + " · " + gear, url: "/admin.html", tag: "drivesq-admin" }) }).catch(function () {}); } catch (e) {}
+          body: JSON.stringify({ instructor_id: B.adminId, title: "📅 New SQ Driving School booking", body: (d.name || "New learner") + " · " + (d.postcode || "") + " · " + gear, url: "/admin.html", tag: "drivesq-admin-" + Date.now() }) }).catch(function () {}); } catch (e) {}
         try { if (window.gtag) gtag("event", "generate_lead", { method: d.source, page: location.pathname }); } catch (e) {}
       } else console.warn("[SQ] booking failed", res);
       return ok;
