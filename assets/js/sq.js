@@ -24,6 +24,13 @@
       blockHours: 10
     },
     offerPostcodes: ["M16", "M18", "M19"],
+    // bookings go to the DriveSQ admin (Website Bookings), the DriveSQ inbox and an instant push to the admin's phone
+    booking: {
+      sbUrl: "https://vwvbfqrlumvoabzkjxoa.supabase.co",
+      sbKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ3dmJmcXJsdW12b2FiemtqeG9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzQ4MzgsImV4cCI6MjA5Njc1MDgzOH0.c5UNle-sh1DYuyqaNYvG9r9ru74EMP89uhdteQu2qho",
+      formspree: "https://formspree.io/f/xvgjdapp",
+      adminId: "00000000-0000-0000-0000-000000000001"
+    },
     // DVSA fees — check gov.uk for the latest
     dvsa: { theory: 23, practicalWeekday: 62, practicalEvening: 75 }
   });
@@ -41,6 +48,47 @@
   var gbp = function (n) { return "£" + Math.round(n).toLocaleString("en-GB"); };
   SQ.gbp = gbp;
   SQ.waLink = function (msg) { return "https://wa.me/" + SQ.wa + "?text=" + encodeURIComponent(msg); };
+
+  /* ------------------------------------------------------
+     BOOKINGS → DriveSQ admin (waiting_list, tagged [WEB][SQ DRIVING SCHOOL]) + email + admin push
+     ------------------------------------------------------ */
+  SQ.fullPostcode = function (v) {
+    var c = String(v || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    return /^[A-Z]{1,2}[0-9][A-Z0-9]?[0-9][A-Z]{2}$/.test(c) ? c.slice(0, -3) + " " + c.slice(-3) : "";
+  };
+  SQ.phoneOk = function (v) { var d = String(v || "").replace(/\D/g, ""); if (d.indexOf("44") === 0) d = "0" + d.slice(2); return /^0\d{9,10}$/.test(d); };
+  SQ.emailOk = function (v) { v = String(v || "").trim(); return !v || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); };
+  SQ.sendBooking = function (d) {
+    var B = SQ.booking, H = { "Content-Type": "application/json", apikey: B.sbKey, Authorization: "Bearer " + B.sbKey, Prefer: "return=minimal" };
+    var gear = /auto/i.test(d.gearbox || "") ? "Automatic" : "Manual";
+    var notes = ["[WEB][SQ DRIVING SCHOOL] " + d.source + " — sqdrivingschool.com" + location.pathname].concat(d.lines || [],
+      ["Gearbox: " + (d.gearbox || "Not sure"), d.postcode ? "Postcode: " + d.postcode : "", d.email ? "Email: " + d.email : "", d.message ? "Message from learner: " + String(d.message).replace(/\s*\n+\s*/g, " · ").slice(0, 500) : ""]).filter(Boolean).join("\n");
+    var row = { student_name: d.name || null, student_phone: d.phone || null, postcode: d.postcode || null, lesson_type: gear, notes: notes, status: "waiting", created_at: new Date().toISOString() };
+    var base = { student_name: row.student_name, student_phone: row.student_phone, notes: notes, status: "waiting" };
+    var tries = [row, Object.assign({}, base, { postcode: row.postcode, lesson_type: gear }), Object.assign({}, base, { postcode: row.postcode }), base];
+    var admin = (function attempt(k) {
+      return fetch(B.sbUrl + "/rest/v1/waiting_list", { method: "POST", headers: H, body: JSON.stringify(tries[k]) }).then(function (r) {
+        if (r.ok) return true;
+        if (k + 1 < tries.length && r.status >= 400 && r.status < 500 && r.status !== 401 && r.status !== 403) return attempt(k + 1);
+        throw new Error("admin " + r.status);
+      });
+    })(0);
+    var fd = new FormData();
+    [["Name", d.name], ["Phone", d.phone], ["Email", d.email], ["Postcode", d.postcode], ["Gearbox", d.gearbox]].concat((d.lines || []).map(function (l) { var i = l.indexOf(": "); return [l.slice(0, i), l.slice(i + 2)]; })).concat([["Message", d.message]])
+      .forEach(function (x) { if (x[1]) fd.append(x[0], x[1]); });
+    fd.append("_subject", "New SQ Driving School booking — " + (d.name || "website") + " (" + d.source + ")");
+    fd.append("Source", "sqdrivingschool.com" + location.pathname);
+    var mail = fetch(B.formspree, { method: "POST", body: fd, headers: { Accept: "application/json" } }).then(function (r) { if (!r.ok) throw new Error("email " + r.status); return true; });
+    return Promise.allSettled([admin, mail]).then(function (res) {
+      var ok = res.some(function (x) { return x.status === "fulfilled"; });
+      if (ok) {
+        try { fetch(B.sbUrl + "/functions/v1/send-push", { method: "POST", keepalive: true, headers: { "Content-Type": "application/json", Authorization: "Bearer " + B.sbKey },
+          body: JSON.stringify({ instructor_id: B.adminId, title: "📅 New SQ Driving School booking", body: (d.name || "New learner") + " · " + (d.postcode || "") + " · " + gear, url: "/admin.html", tag: "drivesq-admin" }) }).catch(function () {}); } catch (e) {}
+        try { if (window.gtag) gtag("event", "generate_lead", { method: d.source, page: location.pathname }); } catch (e) {}
+      } else console.warn("[SQ] booking failed", res);
+      return ok;
+    });
+  };
 
   /* ------------------------------------------------------
      THEME
@@ -779,16 +827,31 @@
   }
 
   /* ------------------------------------------------------
-     CONTACT FORM → WhatsApp
+     CONTACT FORM → DriveSQ admin + email (WhatsApp optional)
      ------------------------------------------------------ */
   function contactForm() {
     $$("[data-tool='contact']").forEach(function (form) {
+      var out = $(".js-cstatus", form) || form.appendChild(document.createElement("p"));
+      var say = function (html, good) { out.className = "js-cstatus form-status " + (good ? "is-ok" : "is-err"); out.setAttribute("role", good ? "status" : "alert"); out.innerHTML = html; };
       form.addEventListener("submit", function (e) {
         e.preventDefault();
-        var fd = new FormData(form);
-        var lines = ["Hi SQ Driving School! New enquiry from your website:"];
-        fd.forEach(function (v, k) { if (String(v).trim()) lines.push("• " + k + ": " + v); });
-        window.open(SQ.waLink(lines.join("\n")), "_blank", "noopener");
+        if (form.dataset.sending) return;
+        var g = function (n) { var el = form.querySelector("[name='" + n + "']"); return el ? String(el.value || "").trim() : ""; };
+        var name = g("Name"), phone = g("Phone"), email = g("Email"), pcRaw = g("Postcode"), pc = SQ.fullPostcode(pcRaw);
+        var focus = function (n) { var el = form.querySelector("[name='" + n + "']"); if (el) el.focus(); };
+        if (!/[A-Za-z].*[A-Za-z]/.test(name)) { say("Please enter your name."); return focus("Name"); }
+        if (!SQ.phoneOk(phone)) { say(phone ? "That phone number doesn't look right — please check it." : "Please add your mobile number so we can reply."); return focus("Phone"); }
+        if (!SQ.emailOk(email)) { say("That email doesn't look right — check it or leave it blank."); return focus("Email"); }
+        if (pcRaw && !pc) { say("Please enter your full postcode, e.g. M19 2AB — or leave it blank."); return focus("Postcode"); }
+        var btn = form.querySelector("[type='submit']"), label = btn.innerHTML;
+        form.dataset.sending = "1"; btn.disabled = true; btn.textContent = "Sending…"; out.innerHTML = "";
+        var d = { source: "Website booking form (contact page)", name: name, phone: phone, email: email, postcode: pc, gearbox: g("Gearbox"), message: g("Message"), lines: ["Package: " + g("Interested in")] };
+        SQ.sendBooking(d).then(function (ok) {
+          delete form.dataset.sending; btn.disabled = false; btn.innerHTML = label;
+          var wa = SQ.waLink("Hi SQ Driving School! I've just sent an enquiry on your website — " + name + (pc ? ", " + pc : "") + ".");
+          if (ok) { form.reset(); say("✅ <b>Thanks " + name.split(" ")[0].replace(/[<>&"]/g, "") + " — we've got your enquiry.</b> A real person will call or text you shortly. Want a faster reply? <a href='" + wa + "' target='_blank' rel='noopener'>WhatsApp us</a>.", true); }
+          else say("Sorry — we couldn't send that just now. Please <a href='" + wa + "' target='_blank' rel='noopener'>WhatsApp us</a> or call <a href='tel:" + SQ.phoneIntl + "'>" + SQ.phone + "</a>.");
+        });
       });
     });
   }
@@ -1445,7 +1508,14 @@
       function valid() {
         var s = steps[i];
         if ($("[name='wpostcode']", s)) { var r = pcInfo(); if (r.status === "empty" || r.status === "invalid") { pcOut.innerHTML = "<span class='red'>Please enter a valid postcode.</span>"; return false; } }
-        if ($("[name='wname']", s) && !$("[name='wname']", s).value.trim()) { $("[name='wname']", s).focus(); return false; }
+        if ($("[name='wname']", s)) {
+          var err = $(".js-werr", s), nm = $("[name='wname']", s), ph = $("[name='wphone']", s), em = $("[name='wemail']", s);
+          var fail = function (msg, el) { if (err) err.textContent = msg; el.focus(); return false; };
+          if (!/[A-Za-z].*[A-Za-z]/.test(nm.value)) return fail("Please add your name.", nm);
+          if (ph && !SQ.phoneOk(ph.value)) return fail(ph.value.trim() ? "That mobile number doesn't look right — please check it." : "Please add your mobile number so we can contact you.", ph);
+          if (em && !SQ.emailOk(em.value)) return fail("That email doesn't look right — check it or leave it blank.", em);
+          if (err) err.textContent = "";
+        }
         var radios = $$("input[type='radio']", s);
         if (radios.length && !radios.some(function (r) { return r.checked; })) { s.classList.remove("shake"); void s.offsetWidth; s.style.animation = "shake .4s"; setTimeout(function () { s.style.animation = ""; }, 400); return false; }
         return true;
@@ -1467,14 +1537,30 @@
       function buildSummary() {
         var r = pcInfo();
         var times = $$("[name='wtime']:checked", root).map(function (c) { return c.value; });
-        var rows = [["Name", $("[name='wname']", root).value.trim()], ["Gearbox", val("wtrans")], ["Postcode", (r.outward || "") + (r.area ? " · " + r.area : "")],
+        var ph = $("[name='wphone']", root), em = $("[name='wemail']", root);
+        var rows = [["Name", $("[name='wname']", root).value.trim()]].concat(ph ? [["Mobile", ph.value.trim()]] : []).concat(em && em.value.trim() ? [["Email", em.value.trim()]] : []).concat([["Gearbox", val("wtrans")], ["Postcode", (r.outward || "") + (r.area ? " · " + r.area : "")],
           ["Experience", val("wexp")], ["Package", val("wpkg")], ["Discount", r.offer ? "M16/M18/M19 offer" : (val("wdisc") || "None")], ["Best times", times.join(", ") || "Flexible"],
-          ["Nervous?", $("[name='wnervous']", root).checked ? "Yes — please take it slow" : "No"], ["Estimated price", priceText()]];
+          ["Nervous?", $("[name='wnervous']", root).checked ? "Yes — please take it slow" : "No"], ["Estimated price", priceText()]]);
+        root._rows = rows;
         summary.innerHTML = rows.map(function (x) { return "<div><span>" + x[0] + "</span><b></b></div>"; }).join("");
         $$("b", summary).forEach(function (b, k) { b.textContent = rows[k][1] || "—"; });
         send.href = SQ.waLink("Hi SQ Driving School! I'd like to book lessons:\n" + rows.map(function (x) { return "• " + x[0] + ": " + (x[1] || "—"); }).join("\n"));
       }
       next.addEventListener("click", function () { if (!valid()) return; i = Math.min(steps.length - 1, i + 1); show(i, 1); });
+      var submit = $(".js-wsubmit", root), status = $(".js-wstatus", root), sentSig = "";
+      if (submit) submit.addEventListener("click", function () {
+        var rows = root._rows || [], get = function (k) { for (var x = 0; x < rows.length; x++) if (rows[x][0] === k) return rows[x][1]; return ""; };
+        var sig = rows.map(function (x) { return x[1]; }).join("|");
+        if (sig === sentSig) { status.innerHTML = "✅ Already sent — we'll be in touch shortly."; return; }
+        var r = pcInfo(), lbl = submit.innerHTML; submit.disabled = true; submit.textContent = "Sending…"; status.textContent = "";
+        SQ.sendBooking({ source: "Book in 60 seconds", name: get("Name"), phone: get("Mobile"), email: get("Email"), postcode: SQ.fullPostcode($("[name='wpostcode']", root).value), gearbox: val("wtrans"),
+          lines: ["Package: " + get("Package") + " — " + get("Estimated price"), "Experience: " + get("Experience"), "Discount: " + get("Discount"), "Availability: " + get("Best times"), "Nervous learner: " + get("Nervous?"), r.area ? "Area: " + r.area : ""].filter(Boolean) })
+          .then(function (ok) {
+            submit.disabled = false; submit.innerHTML = lbl;
+            if (ok) { sentSig = sig; root.classList.add("is-sent"); status.className = "js-wstatus form-status is-ok"; status.innerHTML = "✅ <b>Booking request sent!</b> A real person from SQ Driving School will call or text you shortly. Want a faster reply? Send it on WhatsApp too."; }
+            else { status.className = "js-wstatus form-status is-err"; status.innerHTML = "Sorry — we couldn't send that just now. Please send it on WhatsApp below or call <a href='tel:" + SQ.phoneIntl + "'>" + SQ.phone + "</a>."; }
+          });
+      });
       back.addEventListener("click", function () { i = Math.max(0, i - 1); show(i, -1); });
       $$(".choice input[type='radio']", root).forEach(function (r) {
         r.addEventListener("change", function () { if (!$("input[type='checkbox'], input[type='text']", steps[i])) setTimeout(function () { next.click(); }, 260); });

@@ -17,8 +17,8 @@ def wizard_html():
         ("Do you qualify for a discount?", "M16, M18 &amp; M19 postcodes get the offer automatically.", _choices("wdisc", [("NHS", "🏥", "NHS staff", "10 hrs £320"), ("Student", "🎓", "Student", "10 hrs £320"), ("None", "➖", "No discount", "That's fine!")])),
         ("When suits you best?", "Pick any that work.", _choices("wtime", [("Weekday daytime", "☀️", "Weekday daytime", ""), ("Weekday evenings", "🌙", "Weekday evenings", ""), ("Weekends", "🗓️", "Weekends", "")], "checkbox") +
          '<div class="choice mt-2"><input type="checkbox" name="wnervous" id="wnervous" value="yes"><label for="wnervous"><span class="em">💙</span><b>I\'m a bit nervous</b><small>We\'ll take it slow and plan around you</small></label></div>'),
-        ("Last thing — what's your name?", "So we know who we're chatting to.", '<div class="field mt-2"><label for="wname">First name</label><input class="input" id="wname" name="wname" type="text" autocomplete="given-name" placeholder="Your first name"></div>'),
-        ("All set! 🎉", "Check your details, then send them to us on WhatsApp. A real person will reply.", f'<div class="wizard__summary"></div><a class="btn btn--wa btn--block js-wsend" target="_blank" rel="noopener" href="https://wa.me/{WA}">{icon("wa")} Send to SQ on WhatsApp</a><p class="note mt-1 mb-0">Nothing is stored on this website — your details go straight into a WhatsApp message for you to send.</p>'),
+        ("Last thing — how do we reach you?", "So a real person can call or text you to arrange your first lesson.", '<div class="grid grid--2 mt-2" style="gap:12px"><div class="field mb-0"><label for="wname">Full name</label><input class="input" id="wname" name="wname" type="text" autocomplete="name" placeholder="First and last name"></div><div class="field mb-0"><label for="wphone">Mobile number</label><input class="input" id="wphone" name="wphone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07…"></div></div><div class="field mt-2 mb-0"><label for="wemail">Email <span class="note">(optional)</span></label><input class="input" id="wemail" name="wemail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com"></div><p class="js-werr form-status is-err" aria-live="polite"></p>'),
+        ("All set! 🎉", "Check your details, then press send — they go straight to the SQ Driving School booking team.", f'<div class="wizard__summary"></div><button class="btn btn--red btn--block js-wsubmit" type="button">{icon("send") if "send" in ICONS else "📩"} Send my booking request</button><p class="js-wstatus form-status" aria-live="polite"></p><a class="btn btn--wa btn--block mt-1 js-wsend" target="_blank" rel="noopener" href="https://wa.me/{WA}">{icon("wa")} Also send on WhatsApp — fastest reply</a><p class="note mt-1 mb-0">Your details go to SQ Driving School (part of DriveSQ) only, to arrange your lessons. <a href="privacy.html">Privacy</a></p>'),
     ]
     st = "".join(f'<div class="wizard__step"><div class="wizard__q">{q}</div><p class="mb-0">{sub}</p>{body}</div>' for q, sub, body in steps)
     return f"""<div class="tool neon-border wizard" data-tool="wizard" data-reveal="up">
@@ -41,7 +41,7 @@ def book_page():
 <a class="card" href="first-lesson.html" data-reveal="up"><div class="card__icon">{icon('car')}</div><h3>What happens next?</h3><p class="mb-0">See exactly how your first lesson goes.</p></a>
 </div></div></section>"""
     return page("book.html", "Book Driving Lessons Online | 60-Second Booking | SQ Driving School",
-                "Book driving lessons in Greater Manchester in 60 seconds. Choose manual or automatic, check your postcode and discounts, and send your booking on WhatsApp.", body, root)
+                "Book driving lessons in Greater Manchester in 60 seconds. Choose manual or automatic, check your postcode and discounts, and send your booking — a real person replies fast.", body, root)
 
 
 def voucher_page():

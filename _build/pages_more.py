@@ -340,12 +340,15 @@ def contact_page():
     <div class="tool__head"><div class="card__icon">{icon('chat')}</div><h3>Send an enquiry</h3></div>
     <form data-tool="contact">
       <div class="field"><label for="cn">Name</label><input class="input" id="cn" name="Name" autocomplete="name" required></div>
-      <div class="field"><label for="cp">Postcode</label><input class="input" id="cp" name="Postcode" autocomplete="postal-code"></div>
+      <div class="field"><label for="cph">Mobile number</label><input class="input" id="cph" name="Phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07…" required></div>
+      <div class="field"><label for="ce">Email <span class="note">(optional)</span></label><input class="input" id="ce" name="Email" type="email" inputmode="email" autocomplete="email"></div>
+      <div class="field"><label for="cp">Postcode</label><input class="input" id="cp" name="Postcode" autocomplete="postal-code" placeholder="e.g. M19 2AB"></div>
       <div class="field"><label for="cg">Gearbox</label><select class="select" id="cg" name="Gearbox"><option>Manual</option><option>Automatic</option><option>Not sure</option></select></div>
       <div class="field"><label for="ci">I'm interested in</label><select class="select" id="ci" name="Interested in"><option>2-hour lessons (£70)</option><option>10-hour block (£350)</option><option>NHS discount (£320)</option><option>Student discount (£320)</option><option>M16/M18/M19 offer (£320)</option><option>Intensive course</option><option>Single 1-hour session (£40)</option><option>Something else</option></select></div>
       <div class="field"><label for="cm">Message</label><textarea class="textarea" id="cm" name="Message" placeholder="Experience, availability, test date…"></textarea></div>
-      <button class="btn btn--red btn--block" type="submit">{icon('wa')} Send via WhatsApp</button>
-      <p class="note mt-1 mb-0">Nothing is stored on this website. Your message opens in WhatsApp for you to send.</p>
+      <button class="btn btn--red btn--block" type="submit">Send my enquiry</button>
+      <p class="js-cstatus form-status" aria-live="polite"></p>
+      <p class="note mt-1 mb-0">Your details go to SQ Driving School (part of DriveSQ) only, so we can reply. <a href="privacy.html">Privacy</a></p>
     </form>
   </div>
 </div></section>"""
@@ -382,7 +385,7 @@ def privacy_page():
 <h2>Cookies and Google Analytics</h2><p>With your permission, we use <b>Google Analytics</b> and Google Ads measurement to understand how visitors use the site and which adverts work — for example, how many people open the booking form or tap our WhatsApp or call buttons. Google may set cookies and process your IP address and device information to do this.</p>
 <p>These cookies are <b>off by default</b>. They're only switched on if you choose "Accept" on our cookie banner. If you choose "Reject", or ignore the banner, Google Analytics runs without cookies in a restricted mode. You can change your choice at any time with the "Cookie settings" link in the footer.</p>
 <p>Google's own privacy policy explains how it uses data: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
-<h2>Contact forms and WhatsApp</h2><p>When you use our contact form or chat assistant, your message opens in WhatsApp for you to send. Once you send it, we receive it via WhatsApp and use it only to reply to your enquiry and arrange lessons. WhatsApp's own privacy policy applies to messages sent through WhatsApp.</p>
+<h2>Booking and contact forms</h2><p>When you send our booking form (Book in 60 seconds) or contact form, the details you enter — your name, mobile number, optional email, postcode and lesson preferences — are sent securely to <b>DriveSQ</b>, which owns and manages SQ Driving School. They're stored in DriveSQ's booking system (hosted by Supabase in the EU) and copied to our booking inbox (via Formspree) so a real person can contact you and arrange lessons. We use them only for that, never sell them, and delete enquiries that don't go ahead. You can ask us to see or delete your details at any time on WhatsApp or by phone.</p><h2>WhatsApp and the chat assistant</h2><p>If you choose to message us on WhatsApp, we receive your message via WhatsApp and use it only to reply and arrange lessons; WhatsApp's own privacy policy applies. The SQ Assistant chat on this website answers questions in your browser and doesn't send what you type to us.</p>
 <h2>The DriveSQ Student Portal</h2><p>The Student Portal is operated by DriveSQ at drivesq.co.uk. Its own privacy policy applies when you use it.</p>
 <h2>Third-party services</h2><p>This website loads fonts from Google Fonts and the Google tag from Google, which may receive your IP address when they load.</p>
 <h2>Your rights</h2><p>Under UK GDPR you can ask what information we hold about you and ask us to correct or delete it. Message us on {PHONE}.</p>

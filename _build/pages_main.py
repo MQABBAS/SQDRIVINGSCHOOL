@@ -1,4 +1,9 @@
 from layout import *
+import zlib
+
+
+def _pcid(label, big):
+    return format(zlib.crc32(label.encode()), "x") + ("b" if big else "")
 from pages_book import wizard_html
 
 AREAS = ["Manchester", "Salford", "Trafford", "Stockport", "Tameside", "Oldham", "Rochdale", "Bury", "Bolton", "Wigan",
@@ -12,9 +17,9 @@ def marquee():
 
 def postcode_form(big=False, label="Enter your postcode"):
     return f"""<form class="pc-form" data-tool="postcode" novalidate>
-  <div class="field"><label for="pc-{id(label)}{big}">{label}</label>
+  <div class="field"><label for="pc-{_pcid(label, big)}">{label}</label>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <input class="input {'input--big' if big else ''}" id="pc-{id(label)}{big}" name="postcode" autocomplete="postal-code" placeholder="e.g. M19 2AB" style="flex:1;min-width:180px" required>
+      <input class="input {'input--big' if big else ''}" id="pc-{_pcid(label, big)}" name="postcode" autocomplete="postal-code" placeholder="e.g. M19 2AB" style="flex:1;min-width:180px" required>
       <button class="btn btn--red" type="submit">{icon('pin')} Check</button>
     </div>
   </div>
