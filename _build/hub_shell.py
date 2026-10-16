@@ -39,7 +39,7 @@ def schema(path, title, desc, faqs, crumbs, kind="Article", extra=None):
     out = [
         {"@context": "https://schema.org", "@type": kind, "headline": title, "name": title, "description": desc, "datePublished": UPDATED_ISO, "dateModified": UPDATED_ISO,
          "author": {"@type": "Organization", "name": "SQ Driving School", "url": SITE, "parentOrganization": {"@type": "Organization", "name": "DriveSQ", "url": "https://www.drivesq.co.uk"}},
-         "publisher": {"@type": "Organization", "name": "SQ Driving School", "logo": {"@type": "ImageObject", "url": SITE + "/favicon.svg"}},
+         "publisher": {"@type": "Organization", "name": "SQ Driving School", "logo": {"@type": "ImageObject", "url": SITE + "/assets/img/icon-512.png"}},
          "mainEntityOfPage": SITE + "/" + path},
         {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items},
     ]

@@ -28,7 +28,7 @@ def _minutes(html):
 def _schema(title, desc, path, faqs, crumbs):
     return [
         {"@context": "https://schema.org", "@type": "Article", "headline": title, "description": desc, "datePublished": UPDATED_ISO, "dateModified": UPDATED_ISO,
-         "author": {"@type": "Organization", "name": "SQ Driving School", "url": SITE}, "publisher": {"@type": "Organization", "name": "SQ Driving School", "logo": {"@type": "ImageObject", "url": SITE + "/favicon.svg"}},
+         "author": {"@type": "Organization", "name": "SQ Driving School", "url": SITE}, "publisher": {"@type": "Organization", "name": "SQ Driving School", "logo": {"@type": "ImageObject", "url": SITE + "/assets/img/icon-512.png"}},
          "mainEntityOfPage": SITE + "/" + path},
         {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": re.sub("<[^>]+>", "", a)}} for q, a in faqs]},
         {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "item": SITE + "/" + u} for i, (n, u) in enumerate(crumbs)]},

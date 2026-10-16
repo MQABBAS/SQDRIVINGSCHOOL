@@ -110,7 +110,7 @@ def wa_url(msg):
 
 
 ORG_SCHEMA = json.dumps([
-    {"@context": "https://schema.org", "@type": "Organization", "@id": SITE + "/#org", "name": "SQ Driving School", "url": SITE + "/", "logo": SITE + "/favicon.svg",
+    {"@context": "https://schema.org", "@type": "Organization", "@id": SITE + "/#org", "name": "SQ Driving School", "url": SITE + "/", "logo": SITE + "/assets/img/icon-512.png",
      "telephone": "+44 7352 932003", "parentOrganization": {"@type": "Organization", "name": "DriveSQ", "url": "https://www.drivesq.co.uk"},
      "areaServed": [{"@type": "AdministrativeArea", "name": "Greater Manchester"}, {"@type": "AdministrativeArea", "name": "Metropolitan Borough of Solihull"}], "contactPoint": {"@type": "ContactPoint", "telephone": "+44 7352 932003", "contactType": "customer service", "areaServed": "GB", "availableLanguage": "English"}},
     {"@context": "https://schema.org", "@type": "WebSite", "@id": SITE + "/#website", "name": "SQ Driving School", "url": SITE + "/", "publisher": {"@id": SITE + "/#org"}, "inLanguage": "en-GB"},
@@ -150,7 +150,7 @@ def head(title, desc, path, root, schema=None, noindex=False):
 <meta property="og:url" content="{canon}">
 <meta property="og:image" content="{SITE}/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-96x96.png" sizes="96x96" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="{root}site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
