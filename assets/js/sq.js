@@ -86,9 +86,9 @@
     var B = SQ.booking, H = { "Content-Type": "application/json", apikey: B.sbKey, Authorization: "Bearer " + B.sbKey, Prefer: "return=minimal" };
     var gear = /auto/i.test(d.gearbox || "") ? "Automatic" : "Manual";
     var notes = ["[WEB][SQ DRIVING SCHOOL] " + d.source + " — sqdrivingschool.com" + location.pathname].concat(d.lines || [],
-      ["Gearbox: " + (d.gearbox || "Not sure"), d.postcode ? "Postcode: " + d.postcode : "", d.email ? "Email: " + d.email : "", d.message ? "Message from learner: " + String(d.message).replace(/\s*\n+\s*/g, " · ").slice(0, 500) : "",
-       "Source: " + SQ.source.s, "Landing: sqdrivingschool.com" + SQ.source.l]).filter(Boolean).join("\n");
-    var row = { student_name: d.name || null, student_phone: d.phone || null, postcode: d.postcode || null, lesson_type: gear, notes: notes, status: "waiting", created_at: new Date().toISOString() };
+      ["Gearbox: " + (d.gearbox || "Not sure"), d.postcode ? "Postcode: " + d.postcode : "", d.address ? "Address: " + d.address : "", d.email ? "Email: " + d.email : "", d.message ? "Message from learner: " + String(d.message).replace(/\s*\n+\s*/g, " · ").slice(0, 500) : ""],
+      d.tail || [], ["Source: " + SQ.source.s, "Landing: sqdrivingschool.com" + SQ.source.l]).filter(Boolean).join("\n");
+    var row = { student_name: d.name || null, student_phone: d.phone || null, postcode: d.postcode || null, area: d.address || null, lesson_type: gear, notes: notes, status: "waiting", created_at: new Date().toISOString() };
     var base = { student_name: row.student_name, student_phone: row.student_phone, notes: notes, status: "waiting" };
     var tries = [row, Object.assign({}, base, { postcode: row.postcode, lesson_type: gear }), Object.assign({}, base, { postcode: row.postcode }), base];
     var admin = (function attempt(k) {
@@ -99,7 +99,7 @@
       });
     })(0);
     var fd = new FormData();
-    [["Name", d.name], ["Phone", d.phone], ["Email", d.email], ["Postcode", d.postcode], ["Gearbox", d.gearbox]].concat((d.lines || []).map(function (l) { var i = l.indexOf(": "); return [l.slice(0, i), l.slice(i + 2)]; })).concat([["Message", d.message]])
+    [["Name", d.name], ["Phone", d.phone], ["Email", d.email], ["Postcode", d.postcode], ["Address", d.address], ["Gearbox", d.gearbox]].concat((d.lines || []).map(function (l) { var i = l.indexOf(": "); return [l.slice(0, i), l.slice(i + 2)]; })).concat([["Message", d.message]])
       .forEach(function (x) { if (x[1]) fd.append(x[0], x[1]); });
     fd.append("_subject", "New SQ Driving School booking — " + (d.name || "website") + " (" + d.source + ")");
     fd.append("Source", "sqdrivingschool.com" + location.pathname + " (" + SQ.source.s + ")");
@@ -1519,8 +1519,46 @@
     $$("[data-tool='wizard']").forEach(function (root) {
       var steps = $$(".wizard__step", root), bar = $(".wizard__bar span", root), back = $(".js-back", root), next = $(".js-next", root);
       var pcOut = $(".js-wpc", root), summary = $(".wizard__summary", root), send = $(".js-wsend", root), stepNum = $(".js-stepnum", root);
-      var i = 0;
+      var i = 0, picked = [];
       function val(n) { var el = $("[name='" + n + "']:checked", root); return el ? el.value : ""; }
+      /* start-day strip (next 14 days, pick up to 3) — same as DriveSQ's "Book in 60 seconds" */
+      var dates = $(".js-wdates", root);
+      if (dates) {
+        var DN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], MN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        for (var dd = 1; dd <= 14; dd++) {
+          var dt = new Date(); dt.setDate(dt.getDate() + dd);
+          var db = document.createElement("button"); db.type = "button"; db.className = "wdate"; db.setAttribute("aria-pressed", "false");
+          db.setAttribute("data-v", DN[dt.getDay()] + " " + dt.getDate() + " " + MN[dt.getMonth()]);
+          db.innerHTML = "<small>" + DN[dt.getDay()] + "</small><b>" + dt.getDate() + "</b><small>" + MN[dt.getMonth()] + "</small>";
+          db.addEventListener("click", function () {
+            var v = this.getAttribute("data-v"), k = picked.indexOf(v);
+            if (k > -1) picked.splice(k, 1);
+            else { if (picked.length >= 3) { var old = picked.shift(), ob = $(".wdate[data-v='" + old + "']", dates); if (ob) { ob.classList.remove("is-on"); ob.setAttribute("aria-pressed", "false"); } } picked.push(v); }
+            var on = picked.indexOf(v) > -1; this.classList.toggle("is-on", on); this.setAttribute("aria-pressed", String(on));
+          });
+          dates.appendChild(db);
+        }
+      }
+      /* optional note: one-tap starters + live character count */
+      var notesIn = $("[name='wmsg']", root), noteCount = $(".js-wnotecount", root);
+      function noteText() { return notesIn ? notesIn.value.replace(/\s*\n+\s*/g, " · ").replace(/\s{2,}/g, " ").trim().slice(0, 500) : ""; }
+      if (notesIn) {
+        var countNote = function () { if (noteCount) noteCount.textContent = notesIn.value.length; };
+        notesIn.addEventListener("input", countNote);
+        $$("[data-note]", root).forEach(function (c) {
+          c.addEventListener("click", function () {
+            var add = c.getAttribute("data-note"), cur = notesIn.value.replace(/\s+$/, "");
+            if (cur.indexOf(add.trim()) > -1) { notesIn.focus(); return; }
+            notesIn.value = ((cur ? cur + (/[.!?:]$/.test(cur) ? " " : ". ") : "") + add).slice(0, 500);
+            c.classList.add("is-on"); countNote(); notesIn.focus();
+            try { notesIn.setSelectionRange(notesIn.value.length, notesIn.value.length); } catch (e) {}
+          });
+        });
+      }
+      function availText() {
+        var times = $$("[name='wtime']:checked", root).map(function (c) { return c.value; });
+        return [picked.length ? "Start " + picked.join(", ") : "", times.join(", ")].filter(Boolean).join(" · ") || "Flexible";
+      }
       function pcInfo() { return SQ.checkPostcode($("[name='wpostcode']", root).value); }
       function show(n, dir) {
         steps.forEach(function (s, k) { s.classList.toggle("is-active", k === n); s.classList.toggle("is-back", dir < 0); });
@@ -1528,7 +1566,8 @@
         stepNum.textContent = "Step " + (n + 1) + " of " + steps.length;
         back.style.visibility = n === 0 ? "hidden" : "visible";
         next.classList.toggle("hide", n === steps.length - 1);
-        if (n === steps.length - 1) buildSummary();
+        next.textContent = n === steps.length - 2 ? "Send booking request →" : "Next →";
+        if (n === steps.length - 1) { buildSummary(); sendNow(); }
         var f = $("input, button", steps[n]); if (f && n > 0) setTimeout(function () { f.focus({ preventScroll: true }); }, 50);
       }
       function valid() {
@@ -1562,11 +1601,12 @@
       }
       function buildSummary() {
         var r = pcInfo();
-        var times = $$("[name='wtime']:checked", root).map(function (c) { return c.value; });
-        var ph = $("[name='wphone']", root), em = $("[name='wemail']", root);
-        var rows = [["Name", $("[name='wname']", root).value.trim()]].concat(ph ? [["Mobile", ph.value.trim()]] : []).concat(em && em.value.trim() ? [["Email", em.value.trim()]] : []).concat([["Gearbox", val("wtrans")], ["Postcode", (r.outward || "") + (r.area ? " · " + r.area : "")],
-          ["Experience", val("wexp")], ["Package", val("wpkg")], ["Discount", r.offer ? "M16/M18/M19 offer" : (val("wdisc") || "None")], ["Best times", times.join(", ") || "Flexible"],
-          ["Nervous?", $("[name='wnervous']", root).checked ? "Yes — please take it slow" : "No"], ["Estimated price", priceText()]]);
+        var ph = $("[name='wphone']", root), em = $("[name='wemail']", root), st = $("[name='wstreet']", root);
+        var street = st ? st.value.trim().replace(/\s+/g, " ").slice(0, 120) : "", note = noteText();
+        var rows = [["Name", $("[name='wname']", root).value.trim()]].concat(ph ? [["Mobile", ph.value.trim()]] : []).concat(em && em.value.trim() ? [["Email", em.value.trim()]] : []).concat([["Gearbox", val("wtrans")], ["Postcode", (SQ.fullPostcode($("[name='wpostcode']", root).value) || r.outward || "") + (r.area ? " · " + r.area : "")]])
+          .concat(street ? [["Pick-up", street]] : []).concat([
+          ["Experience", val("wexp")], ["Package", val("wpkg")], ["Discount", r.offer ? "M16/M18/M19 offer" : (val("wdisc") || "None")], ["Availability", availText()],
+          ["Nervous?", $("[name='wnervous']", root).checked ? "Yes — please take it slow" : "No"]]).concat(note ? [["Your note", note]] : []).concat([["Estimated price", priceText()]]);
         root._rows = rows;
         summary.innerHTML = rows.map(function (x) { return "<div><span>" + x[0] + "</span><b></b></div>"; }).join("");
         $$("b", summary).forEach(function (b, k) { b.textContent = rows[k][1] || "—"; });
@@ -1574,19 +1614,26 @@
       }
       next.addEventListener("click", function () { if (!valid()) return; i = Math.min(steps.length - 1, i + 1); show(i, 1); });
       var submit = $(".js-wsubmit", root), status = $(".js-wstatus", root), sentSig = "";
-      if (submit) submit.addEventListener("click", function () {
+      function sendNow() {
         var rows = root._rows || [], get = function (k) { for (var x = 0; x < rows.length; x++) if (rows[x][0] === k) return rows[x][1]; return ""; };
         var sig = rows.map(function (x) { return x[1]; }).join("|");
-        if (sig === sentSig) { status.innerHTML = "✅ Already sent — we'll be in touch shortly."; return; }
-        var r = pcInfo(), lbl = submit.innerHTML; submit.disabled = true; submit.textContent = "Sending…"; status.textContent = "";
+        var q = $(".wizard__q", steps[steps.length - 1]);
+        if (sig === sentSig) { status.className = "js-wstatus form-status is-ok"; status.innerHTML = "✅ Already sent — we'll be in touch shortly."; return; }
+        var r = pcInfo(), nerv = $("[name='wnervous']", root).checked;
+        if (q) q.textContent = "Sending your booking…";
+        submit.classList.add("hide"); submit.disabled = true; status.className = "js-wstatus form-status"; status.textContent = "Sending your booking…";
         SQ.sendBooking({ source: "Book in 60 seconds", name: get("Name"), phone: get("Mobile"), email: get("Email"), postcode: SQ.fullPostcode($("[name='wpostcode']", root).value), gearbox: val("wtrans"),
-          lines: ["Package: " + get("Package") + " — " + get("Estimated price"), "Experience: " + get("Experience"), "Discount: " + get("Discount"), "Availability: " + get("Best times"), "Nervous learner: " + get("Nervous?"), r.area ? "Area: " + r.area : ""].filter(Boolean) })
+          address: get("Pick-up"), message: noteText(),
+          lines: ["Package: " + get("Package") + " — " + get("Estimated price"), "Experience: " + get("Experience"), "Discount: " + get("Discount"),
+            "Nervous learner: " + (nerv ? "yes — please take it slow" : "no"), "Availability: " + availText(), r.area ? "Area: " + r.area : ""].filter(Boolean),
+          tail: ["🎟️ Free Hour Draw: ticket reserved — click Lesson booked once their first lesson is booked"] })
           .then(function (ok) {
-            submit.disabled = false; submit.innerHTML = lbl;
-            if (ok) { sentSig = sig; root.classList.add("is-sent"); status.className = "js-wstatus form-status is-ok"; status.innerHTML = "✅ <b>Booking request sent!</b> A real person from SQ Driving School will call or text you shortly. Want a faster reply? Send it on WhatsApp too."; }
-            else { status.className = "js-wstatus form-status is-err"; status.innerHTML = "Sorry — we couldn't send that just now. Please send it on WhatsApp below or call <a href='tel:" + SQ.phoneIntl + "'>" + SQ.phone + "</a>."; }
+            submit.disabled = false;
+            if (ok) { sentSig = sig; root.classList.add("is-sent"); if (q) q.textContent = "Booking received! 🎉"; status.className = "js-wstatus form-status is-ok"; status.innerHTML = "✅ <b>Booking request sent!</b> A real person from SQ Driving School will call or text you shortly. Want a faster reply? Send it on WhatsApp too."; }
+            else { if (q) q.textContent = "Nearly there…"; submit.classList.remove("hide"); status.className = "js-wstatus form-status is-err"; status.innerHTML = "Sorry — we couldn't send that just now. Try again, send it on WhatsApp below or call <a href='tel:" + SQ.phoneIntl + "'>" + SQ.phone + "</a>."; }
           });
-      });
+      }
+      if (submit) submit.addEventListener("click", sendNow);
       back.addEventListener("click", function () { i = Math.max(0, i - 1); show(i, -1); });
       $$(".choice input[type='radio']", root).forEach(function (r) {
         r.addEventListener("change", function () { if (!$("input[type='checkbox'], input[type='text']", steps[i])) setTimeout(function () { next.click(); }, 260); });

@@ -1123,3 +1123,21 @@ input, select, textarea { max-width: 100%; min-width: 0; }
 [data-theme="dark"] .form-status.is-ok { color:#bbf7d0; background:rgba(34,197,94,.12); border-color:rgba(34,197,94,.4); }
 [data-theme="dark"] .form-status.is-err { color:#fca5a5; }
 .wizard.is-sent .js-wsubmit { opacity:.6; }
+/* Book in 60 seconds — start-day strip, quick-note chips (matches DriveSQ's booking) */
+.wdates { display:flex; gap:8px; overflow-x:auto; padding:6px 2px 10px; margin:14px 0 4px; scroll-snap-type:x mandatory; scrollbar-width:thin; -webkit-overflow-scrolling:touch; }
+.wdate { flex:none; scroll-snap-align:start; width:64px; padding:8px 0; border-radius:16px; border:2px solid var(--line-2); background:var(--bg-2); color:var(--white); display:flex; flex-direction:column; align-items:center; gap:1px; cursor:pointer; font:inherit; transition:all .25s var(--ease); }
+.wdate small { font-size:.66rem; color:var(--grey); text-transform:uppercase; letter-spacing:.06em; }
+.wdate b { font-family:'Russo One',sans-serif; font-size:1.4rem; line-height:1.1; }
+.wdate:hover, .wdate:focus-visible { border-color:var(--red); transform:translateY(-2px); outline:none; }
+.wdate.is-on { border-color:var(--red); background:var(--red); color:#fff; box-shadow:0 10px 22px -12px var(--red-glow); }
+.wdate.is-on small { color:rgba(255,255,255,.85); }
+.wnotechips { display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 8px; }
+.wnotechips button { border:1px solid var(--line-2); background:var(--bg-2); color:var(--white); border-radius:999px; padding:7px 12px; font:inherit; font-size:.82rem; font-weight:600; cursor:pointer; min-height:36px; transition:border-color .2s, transform .2s; }
+.wnotechips button:hover, .wnotechips button:focus-visible { border-color:var(--red); transform:translateY(-1px); outline:none; }
+.wnotechips button.is-on { border-color:var(--red); background:var(--red-soft); }
+textarea.wnotes { min-height:92px; }
+.wnotecount { text-align:right; font-size:.72rem; color:var(--grey); margin-top:4px; }
+.wfh-mini { font-size:.86rem; margin:6px 0 4px; }
+@media (max-width:420px) { .wnotechips button { font-size:.76rem; padding:6px 10px; } }
+@media (prefers-reduced-motion:reduce) { .wdate, .wnotechips button { transition:none; } .wdate:hover, .wnotechips button:hover { transform:none; } }
+.wizard .js-wsend, .wizard .js-wsubmit { white-space:normal; text-align:center; }
