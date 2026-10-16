@@ -246,26 +246,26 @@ AREAS = [
     dict(slug="knowle", name="Knowle", pcs=["B93"], centre="shirley",
          intro="Knowle is a historic village in south Solihull. Its High Street is busy and narrow, and the roads around it mix village streets with faster rural lanes.",
          local="We use Knowle's quieter residential roads for early lessons, then the village centre for parked-car clearance and pedestrian awareness, and the surrounding lanes for bends and national speed limits.",
-         roads=["Warwick Road through Knowle", "Station Road", "Kenilworth Road", "Hampton Road"],
+         roads=["Warwick Road (A4141) / High Street — 20mph", "Station Road", "Kenilworth Road", "Lodge Road"],
          near=["Knowle village High Street", "Dorridge station (nearby)", "M42 junctions 4 and 5"],
          angle="Knowle learners usually test at Shirley; Warwick is an alternative."),
     dict(slug="dorridge", name="Dorridge", pcs=["B93"], centre="shirley",
          intro="Dorridge, next to Knowle and Bentley Heath, is a quiet commuter village with a station on the Chiltern line — perfect for calm first lessons.",
          local="Wide residential roads and gentle traffic make Dorridge one of the best places in Solihull for a nervous beginner. We progress to Knowle's village centre and the lanes towards Hockley Heath.",
-         roads=["Station Road", "Four Ashes Road", "Avenue Road", "Grove Road"],
-         near=["Dorridge station", "Station Road shops", "Bentley Heath"],
+         roads=["Four Ashes Road", "Mill Lane", "Widney Road", "Station Road"],
+         near=["Dorridge station (opened 1852)", "Drum & Monkey, Four Ashes Road", "Bentley Heath"],
          angle="Dorridge learners usually test at Shirley."),
     dict(slug="chelmsley-wood", name="Chelmsley Wood", pcs=["B37", "B36"], centre="garretts-green",
          intro="Chelmsley Wood in north Solihull has its own town centre, and is minutes from Birmingham Airport, the NEC and the M6 and M42. Garretts Green is usually the nearest test centre.",
          local="Estates with mini-roundabouts and parked cars make great early practice. Later lessons use the faster roads towards the A45, the M6 and the M42 — the same kind of roads you'll meet on a Garretts Green test.",
          roads=["Chester Road (A452)", "Moorend Avenue", "Chelmsley Road", "Coleshill Heath Road"],
-         near=["Chelmsley Wood Shopping Centre", "Solihull College Woodlands campus (Smith's Wood)", "Birmingham Airport and the NEC"],
+         near=["Chelmsley Wood shopping centre and bus interchange", "Solihull College Woodlands campus (Smith's Wood)", "Marston Green station"],
          angle="Chelmsley Wood learners usually test at Garretts Green — we focus lessons on its roads."),
     dict(slug="castle-bromwich", name="Castle Bromwich", pcs=["B36"], centre="garretts-green",
          intro="Castle Bromwich, on the north-west edge of the borough, is close to the M6 and the A452 Chester Road — busy roads that make confident drivers.",
          local="Quiet residential streets for the basics, then the A452 Chester Road dual carriageway and the junctions near the M6 for faster, multi-lane driving.",
-         roads=["Chester Road (A452)", "Bradford Road"],
-         near=["Castle Bromwich Hall", "M6 nearby", "Chester Road shops"],
+         roads=["Chester Road (A452)", "Bradford Road (B4114)", "Hall Road"],
+         near=["Castle Bromwich Hall Gardens", "St Mary & St Margaret church (Grade I)", "Bradford Arms"],
          angle="Castle Bromwich learners usually book Garretts Green."),
     dict(slug="kingshurst-smiths-wood", name="Kingshurst and Smith's Wood", pcs=["B36", "B37"], centre="garretts-green",
          intro="Kingshurst, Smith's Wood and Fordbridge sit between Castle Bromwich and Chelmsley Wood. Solihull College's Woodlands campus is in Smith's Wood, so many of our learners here are students.",
@@ -276,7 +276,7 @@ AREAS = [
     dict(slug="marston-green", name="Marston Green", pcs=["B37"], centre="garretts-green",
          intro="Marston Green is a village beside Birmingham Airport and the NEC, with its own station. Airport and NEC traffic makes for great hazard-awareness practice.",
          local="Quiet village roads first, then the routes towards the A45, the airport and the NEC — taxis, coaches and drivers who don't know where they're going.",
-         roads=["Station Road", "Elmdon Road", "Coleshill Road"],
+         roads=["Station Road", "Elmdon Road", "Holly Lane", "Chester Road (A452)"],
          near=["Marston Green station", "Birmingham Airport", "NEC and Resorts World"],
          angle="Marston Green learners usually test at Garretts Green."),
     dict(slug="dickens-heath", name="Dickens Heath", pcs=["B90"], centre="shirley",
@@ -294,20 +294,20 @@ AREAS = [
     dict(slug="balsall-common", name="Balsall Common", pcs=["CV7"], centre=None,
          intro="Balsall Common is Solihull's rural south-east, near Berkswell, Kenilworth and Coventry. Country lanes, the A452 and village traffic make it a different kind of learning.",
          local="Rural lanes teach bends, national speed limits, cyclists and horse riders; the A452 Kenilworth Road gives faster main-road driving. For towns, we head to Solihull or Coventry.",
-         roads=["Kenilworth Road (A452)", "Station Road", "Kelsey Lane"],
+         roads=["Kenilworth Road (A452) — HS2 contraflow to Aug 2027", "Station Road", "Kelsey Lane"],
          near=["Berkswell station", "Balsall Common village centre", "Coventry (nearby)"],
          angle="Balsall Common learners choose between Shirley, Coventry and Warwick — see our comparison."),
     dict(slug="hockley-heath", name="Hockley Heath", pcs=["B94"], centre="shirley",
          intro="Hockley Heath is a village on the Stratford Road south of the M42, surrounded by country lanes.",
          local="The Stratford Road through the village, the approach to M42 junction 4 and country lanes towards Earlswood and Lapworth cover almost every type of road on the test.",
-         roads=["Stratford Road", "Spring Lane", "Box Trees Road"],
-         near=["Hockley Heath village", "M42 junction 4", "Blythe Valley Park"],
+         roads=["Stratford Road through the village", "B4439 towards Lapworth", "Box Trees Road (40mph)"],
+         near=["Stratford-upon-Avon Canal (Bridge 25)", "M42 junction 4", "Blythe Valley Park"],
          angle="Hockley Heath learners usually test at Shirley; Redditch is an alternative."),
     dict(slug="meriden", name="Meriden", pcs=["CV7"], centre=None,
          intro="Meriden, between Solihull and Coventry, is a village known for its 'centre of England' marker on the green. It's surrounded by fast roads and lanes.",
          local="Village roads for the basics, then country lanes and the faster roads towards the A45 — ideal for building speed judgement.",
-         roads=["Main Road", "Fillongley Road", "Birmingham Road"],
-         near=["Meriden village green", "A45", "Coventry (nearby)"],
+         roads=["London Road", "Fillongley Road", "A45 (Meriden bypass, 1958)"],
+         near=["Centre-of-England cross on the village green", "A45 dual carriageway", "Coventry (nearby)"],
          angle="Meriden learners often test at Coventry or Shirley."),
 ]
 
@@ -322,9 +322,10 @@ def area_page(a):
                    else f'<p>{a["angle"]} <a href="solihull-driving-test-centres-compared.html">Compare Solihull test centres</a>.</p>')
     body = f"""
 <p class="lead">{a['intro']}</p>
-<div class="rx-figs" data-stagger=".06"><div class="rx-fig" data-reveal="up"><b>£35</b><span>per hour, manual or automatic</span></div><div class="rx-fig" data-reveal="up"><b>£350</b><span>10-hour block (£320 NHS &amp; students)</span></div><div class="rx-fig" data-reveal="up"><b>{' / '.join(a['pcs'])}</b><span>postcodes covered</span></div><div class="rx-fig" data-reveal="up"><b>{c['rate'] if c else '—'}{'%' if c else ''}</b><span>{(c['name'] + ' test centre pass rate') if c else 'see comparison'}</span></div></div>
+<div class="rx-figs" data-stagger=".06"><div class="rx-fig" data-reveal="up"><b>£35</b><span>per hour, manual or automatic</span></div><div class="rx-fig" data-reveal="up"><b>£350</b><span>10-hour block (£320 NHS &amp; students)</span></div><div class="rx-fig" data-reveal="up"><b>{a.get('pop') or ' / '.join(a['pcs'])}</b><span>{a.get('pop_label') or 'postcodes covered'}</span></div><div class="rx-fig" data-reveal="up"><b>{c['rate'] if c else '—'}{'%' if c else ''}</b><span>{(c['name'] + ' test centre pass rate') if c else 'see comparison'}</span></div></div>
 <h2>Driving lessons in {n}: where you'll learn</h2>
 <p>{a['local']}</p>
+{a.get('extra', '')}
 <p>Roads we use around {n}:</p><ul>{roads}</ul>
 <h2>Landmarks and pick-up points in {n}</h2>
 <p>We pick you up from home, school, college or work — door to door. Popular spots:</p>
@@ -334,7 +335,7 @@ def area_page(a):
 <h2>Manual and automatic lessons in {n}</h2>
 <p>Both cost the same: £35 an hour, £70 for 2 hours, £350 for 10 hours. Automatic is popular with nervous learners and anyone who wants to pass faster — see <a href="automatic-driving-lessons-solihull.html">automatic driving lessons in Solihull</a>. In a hurry? Try an <a href="intensive-driving-courses-solihull.html">intensive course</a>.</p>
 <h2>What makes SQ different in {n}</h2>
-<ul class="check"><li>Free DriveSQ Student Portal: 23 skills tracked after every lesson, theory practice and a test-readiness checklist.</li><li>Lessons planned around your test centre's real roads.</li><li>Mock test before your real one.</li><li>Same transparent prices as our Manchester learners — no hidden fees.</li></ul>"""
+<ul class="check"><li>Free <a href="../student-portal.html">DriveSQ Student Portal</a>: 23 skills tracked after every lesson, theory practice and a test-readiness checklist — see exactly when you're ready for {(c or CENTRES[0])['name']}.</li><li>Instructors run their diaries in the DriveSQ Instructor Portal, so lesson times, progress notes and messages are always up to date.</li><li>Lessons planned around your test centre's real roads.</li><li>Mock test before your real one.</li><li>Same transparent prices as our Manchester learners — no hidden fees.</li></ul>"""
     faqs = [(f"How much are driving lessons in {n}?", "£35 an hour for manual or automatic, £70 for 2 hours, and £350 for 10 hours (£320 for NHS staff and students)."),
             (f"Do you offer automatic driving lessons in {n}?", "Yes — automatic and manual lessons are the same price."),
             (f"Which test centre is nearest to {n}?", (f"Usually {c['full']} ({c['address']})." if c else "Coventry, Warwick or Shirley, depending on where you live.")),
@@ -442,15 +443,17 @@ def pillar():
     areas = "".join(f'<a class="rx-study" href="solihull/driving-lessons-{a["slug"]}.html" data-reveal="up"><span class="k-cat">{" / ".join(a["pcs"])}</span><h3>{a["name"]}</h3><p>{a["intro"][:110].rsplit(" ", 1)[0]}…</p></a>' for a in AREAS)
     cen = "".join(f'<a class="rx-study" href="solihull/{c["slug"]}-driving-test-centre-routes.html" data-reveal="up"><span class="k-cat">{c["pc"]} · {c["rate"]}%</span><h3>{c["name"]} test centre</h3><p>{len(c["roads"])} roads, mistakes and landmarks.</p></a>' for c in CENTRES)
     body = f"""
-<p class="lead">SQ Driving School — part of DriveSQ — now teaches across Solihull: Shirley, Solihull town centre, Olton, Knowle, Dorridge, Chelmsley Wood, Castle Bromwich, Kingshurst, Marston Green, Dickens Heath, Monkspath, Hockley Heath, Balsall Common and Meriden. Manual or automatic, £35 an hour, door-to-door pick-up and the free DriveSQ Student Portal.</p>
-{RS._figs([("£35", "per hour, manual or automatic", "Same price either way"), ("£350", "10-hour block", "£320 NHS staff & students"), ("58.1%", "Shirley test pass rate 2024-25", "UK 48.7%"), ("14", "Solihull areas covered", "B90–B94, B36, B37, CV7")])}
+<p class="lead">SQ Driving School — part of DriveSQ — now teaches across Solihull, from Shirley, Solihull town centre, Olton, Knowle and Dorridge to Chelmsley Wood, Castle Bromwich, Kingshurst, Marston Green, Balsall Common, Meriden and every village in between. Manual or automatic, £35 an hour, door-to-door pick-up and the free DriveSQ Student Portal.</p>
+{RS._figs([("£35", "per hour, manual or automatic", "Same price either way"), ("£350", "10-hour block", "£320 NHS staff & students"), ("58.1%", "Shirley test pass rate 2024-25", "UK 48.7%"), (str(len(AREAS)), "Solihull areas covered", "B90–B94, B36, B37, B40, CV7")])}
 <h2>Driving lessons in every part of Solihull</h2>
 <div class="grid grid--3" data-stagger=".04">{areas}</div>
 <h2>Driving test centres for Solihull learners</h2>
 <p>Shirley is the borough's own centre; north Solihull learners usually book Garretts Green. Every guide lists the roads on reported routes, landmarks and the mistakes learners make. <a href="solihull/solihull-driving-test-centres-compared.html">Compare them all</a>.</p>
 <div class="grid grid--2" data-stagger=".05">{cen}</div>
+<h2>Every Solihull guide</h2>
+<p>Postcode districts, schools and colleges, workplaces, ten road guides and more: <a href="solihull/all-solihull-guides.html">see every Solihull guide</a> · <a href="solihull/solihull-road-guides.html">Solihull road guides</a> · <a href="solihull/driving-lesson-prices-solihull.html">Solihull prices</a> · <a href="solihull/drivesq-student-portal-solihull.html">DriveSQ Student Portal</a> · <a href="solihull/drivesq-instructor-portal-solihull.html">DriveSQ Instructor Portal</a>.</p>
 <h2>Lessons for every learner</h2>
-<ul><li><a href="solihull/automatic-driving-lessons-solihull.html">Automatic driving lessons in Solihull</a> — same price as manual.</li><li><a href="solihull/intensive-driving-courses-solihull.html">Intensive driving courses in Solihull</a>.</li><li><a href="solihull/motorway-driving-lessons-m42-solihull.html">Motorway lessons on the M42</a>.</li><li><a href="solihull/student-driving-lessons-solihull.html">Student lessons</a> and <a href="solihull/nhs-driving-lessons-solihull.html">NHS staff lessons</a> — 10 hours for £320.</li><li><a href="solihull/learning-to-drive-in-solihull.html">Learning to drive in Solihull: the local guide</a>.</li></ul>
+<ul><li><a href="solihull/automatic-driving-lessons-solihull.html">Automatic driving lessons in Solihull</a> — same price as manual.</li><li><a href="solihull/nervous-driver-lessons-solihull.html">Nervous drivers</a>, <a href="solihull/refresher-driving-lessons-solihull.html">refresher lessons</a>, <a href="solihull/adult-driving-lessons-solihull.html">adults and over-50s</a>, <a href="solihull/evening-weekend-driving-lessons-solihull.html">evenings and weekends</a>, <a href="solihull/semi-intensive-driving-course-solihull.html">semi-intensive courses</a>, <a href="solihull/mock-driving-test-solihull.html">mock tests</a>, <a href="solihull/pass-plus-solihull.html">Pass Plus</a> and <a href="solihull/driving-test-cancellations-shirley.html">finding an earlier test</a>.</li><li><a href="solihull/intensive-driving-courses-solihull.html">Intensive driving courses in Solihull</a>.</li><li><a href="solihull/motorway-driving-lessons-m42-solihull.html">Motorway lessons on the M42</a>.</li><li><a href="solihull/student-driving-lessons-solihull.html">Student lessons</a> and <a href="solihull/nhs-driving-lessons-solihull.html">NHS staff lessons</a> — 10 hours for £320.</li><li><a href="solihull/learning-to-drive-in-solihull.html">Learning to drive in Solihull: the local guide</a>.</li></ul>
 <h2>How lessons work</h2>
 <ol class="rx-steps"><li data-n="1"><h4>Book in 60 seconds</h4><p>Choose manual or automatic and enter your postcode below — a real person replies fast.</p></li><li data-n="2"><h4>First lesson from your door</h4><p>We pick you up anywhere in Solihull.</p></li><li data-n="3"><h4>Track every skill</h4><p>Your instructor logs 23 skills in your DriveSQ Student Portal after every lesson.</p></li><li data-n="4"><h4>Test-route practice and mock test</h4><p>On the real roads around your test centre.</p></li></ol>"""
     faqs = [("Do you offer driving lessons in Solihull?", "Yes. SQ Driving School, part of DriveSQ, teaches across Solihull — manual and automatic."),
@@ -459,7 +462,7 @@ def pillar():
             ("Which Solihull areas do you cover?", ", ".join(a["name"] for a in AREAS) + ".")]
     return S(path, "Driving Lessons Solihull | £35/hr Manual & Automatic | SQ Driving School", "Driving lessons Solihull", None,
              "Driving lessons in Solihull", "Driving lessons across Solihull from £35/hr — manual and automatic, door-to-door pick-up, Shirley test-route practice and the free DriveSQ Student Portal. Part of DriveSQ.",
-             [("£35", "per hour"), ("14", "areas"), ("58.1%", "Shirley pass rate"), ("Free", "Student Portal")],
+             [("£35", "per hour"), (str(len(AREAS)), "areas"), ("58.1%", "Shirley pass rate"), ("Free", "Student Portal")],
              ["Lessons across Solihull from £35/hr, manual or automatic.", "10 hours £350 — £320 for NHS staff and students.", "Shirley test centre had the area's best pass rate in 2024-25 (58.1%).", "Part of DriveSQ — free Student Portal with every lesson."],
              body, faqs, ["census", "story", "pr_shirley", "pr_bham", "cost", "book"],
              [("solihull/learning-to-drive-in-solihull.html", "Guide", "Learning to drive in Solihull", "Local data and roads."), ("solihull/solihull-driving-test-centres-compared.html", "Compare", "Solihull test centres compared", "Pass rates by centre.")],

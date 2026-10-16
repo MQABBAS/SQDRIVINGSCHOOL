@@ -1,7 +1,7 @@
 import os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from layout import SITE
-import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO, pages_knowledge as KN, pages_postcodes as PCD, pages_gearbox as GB, pages_niche as NI, pages_research as RS, pages_toolkit as TK, pages_routes as RT, pages_faults as TF, pages_solihull as SOL
+import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO, pages_knowledge as KN, pages_postcodes as PCD, pages_gearbox as GB, pages_niche as NI, pages_research as RS, pages_toolkit as TK, pages_routes as RT, pages_faults as TF, pages_solihull as SOL, pages_sol_more as SOLM, pages_sol_roads as SOLR
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 pages = {
@@ -59,6 +59,8 @@ pages.update(TK.all_pages())
 pages.update(RT.all_pages())
 pages.update(TF.all_pages())
 pages.update(SOL.all_pages())
+pages.update(SOLM.all_pages())
+pages.update(SOLR.all_pages())
 import pages_sitemap as SM
 pages["sitemap.html"] = SM.html_sitemap(pages)
 for path, html in pages.items():
