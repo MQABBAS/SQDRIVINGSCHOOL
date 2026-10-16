@@ -97,7 +97,7 @@ def _schema(title, desc, path, faqs, dataset=None):
     out = [
         {"@context": "https://schema.org", "@type": "Article", "headline": title, "description": desc, "datePublished": UPDATED_ISO, "dateModified": UPDATED_ISO,
          "author": {"@type": "Organization", "name": "SQ Driving School", "url": SITE, "parentOrganization": {"@type": "Organization", "name": "DriveSQ", "url": "https://www.drivesq.co.uk"}},
-         "publisher": {"@type": "Organization", "name": "SQ Driving School", "logo": {"@type": "ImageObject", "url": SITE + "/favicon.svg"}},
+         "publisher": {"@type": "Organization", "name": "SQ Driving School", "logo": {"@type": "ImageObject", "url": SITE + "/assets/img/icon-512.png"}},
          "mainEntityOfPage": SITE + "/" + path, "about": "Learning to drive in Greater Manchester"},
         {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": re.sub("<[^>]+>", "", a)}} for q, a in faqs]},
         {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [

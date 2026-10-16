@@ -94,7 +94,7 @@ def index():
     root = ""
     schema = [{
         "@context": "https://schema.org", "@type": "DrivingSchool", "name": "SQ Driving School", "url": SITE,
-        "telephone": "+44 7352 932003", "priceRange": "£35–£350", "logo": SITE + "/favicon.svg",
+        "telephone": "+44 7352 932003", "priceRange": "£35–£350", "logo": SITE + "/assets/img/icon-512.png",
         "description": "Fast, modern driving lessons across Greater Manchester. Manual & automatic. NHS & student discounts. Powered by DriveSQ.",
         "areaServed": [{"@type": "AdministrativeArea", "name": "Greater Manchester"}] + [{"@type": "AdministrativeArea", "name": n} for n in ["Manchester", "Salford", "Trafford", "Stockport", "Tameside", "Oldham", "Rochdale", "Bury", "Bolton", "Wigan"]]
             + [{"@type": "Place", "name": h["name"]} for h in __import__("pages_seo").neighbourhoods()]
