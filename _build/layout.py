@@ -248,6 +248,9 @@ def footer(root):
           <li><a href="{root}guides.html">Learner guides</a></li>
           <li><a href="{root}research.html">Driving Data Lab (original research)</a></li>
           <li><a href="{root}knowledge.html">Greater Manchester knowledge hub</a></li>
+          <li><a href="{root}learner-toolkit.html">Learner toolkit (calculators &amp; planners)</a></li>
+          <li><a href="{root}test-routes.html">Driving test routes by centre</a></li>
+          <li><a href="{root}test-faults.html">Why people fail — fault by fault</a></li>
           <li><a href="{root}knowledge/greater-manchester-driving-test-centres.html">Test centre guides</a></li>
           <li><a href="{root}student-portal.html">DriveSQ Student Portal</a></li>
         </ul>
@@ -262,6 +265,7 @@ def footer(root):
           <li><a href="{INSTRUCTOR}" target="_blank" rel="noopener">Instructor login ↗</a></li>
           <li><a href="{root}privacy.html">Privacy</a></li>
           <li><a href="{root}review-policy.html">Review policy</a></li>
+          <li><a href="{root}sitemap.html">Sitemap</a></li>
           <li><a href="#" data-cookie-settings>Cookie settings</a></li>
         </ul>
       </div>

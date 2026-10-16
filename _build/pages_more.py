@@ -17,7 +17,7 @@ BOROUGHS = [
      "The A6, the town-centre gyratory, hilly residential streets and fast dual carriageways around the M60.", ["Bredbury", "West Didsbury"]),
     ("tameside", "Tameside", ["M34", "M43", "OL5", "OL6", "OL7", "SK14", "SK15", "SK16"],
      "Ashton-under-Lyne, Denton, Droylsden, Audenshaw, Hyde, Stalybridge, Dukinfield and Mossley",
-     "Hill starts in Stalybridge and Mossley, Ashton's busy centre and the M60/M67 junctions.", ["Hyde", "Bredbury"]),
+     "Hill starts in Stalybridge and Mossley, Ashton's busy centre and the M60/M67 junctions.", ["Bredbury", "Chadderton"]),
     ("oldham", "Oldham", ["OL1", "OL2", "OL3", "OL4", "OL8", "OL9", "M35"],
      "Oldham centre, Chadderton, Royton, Shaw, Failsworth, Lees, Hollinwood and Saddleworth",
      "Steep hills, the A62 and A627(M), and rural roads out towards Saddleworth.", ["Chadderton", "Rochdale"]),
@@ -44,7 +44,7 @@ CENTRES = [("Cheetham Hill", "North Manchester", "City-centre style traffic, mul
            ("Bolton", "Bolton", "Ring roads, roundabouts and busy town-centre junctions."),
            ("Atherton", "Wigan", "Suburban and semi-rural roads with roundabouts."),
            ("Bury", "Bury", "Ring road, main roads and roads near the M66 and M60."),
-           ("Hyde", "Tameside", "Hilly roads, town centres and roads near the M60 and M67.")]
+           ("Hyde", "Tameside · closed 2022", "Closed for car tests since April 2022. Tameside learners now usually test at Bredbury or Chadderton.")]
 
 
 def tools():

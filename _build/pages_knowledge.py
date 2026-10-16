@@ -99,7 +99,10 @@ def centre_page(c):
     others = [x for x in CENTRES if x[0] != slug and set(x[3]) & set(boroughs)]
     alt = ", ".join(f'<a href="test-centre-{x[0]}.html">{x[1]}</a>' for x in others) or "other nearby centres"
     sk = "".join(f"<li><span>{s}</span></li>" for s in skills)
-    body_html = f"""
+    if slug == "hyde":
+        return _hyde_closed(c, path)
+    deep = f'<div class="callout callout--info"><b>New:</b> our in-depth <a href="../test-routes/{slug}-driving-test-routes.html">{name} test-route guide</a> — the roads on reported routes, tricky junctions, landmarks, pass rate and the mistakes learners make there.</div>'
+    body_html = deep + f"""
 <h2>Who tests at {name}?</h2>
 <p>{intro} Learners from {bl} commonly book here, but there's no catchment area for new bookings — you can book any centre on GOV.UK.</p>
 <h2>What the roads are like</h2>
@@ -127,16 +130,35 @@ def centre_page(c):
     return page(path, f"{name} Driving Test Centre Guide | SQ Driving School", desc, body, "../", active="knowledge.html", schema=sch)
 
 
+def _hyde_closed(c, path):
+    body_html = """
+<div class="callout callout--warn"><b>Hyde driving test centre is closed.</b> The DVSA closed the Hyde car test centre (23 Perrin Street, SK14 1JE) after Sunday 10 April 2022. Some websites still list it — always check GOV.UK.</div>
+<h2>Where Tameside learners test now</h2>
+<p>Most learners from Hyde, Denton, Dukinfield, Stalybridge and Ashton-under-Lyne now book <a href="../test-routes/bredbury-driving-test-routes.html">Bredbury</a> (Lingard Lane, SK6 2QT) or <a href="../test-routes/chadderton-driving-test-routes.html">Chadderton</a> (Broadway Business Park, OL9 9XA). Read the full story in <a href="../test-routes/hyde-driving-test-centre-closed.html">Hyde test centre closed — where to test instead</a>.</p>
+<h2>Learning in Tameside</h2>
+<p>SQ Driving School still covers all of Tameside with door-to-door lessons, then practises the roads around whichever centre you book. See <a href="../areas/tameside.html">driving lessons in Tameside</a>.</p>
+"""
+    faqs = [("Is Hyde driving test centre open?", "No. It closed for car tests after 10 April 2022."),
+            ("Where do Hyde learners take their test now?", "Usually Bredbury or Chadderton.")]
+    title = "Hyde driving test centre (closed)"
+    desc = "Hyde driving test centre closed for car tests in April 2022. Where Tameside learners test now, and how SQ Driving School can help."
+    crumbs = ['<a href="../knowledge.html">Learn</a>', '<a href="greater-manchester-driving-test-centres.html">Test centres</a>', "Hyde (closed)"]
+    takeaways = ["Hyde car test centre closed after 10 April 2022.", "Tameside learners now usually test at Bredbury or Chadderton.", "Some websites still list Hyde — check GOV.UK."]
+    body = _article_shell(path, "Test centre · Tameside", title, desc, takeaways, body_html, faqs, [GOV_FIND_CENTRE, GOV_BOOK, DVSA_STATS], _related_cards(["greater-manchester-driving-test-centres", "driving-test-booking-rules-2026", "why-learners-fail-the-driving-test"]), crumbs, None)
+    sch = _schema(title, desc, path, faqs, [("Home", ""), ("Learn", "knowledge.html"), ("Test centres", "knowledge/greater-manchester-driving-test-centres.html"), ("Hyde (closed)", path)])
+    return page(path, "Hyde Driving Test Centre (Closed 2022) | SQ Driving School", desc, body, "../", active="knowledge.html", schema=sch)
+
+
 def centres_overview():
     path = "knowledge/greater-manchester-driving-test-centres.html"
-    rows = "".join(f'<tr><td><a href="test-centre-{c[0]}.html">{c[1]}</a></td><td>{c[2]}</td><td>{", ".join(c[3])}</td></tr>' for c in CENTRES)
+    rows = "".join(f'<tr><td><a href="test-centre-{c[0]}.html">{c[1]}</a></td><td>{c[2]}</td><td>{", ".join(c[3]) if c[3] else "Closed for car tests in 2022"}</td><td>{"" if not c[3] else f'<a href="../test-routes/{c[0]}-driving-test-routes.html">Route guide →</a>'}</td></tr>' for c in CENTRES)
     finder = ""
     for b in BOROUGHS:
         near = [c for c in CENTRES if b[1] in c[3]]
         finder += f'<details><summary>I live in {b[1]}</summary><div>Most {b[1]} learners test at ' + " or ".join(f'<a href="test-centre-{c[0]}.html">{c[1]}</a>' for c in near) + f'. <a href="../areas/{b[0]}.html">Lessons in {b[1]} →</a></div></details>'
     body_html = f"""
 <h2>All Greater Manchester practical test centres</h2>
-<table><tr><th>Centre</th><th>Area</th><th>Commonly used by learners from</th></tr>{rows}</table>
+<table><tr><th>Centre</th><th>Area</th><th>Commonly used by learners from</th><th>Roads</th></tr>{rows}</table>
 <p>There's no catchment area for new bookings: you can book any centre on GOV.UK. Since June 2026, moving an existing booking is limited to nearby centres — see <a href="driving-test-booking-rules-2026.html">the 2026 rules</a>.</p>
 <h2>Which centre is nearest to me?</h2>
 <div class="faq">{finder}</div>
@@ -145,11 +167,11 @@ def centres_overview():
 <h2>Theory test centres</h2>
 <p>For the theory test, Greater Manchester learners commonly use the Manchester (Ardwick) and Stockport centres. See <a href="theory-test-greater-manchester.html">the theory test guide</a>.</p>
 """
-    faqs = [("How many driving test centres are in Greater Manchester?", "Around ten practical test centres serve Greater Manchester, including Cheetham Hill, West Didsbury, Sale, Bredbury, Chadderton, Rochdale, Bolton, Bury, Hyde and Atherton."),
+    faqs = [("How many driving test centres are in Greater Manchester?", "Nine practical car test centres serve Greater Manchester: Cheetham Hill, West Didsbury, Sale, Bredbury, Chadderton, Rochdale, Bolton, Bury and Atherton. Hyde closed in 2022."),
             ("Can I take my test at any centre?", "Yes, new bookings can be made at any centre. Moving an existing booking is limited to nearby centres.")]
-    takeaways = ["Around ten practical test centres serve Greater Manchester.", "You can book any centre — there's no catchment area for new bookings.", "Compare waiting times at several centres on GOV.UK.", "Official pass rates are in the DVSA's statistics."]
+    takeaways = ["Nine practical car test centres serve Greater Manchester (Hyde closed in 2022).", "You can book any centre — there's no catchment area for new bookings.", "Compare waiting times at several centres on GOV.UK.", "Official pass rates are in the DVSA's statistics."]
     title = "Every Greater Manchester driving test centre"
-    desc = "All Greater Manchester driving test centres — Cheetham Hill, West Didsbury, Sale, Bredbury, Chadderton, Rochdale, Bolton, Bury, Hyde and Atherton — and which to choose."
+    desc = "All Greater Manchester driving test centres — Cheetham Hill, West Didsbury, Sale, Bredbury, Chadderton, Rochdale, Bolton, Bury and Atherton (Hyde closed in 2022) — and which to choose."
     body = _article_shell(path, "Test centres", title, desc, takeaways, body_html, faqs, [GOV_FIND_CENTRE, GOV_BOOK, DVSA_STATS], _related_cards(["driving-test-booking-rules-2026", "driving-test-waiting-times-greater-manchester", "theory-test-greater-manchester"]),
                           [f'<a href="../knowledge.html">Learn</a>', "Test centres"], None)
     sch = _schema(title, desc, path, faqs, [("Home", ""), ("Learn", "knowledge.html"), ("Test centres", path)])

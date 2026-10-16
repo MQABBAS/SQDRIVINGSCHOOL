@@ -1,7 +1,7 @@
 import os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from layout import SITE
-import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO, pages_knowledge as KN, pages_postcodes as PCD, pages_gearbox as GB, pages_niche as NI, pages_research as RS
+import pages_main as M, pages_more as R, pages_extra as X, pages_comfort as C, pages_book as K, pages_seo as SEO, pages_knowledge as KN, pages_postcodes as PCD, pages_gearbox as GB, pages_niche as NI, pages_research as RS, pages_toolkit as TK, pages_routes as RT, pages_faults as TF
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 pages = {
@@ -55,6 +55,11 @@ for a in KN.ARTICLES:
 for c in KN.CENTRES:
     pages[f"knowledge/test-centre-{c[0]}.html"] = KN.centre_page(c)
 pages.update(RS.all_pages())
+pages.update(TK.all_pages())
+pages.update(RT.all_pages())
+pages.update(TF.all_pages())
+import pages_sitemap as SM
+pages["sitemap.html"] = SM.html_sitemap(pages)
 for path, html in pages.items():
     full = os.path.join(OUT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
@@ -68,7 +73,8 @@ for p in pages:
     groups.setdefault(sec, []).append(p)
 index = ""
 for sec, plist in sorted(groups.items()):
-    lm = lambda p: "2026-10-16" if p.startswith("research") or p in ("book.html", "contact.html", "privacy.html") else LASTMOD
+    NEW = ("research", "driving/", "test-routes", "test-faults", "learner-toolkit", "sitemap.html", "knowledge", "test-centres.html")
+    lm = lambda p: "2026-10-16" if p.startswith(NEW) or p in ("book.html", "contact.html", "privacy.html") else LASTMOD
     urls = "".join(f"  <url><loc>{SITE}/{'' if p == 'index.html' else p}</loc><lastmod>{lm(p)}</lastmod></url>\n" for p in sorted(plist))
     open(os.path.join(OUT, f"sitemap-{sec}.xml"), "w").write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     index += f"  <sitemap><loc>{SITE}/sitemap-{sec}.xml</loc><lastmod>{max(lm(p) for p in plist)}</lastmod></sitemap>\n"
