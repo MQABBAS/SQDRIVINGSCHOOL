@@ -892,17 +892,68 @@ main, header, footer, section { position: relative; z-index: 2; }
 .scribble--circle svg { left: -12%; width: 124%; height: 150%; top: -25%; bottom: auto; }
 .scribble.is-in path, .is-in .scribble path { stroke-dashoffset: 0; }
 
-/* Hero car drive-in */
-.hero-car { position: absolute; left: 50%; bottom: -6%; width: min(360px, 70%); transform: translateX(-50%); z-index: 2; }
-.hero-car svg { width: 100%; filter: drop-shadow(0 20px 30px rgba(255, 31, 31, 0.35)); }
+/* Hero car — 3D SQ car: drive in, headlight flash, hazards, 360° turntable spin, idle, drag to spin */
+.hero-car { position: absolute; left: 50%; bottom: -6%; width: min(360px, 70%); transform: translateX(-50%); z-index: 2; --w: 320px; }
 .hero-car.is-driving { animation: drive-in 1.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
 @keyframes drive-in { from { transform: translateX(-260%); } 80% { transform: translateX(-46%); } to { transform: translateX(-50%); } }
+.hc-stage { position: relative; width: 100%; aspect-ratio: 320 / 120; perspective: 1100px; perspective-origin: 50% 35%; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.hero-car.is-dragging .hc-stage { cursor: grabbing; }
+.hc-body { position: absolute; inset: 0; transform-style: preserve-3d; }
+.hc-face { position: absolute; top: 0; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; opacity: 0; will-change: transform; }
+.hc-face.is-on { opacity: 1; }
+.hc-face svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.hc-face--l, .hc-face--r { left: 0; width: 100%; }
+.hc-face--f, .hc-face--b { left: 50%; width: calc(var(--w) * 0.5); margin-left: calc(var(--w) * -0.25); }
+.hc-face--l svg { filter: drop-shadow(0 20px 30px rgba(255, 31, 31, 0.35)); }
+.hc-shadow { position: absolute; left: 8%; right: 8%; bottom: -6%; height: 22%; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.55), rgba(0,0,0,0)); transform: translateZ(-1px); transition: transform .6s; }
 .hero-car .wheel { transform-box: fill-box; transform-origin: center; }
 .hero-car.is-driving .wheel { animation: wheel-spin 0.4s linear 4; }
 @keyframes wheel-spin { to { transform: rotate(360deg); } }
-.hero-car__beam { position: absolute; right: -40%; top: 38%; width: 60%; height: 50%; background: radial-gradient(ellipse at left, rgba(255, 245, 200, 0.55), transparent 70%); filter: blur(6px); opacity: 0; transition: opacity 0.6s 1.6s; pointer-events: none; }
-.hero-car.is-parked .hero-car__beam { opacity: 1; }
+/* lights */
+.hc-head { fill: #fff6c8; transition: fill .2s, filter .2s; }
+.hc-tail { fill: #ff5a5a; }
+.hc-ind { fill: #b86a00; }
+.hero-car.is-parked .hc-head { filter: drop-shadow(0 0 6px rgba(255, 246, 200, .9)); }
+.hero-car.is-parked .hc-tail { filter: drop-shadow(0 0 5px rgba(255, 60, 60, .8)); }
+.hero-car.is-flash .hc-head { animation: hc-flash 1s steps(1) both; }
+@keyframes hc-flash { 0%, 50% { fill: #ffffff; filter: drop-shadow(0 0 14px #fff) drop-shadow(0 0 28px rgba(255,246,200,.9)); } 25%, 75%, 100% { fill: #fff6c8; filter: drop-shadow(0 0 4px rgba(255,246,200,.6)); } }
+.hero-car.is-hazard .hc-ind { animation: hc-hazard .38s steps(1) 5 both; }
+@keyframes hc-hazard { 0% { fill: #ffb400; filter: drop-shadow(0 0 8px #ffb400); } 50% { fill: #b86a00; filter: none; } }
+.hero-car__beam { position: absolute; right: -40%; top: 38%; width: 60%; height: 50%; background: radial-gradient(ellipse at left, rgba(255, 245, 200, 0.55), transparent 70%); filter: blur(6px); opacity: 0; transition: opacity 0.6s; pointer-events: none; }
+.hero-car.is-parked .hero-car__beam { opacity: 1; transition-delay: .3s; }
+.hero-car.is-flash .hero-car__beam { animation: hc-beam 1s steps(1) both; }
+@keyframes hc-beam { 0%, 50% { opacity: 1; filter: blur(4px) brightness(1.6); } 25%, 75% { opacity: .35; } 100% { opacity: 1; } }
+.hero-car.is-spinning .hero-car__beam, .hero-car.is-dragging .hero-car__beam { opacity: 0; transition-delay: 0s; }
+/* spin, settle, idle */
+.hero-car.is-spinning .hc-body { filter: blur(.4px); }
+.hero-car.is-spinning .hc-stage { animation: hc-lift 2.4s cubic-bezier(.65,0,.35,1) both; }
+@keyframes hc-lift { 0% { transform: none; } 50% { transform: translateY(-10px) scale(1.04); } 100% { transform: none; } }
+.hero-car.is-spinning .hc-shadow { transform: translateZ(-1px) scale(.82); }
+.hero-car.is-settle .hc-body { animation: hc-settle .7s cubic-bezier(.3,1.6,.5,1) both; }
+@keyframes hc-settle { 0% { translate: 0 4px; } 40% { translate: 0 -3px; } 70% { translate: 0 1px; } 100% { translate: 0 0; } }
+.hero-car.is-idle .hc-stage { animation: hc-idle 3.2s ease-in-out infinite; }
+@keyframes hc-idle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+.hero-car.is-idle.is-spinning .hc-stage { animation: hc-lift 2.4s cubic-bezier(.65,0,.35,1) both; }
+/* paint gleam sweeping across the side (clipped to the car body) */
+.hc-gleam { transform: skewX(-20deg) translateX(0); transform-box: view-box; }
+.hero-car.is-parked .hc-gleam { animation: hc-gleam 1.3s .25s ease-out both; }
+.hero-car.is-settle .hc-gleam { animation: hc-gleam2 1.3s ease-out both; }
+@keyframes hc-gleam { from { transform: skewX(-20deg) translateX(0); } to { transform: skewX(-20deg) translateX(480px); } }
+@keyframes hc-gleam2 { from { transform: skewX(-20deg) translateX(0); } to { transform: skewX(-20deg) translateX(480px); } }
+/* exhaust puffs while driving in */
+.hc-puffs { position: absolute; left: 2%; bottom: 14%; width: 30px; height: 30px; pointer-events: none; }
+.hc-puffs i { position: absolute; left: 0; bottom: 0; width: 14px; height: 14px; border-radius: 50%; background: rgba(200,200,210,.5); opacity: 0; }
+.hero-car.is-driving .hc-puffs i { animation: hc-puff 1.1s ease-out 2 both; }
+.hero-car.is-driving .hc-puffs i:nth-child(2) { animation-delay: .25s; }
+.hero-car.is-driving .hc-puffs i:nth-child(3) { animation-delay: .5s; }
+@keyframes hc-puff { 0% { opacity: .7; transform: translate(0,0) scale(.4); } 100% { opacity: 0; transform: translate(-40px,-14px) scale(2.2); } }
+/* hint */
+.hc-hint { position: absolute; left: 50%; bottom: -34px; transform: translateX(-50%) translateY(6px); font-size: .74rem; letter-spacing: .04em; color: var(--grey); background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: 5px 12px; opacity: 0; transition: opacity .5s, transform .5s; white-space: nowrap; cursor: pointer; }
+.hero-car.hint-on .hc-hint { opacity: 1; transform: translateX(-50%); }
+.hc-hint:hover, .hc-hint:focus-visible { color: #fff; border-color: var(--red); outline: none; }
 @media (max-width: 900px) { .hero-car { bottom: -2%; width: 62%; } }
+@media (prefers-reduced-motion: reduce) { .hc-body { transition: none !important; } .hc-hint { display: none; } }
+html.a11y-still .hc-hint { display: none; }
 
 /* Accessibility panel */
 .a11y-btn { position: fixed; left: 22px; bottom: 96px; z-index: 940; width: 48px; height: 48px; border-radius: 50%; background: #1f3fbf; color: #fff; display: grid; place-items: center; box-shadow: 0 10px 24px -8px rgba(31, 63, 191, 0.6); }

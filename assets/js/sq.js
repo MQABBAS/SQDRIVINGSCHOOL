@@ -1499,24 +1499,112 @@
      HERO CAR — drives in and parks under the logo
      ------------------------------------------------------ */
   function heroCar() {
+    /* The same SQ car, now a 3D model made of four faces: drives in, flashes its headlights,
+       hazards blink, does a 360° turntable spin, settles on its suspension, then idles.
+       Drag (or swipe) to spin it yourself; tap to replay. */
+    var BODY = '<path d="M16 82c0-14 10-22 26-24l34-24c8-6 18-8 28-8h68c12 0 22 4 30 12l24 20 50 8c16 2 24 12 24 24v10H16z" fill="url(#hcPaint)"/>' +
+      '<path d="M90 34l-26 22h68V30h-24c-6 0-12 2-18 4zM144 30v26h80l-24-18c-6-5-12-8-20-8z" fill="url(#hcGlass)"/>' +
+      '<path d="M138 30v26" stroke="#e3141c" stroke-width="4"/><path d="M60 64h236" stroke="rgba(255,255,255,.18)" stroke-width="2"/>' +
+      '<rect class="hc-head" x="292" y="70" width="16" height="9" rx="3"/><rect class="hc-tail" x="14" y="74" width="10" height="8" rx="2"/>' +
+      '<rect class="hc-ind" x="300" y="82" width="8" height="4" rx="2"/><rect class="hc-ind" x="16" y="84" width="7" height="4" rx="2"/>' +
+      '<rect x="56" y="92" width="44" height="6" rx="3" fill="#b80f15"/>' +
+      '<g class="wheel"><circle cx="80" cy="96" r="20" fill="#0b0b0d"/><circle cx="80" cy="96" r="9" fill="#9a9aa2"/><path d="M80 87v18M71 96h18" stroke="#0b0b0d" stroke-width="3"/></g>' +
+      '<g class="wheel"><circle cx="246" cy="96" r="20" fill="#0b0b0d"/><circle cx="246" cy="96" r="9" fill="#9a9aa2"/><path d="M246 87v18M237 96h18" stroke="#0b0b0d" stroke-width="3"/></g>';
+    var DEFS = '<defs><linearGradient id="hcPaint" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff3b3b"/><stop offset=".55" stop-color="#e3141c"/><stop offset="1" stop-color="#9e0b10"/></linearGradient>' +
+      '<linearGradient id="hcGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2a33"/><stop offset="1" stop-color="#0e0e12"/></linearGradient>' +
+      '<linearGradient id="hcGleam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
+      '<clipPath id="hcClip"><path d="M16 82c0-14 10-22 26-24l34-24c8-6 18-8 28-8h68c12 0 22 4 30 12l24 20 50 8c16 2 24 12 24 24v10H16z"/></clipPath></defs>';
+    var GLEAM = '<g clip-path="url(#hcClip)"><rect class="hc-gleam" x="-90" y="0" width="60" height="120" fill="url(#hcGleam)"/></g>';
+    var SQ = '<text x="160" y="84" font-family="Russo One, Arial Black, sans-serif" font-style="italic" font-size="22" fill="#fff" text-anchor="middle">SQ</text>';
+    var sideL = '<svg viewBox="0 0 320 120" aria-hidden="true">' + DEFS + BODY + GLEAM + SQ + '</svg>';
+    var sideR = '<svg viewBox="0 0 320 120" aria-hidden="true"><g transform="translate(320 0) scale(-1 1)">' + BODY + '</g>' + SQ + '</svg>';
+    var front = '<svg viewBox="0 0 140 120" aria-hidden="true">' +
+      '<rect x="8" y="96" width="22" height="22" rx="5" fill="#0b0b0d"/><rect x="110" y="96" width="22" height="22" rx="5" fill="#0b0b0d"/>' +
+      '<path d="M6 104V72c0-8 4-13 12-14l12-26c2-5 6-7 11-7h58c5 0 9 2 11 7l12 26c8 1 12 6 12 14v32z" fill="url(#hcPaint)"/>' +
+      '<path d="M34 34h72l10 22H24z" fill="url(#hcGlass)"/><rect x="0" y="54" width="10" height="7" rx="3" fill="#b80f15"/><rect x="130" y="54" width="10" height="7" rx="3" fill="#b80f15"/>' +
+      '<rect class="hc-head" x="12" y="66" width="24" height="10" rx="4"/><rect class="hc-head" x="104" y="66" width="24" height="10" rx="4"/>' +
+      '<rect class="hc-ind" x="12" y="79" width="10" height="4" rx="2"/><rect class="hc-ind" x="118" y="79" width="10" height="4" rx="2"/>' +
+      '<rect x="44" y="72" width="52" height="12" rx="3" fill="#141418"/><rect x="50" y="90" width="40" height="11" rx="2" fill="#f4f4f4"/>' +
+      '<text x="70" y="99" font-family="Russo One, Arial Black, sans-serif" font-style="italic" font-size="9" fill="#e3141c" text-anchor="middle">SQ</text></svg>';
+    var rear = '<svg viewBox="0 0 140 120" aria-hidden="true">' +
+      '<rect x="8" y="96" width="22" height="22" rx="5" fill="#0b0b0d"/><rect x="110" y="96" width="22" height="22" rx="5" fill="#0b0b0d"/>' +
+      '<path d="M6 104V72c0-8 4-13 12-14l12-26c2-5 6-7 11-7h58c5 0 9 2 11 7l12 26c8 1 12 6 12 14v32z" fill="url(#hcPaint)"/>' +
+      '<path d="M36 36h68l8 20H28z" fill="url(#hcGlass)"/>' +
+      '<rect class="hc-tail" x="10" y="64" width="26" height="11" rx="4"/><rect class="hc-tail" x="104" y="64" width="26" height="11" rx="4"/>' +
+      '<rect class="hc-ind" x="12" y="78" width="10" height="4" rx="2"/><rect class="hc-ind" x="118" y="78" width="10" height="4" rx="2"/>' +
+      '<rect x="50" y="86" width="40" height="12" rx="2" fill="#ffd400"/><text x="70" y="95.5" font-family="Russo One, Arial Black, sans-serif" font-size="9" fill="#111" text-anchor="middle">SQ</text>' +
+      '<rect x="57" y="66" width="26" height="14" rx="2" fill="#fff"/><text x="70" y="77.5" font-family="Arial Black, sans-serif" font-size="12" fill="#e3141c" text-anchor="middle">L</text></svg>';
     $$("[data-hero-car]").forEach(function (el) {
       el.classList.add("hero-car");
-      el.innerHTML = '<div class="hero-car__beam"></div><svg viewBox="0 0 320 120" aria-hidden="true">' +
-        '<path d="M16 82c0-14 10-22 26-24l34-24c8-6 18-8 28-8h68c12 0 22 4 30 12l24 20 50 8c16 2 24 12 24 24v10H16z" fill="#e3141c"/>' +
-        '<path d="M90 34l-26 22h68V30h-24c-6 0-12 2-18 4zM144 30v26h80l-24-18c-6-5-12-8-20-8z" fill="#141418"/>' +
-        '<rect x="292" y="70" width="16" height="9" rx="3" fill="#fff6c8"/><rect x="14" y="74" width="10" height="8" rx="2" fill="#ff5a5a"/>' +
-        '<text x="160" y="84" font-family="Russo One, Arial Black, sans-serif" font-style="italic" font-size="22" fill="#fff" text-anchor="middle">SQ</text>' +
-        '<rect x="56" y="92" width="44" height="6" rx="3" fill="#b80f15"/>' +
-        '<g class="wheel"><circle cx="80" cy="96" r="20" fill="#0b0b0d"/><circle cx="80" cy="96" r="9" fill="#9a9aa2"/><path d="M80 87v18M71 96h18" stroke="#0b0b0d" stroke-width="3"/></g>' +
-        '<g class="wheel"><circle cx="246" cy="96" r="20" fill="#0b0b0d"/><circle cx="246" cy="96" r="9" fill="#9a9aa2"/><path d="M246 87v18M237 96h18" stroke="#0b0b0d" stroke-width="3"/></g>' +
-        '</svg>';
+      el.innerHTML = '<div class="hero-car__beam"></div>' +
+        '<div class="hc-stage"><div class="hc-shadow"></div><div class="hc-body">' +
+        '<div class="hc-face hc-face--l">' + sideL + '</div>' +
+        '<div class="hc-face hc-face--r">' + sideR + '</div>' +
+        '<div class="hc-face hc-face--f">' + front + '</div>' +
+        '<div class="hc-face hc-face--b">' + rear + '</div>' +
+        '</div><div class="hc-puffs"><i></i><i></i><i></i></div></div>' +
+        '<button type="button" class="hc-hint" aria-label="Spin the SQ car">↻ Drag or tap to spin</button>';
+      var body = $(".hc-body", el), stage = $(".hc-stage", el), hint = $(".hc-hint", el), angle = 0, busy = false, raf = 0;
+      var faces = [$(".hc-face--l", el), $(".hc-face--f", el), $(".hc-face--r", el), $(".hc-face--b", el)];
+      function size() { var w = stage.getBoundingClientRect().width || 300; el.style.setProperty("--w", w + "px"); }
+      size(); window.addEventListener("resize", size);
+      /* Turntable: every 90° of turn shows one view (side → front → other side → rear).
+         Each view turns from edge-on to facing you and back, so there are never two flat panels on screen at once. */
+      function render(a) {
+        var n = ((a % 360) + 360) % 360, seg = Math.floor((n + 45) / 90) % 4, local = n - seg * 90;
+        if (local > 180) local -= 360;
+        var phi = -local * 2;           // 90..-90 across the 90° segment (front swings towards you)
+        faces.forEach(function (f, k) {
+          var on = k === seg;
+          f.classList.toggle("is-on", on);
+          f.style.transform = on ? "rotateY(" + phi + "deg)" : "rotateY(90deg)";
+        });
+        angle = a;
+      }
+      function setAngle(a, ms, ease) {
+        cancelAnimationFrame(raf);
+        if (!ms) { render(a); return; }
+        var from = angle, t0 = performance.now(), f = ease === "snap" ? function (x) { var c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); } : function (x) { return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+        (function step(now) { var x = Math.min(1, (now - t0) / ms); render(from + (a - from) * f(x)); if (x < 1) raf = requestAnimationFrame(step); })(t0);
+      }
+      render(0);
+      function flash(cls, ms) { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(function () { el.classList.remove(cls); }, ms); }
+      function spin(then) {
+        if (busy) return; busy = true;
+        el.classList.add("is-spinning");
+        setAngle(angle + 360, 2400);
+        setTimeout(function () {
+          el.classList.remove("is-spinning"); flash("is-settle", 700); busy = false;
+          angle = 0; setAngle(0, 0);
+          if (then) then();
+        }, 2450);
+      }
+      function show() {
+        flash("is-flash", 1000);                 // headlights blink twice
+        setTimeout(function () { flash("is-hazard", 1900); }, 300);   // hazards
+        setTimeout(function () { spin(function () { el.classList.add("is-idle"); el.classList.add("hint-on"); }); }, 1500);
+      }
       if (reduceMotion) { el.classList.add("is-parked"); return; }
       el.style.visibility = "hidden";
       setTimeout(function () {
         el.style.visibility = "";
         el.classList.add("is-driving");
-        setTimeout(function () { el.classList.add("is-parked"); }, 1700);
+        setTimeout(function () { el.classList.add("is-parked"); show(); }, 1750);
       }, $(".preloader") ? 1000 : 250);
+      // drag / swipe to rotate
+      var dragging = false, sx = 0, sa = 0, moved = 0;
+      stage.addEventListener("pointerdown", function (e) { if (busy) return; dragging = true; moved = 0; sx = e.clientX; sa = angle; el.classList.add("is-dragging"); try { stage.setPointerCapture(e.pointerId); } catch (x) {} });
+      stage.addEventListener("pointermove", function (e) { if (!dragging) return; var dx = e.clientX - sx; moved = Math.max(moved, Math.abs(dx)); setAngle(sa + dx * 0.9, 0); });
+      function end() {
+        if (!dragging) return; dragging = false; el.classList.remove("is-dragging");
+        if (moved < 6) { flash("is-flash", 1000); spin(); return; }
+        var snap = Math.round(angle / 90) * 90; setAngle(snap, 500, "snap");
+        setTimeout(function () { if (!busy) { angle = ((snap % 360) + 360) % 360; setAngle(angle, 0); } }, 520);
+      }
+      stage.addEventListener("pointerup", end); stage.addEventListener("pointercancel", end);
+      hint.addEventListener("click", function () { flash("is-flash", 1000); setTimeout(function () { flash("is-hazard", 1900); }, 200); spin(); });
+      // every so often, a friendly headlight wink
+      setInterval(function () { if (!busy && !dragging && document.visibilityState === "visible" && el.classList.contains("is-idle")) flash("is-flash", 1000); }, 14000);
     });
   }
 
