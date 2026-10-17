@@ -383,7 +383,7 @@ def lesson_pages():
 <h2>Colleges we pick up from</h2>
 <div class="rt-marks"><div class="rt-mark"><b>Solihull College — Blossomfield campus</b><small>Blossomfield Road, a few minutes from Solihull station</small></div><div class="rt-mark"><b>Solihull College — Woodlands campus</b><small>Auckland Drive, Smith's Wood</small></div><div class="rt-mark"><b>Solihull Sixth Form College</b><small>Widney Manor Road, B91</small></div></div>
 <h2>Why learn while you study</h2><p>About 18% of Solihull households had no car or van in 2021 — and young people are the most likely to depend on lifts and buses. A licence opens up jobs at places like the airport, the NEC and JLR's Lode Lane plant, which public transport doesn't always serve at shift times.</p>
-<h2>How to claim</h2><p>Tell us you're a student when you book and show your student ID at your first lesson.</p>""",
+<h2>How to claim</h2><p>Tell us you're a student when you book. We'll check your uni or college student ID to confirm — then your 10 hours are £320.</p>""",
          [("Is there a student discount in Solihull?", "Yes: 10 hours for £320 instead of £350."), ("Can you pick me up from Solihull College?", "Yes, from either campus or the Sixth Form College.")]),
         ("nhs-driving-lessons-solihull", "Driving lessons for NHS staff in Solihull", "NHS Staff Driving Lessons Solihull | £320 for 10 Hours | SQ",
          "NHS staff discount on driving lessons in Solihull — 10 hours for £320 — with lessons around shifts at Solihull Hospital and nearby.",
