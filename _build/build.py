@@ -62,6 +62,11 @@ pages.update(SOL.all_pages())
 pages.update(SOLM.all_pages())
 pages.update(SOLR.all_pages())
 import pages_sitemap as SM
+# hand-written inner-Manchester, Wythenshawe & Altrincham pages replace the templated versions
+import pages_local as LOCAL
+pages.update(LOCAL.all_pages())
+for _d in ("driving-lessons", "automatic-driving-lessons", "manual-driving-lessons"):
+    pages.pop(f"{_d}/chorlton.html", None)  # duplicate of chorlton-cum-hardy; a redirect file is kept in the repo
 pages["sitemap.html"] = SM.html_sitemap(pages)
 for path, html in pages.items():
     full = os.path.join(OUT, path)

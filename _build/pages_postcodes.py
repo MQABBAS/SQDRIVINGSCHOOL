@@ -132,6 +132,12 @@ def postcode_page(entry, all_codes, hoods):
     return page(f"postcodes/{code.lower()}.html", f"{title} | SQ Driving School", desc, body, root, active="areas.html", schema=schema)
 
 
+def inner_guides(root=""):
+    from local_districts import DISTRICTS
+    chips = "".join(f'<a class="chip{" chip--red" if c in OFFER else ""}" href="{root}postcodes/{c.lower()}.html">{c} · {d["short"]}</a>' for c, d in DISTRICTS.items())
+    return f'<section class="section--tight"><div class="container"><div class="section__head"><div class="eyebrow">In-depth local guides</div><h2 data-split>Inner Manchester, Wythenshawe &amp; Altrincham.</h2><p class="lead">Hand-written guides with local roads, hotspots, test centre advice and our own learner data.</p></div><div class="hero__badges">{chips}</div></div></section>'
+
+
 def postcode_index(all_codes, hoods):
     root = ""
     blocks = ""
@@ -143,7 +149,7 @@ def postcode_index(all_codes, hoods):
         blocks += f'<h2 class="mt-3" data-reveal="up" style="font-size:1.6rem">{letter} — {AREA_NAMES[letter]} postcode area</h2><div class="table-wrap" data-reveal="up"><table class="table"><thead><tr><th>District</th><th>Areas</th><th>Borough</th></tr></thead><tbody>{rows}</tbody></table></div>'
     body = page_hero("Postcode directory", "Every Greater Manchester postcode.", f"SQ Driving School covers {len(all_codes)} postcode districts across Greater Manchester. Find yours for local prices, test centres and neighbourhoods.", ["Postcodes"], root)
     body += f"""<section class="section--tight"><div class="container" style="max-width:820px"><div class="tool neon-border" data-reveal="up">{postcode_form(True, "Search your postcode")}</div></div></section>
-<section class="section--tight"><div class="container">{blocks}<p class="note mt-2">Some districts (such as WA3, WN8 and SK12) cross the Greater Manchester boundary — check your full postcode above.</p></div></section>
+{inner_guides()}<section class="section--tight"><div class="container">{blocks}<p class="note mt-2">Some districts (such as WA3, WN8 and SK12) cross the Greater Manchester boundary — check your full postcode above.</p></div></section>
 {cta(root)}"""
     return page("postcodes.html", "Greater Manchester Postcodes | Driving Lessons by Postcode | SQ Driving School",
                 f"Driving lessons in every Greater Manchester postcode district: M, BL, OL, SK, WA and WN. {len(all_codes)} districts covered by SQ Driving School.", body, root, active="areas.html")
