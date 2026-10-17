@@ -233,6 +233,7 @@ def footer(root):
           <li><a href="{root}nhs-driving-lessons.html">NHS staff discount</a></li>
           <li><a href="{root}student-driving-lessons-manchester.html">Student discount</a></li>
           <li><a href="{root}offer-m16-m18-m19.html">M16 · M18 · M19 offer</a></li>
+          <li><a href="{root}free-prize-draw.html">Win a £35 voucher</a></li>
           <li><a href="{root}services.html">All lesson types</a></li>
           <li><a href="{root}areas.html">Areas we cover</a></li>
         </ul>

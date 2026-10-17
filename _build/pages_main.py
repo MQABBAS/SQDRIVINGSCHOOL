@@ -4,7 +4,7 @@ import zlib
 
 def _pcid(label, big):
     return format(zlib.crc32(label.encode()), "x") + ("b" if big else "")
-from pages_book import wizard_html
+from pages_book import wizard_html, draw_banner
 
 AREAS = ["Manchester", "Salford", "Trafford", "Stockport", "Tameside", "Oldham", "Rochdale", "Bury", "Bolton", "Wigan",
          "Levenshulme", "Gorton", "Old Trafford", "Whalley Range", "Didsbury", "Chorlton", "Fallowfield", "Sale", "Altrincham", "Eccles", "Ashton-under-Lyne", "Middleton"]
@@ -247,6 +247,7 @@ def index():
 <section class="section" id="book">
   <div class="container" style="max-width:960px">
     <div class="section__head center"><div class="eyebrow">Book in 60 seconds</div><h2 data-split>Ready? Let's get you booked.</h2><p class="lead">A few taps. We'll check your postcode, your discount and your price as you go.</p></div>
+    {draw_banner()}
     {wizard_html()}
   </div>
 </section>
@@ -416,12 +417,19 @@ def discounts():
     more = [("shield", "Key workers"), ("flag", "Armed forces & veterans"), ("users", "Refer a friend"), ("heart", "Carers"),
             ("book", "Teachers & school staff"), ("target", "Second-time test takers"), ("users", "Family & siblings"), ("bolt", "Emergency services")]
     more_html = "".join(f'<article class="card" data-reveal="zoom"><div class="card__icon">{icon(i)}</div><h3>{t}</h3><p class="mb-0"><span class="tag">Coming soon</span></p></article>' for i, t in more)
-    body = page_hero("Discounts", "More ways to save.", "Our 10-hour block is £350. If you're NHS staff, a student or live in M16, M18 or M19, it's just £320.", ["Discounts"], root)
-    body += f"""<section class="section--tight"><div class="container"><div class="grid grid--3" data-stagger=".1">
+    perks = [("pin", "Door-to-door pick-up", "From home, college or work — anywhere we cover."), ("car", "Manual or automatic", "Same price either way."),
+             ("phone-app", "Free DriveSQ Student Portal", "Track your progress, lessons and test prep from day one."), ("check", "No hidden fees", "The price you're quoted is the price you pay.")]
+    perks_html = "".join(f'<article class="card" data-reveal="up"><div class="card__icon">{icon(i) if i in ICONS else icon("check")}</div><h3>{a}</h3><p class="mb-0">{b}</p></article>' for i, a, b in perks)
+    body = page_hero("Offers &amp; discounts", "More ways to save.", "Our 10-hour block is £350. If you're NHS staff, a student or live in M16, M18 or M19, it's just £320 — and every month one learner wins a £35 lesson voucher.", ["Discounts"], root)
+    body += f"""<section class="section--tight"><div class="container">
+  <div class="offer drawoffer" data-reveal="zoom"><div class="eyebrow">Free monthly prize draw</div><h2>Win a <span class="glow-text">£35</span> lesson voucher</h2><p>Tick the box when you book in 60 seconds and you're in this month's draw. Free to enter — no purchase needed — and you can still use any discount below.</p><div class="btn-row" style="justify-content:center"><a class="btn btn--red" href="book.html">Book &amp; enter the draw</a><a class="btn btn--ghost" href="free-prize-draw.html">How it works</a></div></div>
+</div></section>
+<section class="section--tight"><div class="container"><div class="grid grid--3" data-stagger=".1">
   <article class="card discount neon-border" data-reveal="flip"><div class="card__icon">{icon('heart')}</div><span class="discount__who">NHS discount</span><span class="discount__badge">£320</span><p><s>£350</s> · 10 hours · save £30</p><p>For doctors, nurses, healthcare assistants, porters, admin — anyone who works for the NHS.</p><span class="discount__proof">Proof: NHS ID badge, NHS email address or recent payslip.</span><a class="btn btn--red mt-2" data-wa="Hi! I work for the NHS and I'd like the NHS discount (10 hours for £320)." href="https://wa.me/{WA}">Claim NHS discount</a><a class="red mt-1" href="nhs-driving-lessons.html">Find your hospital →</a></article>
   <article class="card discount neon-border" data-reveal="flip"><div class="card__icon">{icon('grad')}</div><span class="discount__who">Student discount</span><span class="discount__badge">£320</span><p><s>£350</s> · 10 hours · save £30</p><p>Sixth form, college and university students — Manchester, Salford, MMU and beyond.</p><span class="discount__proof">Proof: valid student ID card or enrolment letter.</span><a class="btn btn--red mt-2" data-wa="Hi! I'm a student and I'd like the student discount (10 hours for £320)." href="https://wa.me/{WA}">Claim student discount</a><a class="red mt-1" href="student-driving-lessons-manchester.html">Find your college or uni →</a></article>
   <article class="card discount neon-border" data-reveal="flip"><div class="card__icon">{icon('pin')}</div><span class="discount__who">M16 · M18 · M19 offer</span><span class="discount__badge">£320</span><p><s>£350</s> · 10 hours · save £30</p><p>Old Trafford, Whalley Range, Firswood, Gorton, Abbey Hey, Levenshulme and Burnage.</p><span class="discount__proof">Pick-up address must be in M16, M18 or M19.</span><a class="btn btn--red mt-2" href="offer-m16-m18-m19.html">See the offer</a></article>
 </div></div></section>
+<section class="section section--alt"><div class="container"><div class="section__head center"><div class="eyebrow">Included with every booking</div><h2 data-split>Free with every lesson.</h2><p class="lead">No matter which package you pick.</p></div><div class="grid grid--4" data-stagger=".06">{perks_html}</div></div></section>
 <section class="section"><div class="container"><div class="section__head center"><div class="eyebrow">More discounts</div><h2 data-split>More discounts on the way.</h2><p class="lead">We're adding more ways to save. Message us to ask about them.</p></div><div class="grid grid--4" data-stagger=".05">{more_html}</div></div></section>
 <section class="section section--alt"><div class="container" style="max-width:900px"><div class="section__head"><div class="eyebrow">How to claim</div><h2 data-split>Three steps.</h2></div>
 <div class="timeline"><div class="timeline__fill"></div>
@@ -429,7 +437,7 @@ def discounts():
 <div class="step" data-reveal="left"><div class="step__dot">2</div><div class="step__body"><h3>Show your proof</h3><p class="mb-0">A quick photo of your ID, or show it at your first lesson.</p></div></div>
 <div class="step" data-reveal="left"><div class="step__dot">3</div><div class="step__body"><h3>Start driving for less</h3><p class="mb-0">Your discounted block is booked, and your DriveSQ Student Portal is set up.</p></div></div>
 </div>
-<p class="note mt-3">Terms: one discount per 10-hour block. Discounts can't be combined. Proof of eligibility is required. Discounted blocks are paid in advance. Offers may change; the price you're quoted when you book is the price you pay.</p>
+<p class="note mt-3">Terms: one discount per 10-hour block. Discounts can't be combined with each other (the free prize draw is separate — <a href="free-prize-draw.html#terms">draw terms</a>). Proof of eligibility is required. Discounted blocks are paid in advance. Offers may change; the price you're quoted when you book is the price you pay.</p>
 </div></section>
 {cta(root)}"""
     return page("discounts.html", "NHS & Student Driving Lesson Discounts Manchester | SQ Driving School",

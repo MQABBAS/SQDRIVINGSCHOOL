@@ -116,6 +116,62 @@
   };
 
   /* ------------------------------------------------------
+     FREE PRIZE DRAW (£35 voucher) — opt-in from Book in 60 seconds.
+     Writes a ticket straight into the shared draw (draw_entries), so it shows in admin → Free Hour Draw.
+     ------------------------------------------------------ */
+  SQ.draw = (function () {
+    var B = SQ.booking, H = { apikey: B.sbKey, Authorization: "Bearer " + B.sbKey };
+    function ukMonth(off) {
+      var p = {}; new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", year: "numeric", month: "2-digit" }).formatToParts(new Date()).forEach(function (x) { p[x.type] = +x.value; });
+      var y = p.year, m = p.month + (off || 0); while (m > 12) { m -= 12; y++; }
+      return y + "-" + (m < 10 ? "0" : "") + m;
+    }
+    function phoneKey(v) { var s = String(v || "").replace(/\D/g, ""); if (s.indexOf("44") === 0) s = "0" + s.slice(2); return s; }
+    function monthName(k) { var a = k.split("-"); return new Date(Date.UTC(+a[0], +a[1] - 1, 15)).toLocaleDateString("en-GB", { month: "long", timeZone: "UTC" }); }
+    function get(path) { return fetch(B.sbUrl + "/rest/v1/" + path, { headers: H }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
+    var settings = null;
+    function status() { // { open: bool } — closed only if admin has switched the draw off or paused this month
+      if (!settings) settings = get("draw_settings?id=eq.1&select=enabled,months").then(function (rows) {
+        var s = rows && rows[0]; if (!s) return { open: true };
+        var mo = (s.months || {})[ukMonth(0)] || {};
+        return { open: s.enabled !== false && !mo.paused };
+      });
+      return settings;
+    }
+    function targetMonth() { // like admin: if this month has already been drawn, the ticket goes into next month
+      var k = ukMonth(0);
+      return get("draw_results?month=eq." + k + "&select=status").then(function (rows) {
+        var drawn = (rows || []).some(function (r) { return r.status !== "redrawn" && r.status !== "void"; });
+        return drawn ? ukMonth(1) : k;
+      });
+    }
+    function enter(d) {
+      var pk = phoneKey(d.phone);
+      if (pk.length < 10) return Promise.resolve({ ok: false });
+      return targetMonth().then(function (k) {
+        var mk = k.slice(2, 4) + k.slice(5, 7);
+        function attempt(n) {
+          var tk = "SQ-" + mk + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+          var row = { month: k, ticket_no: tk, student_name: d.name || "Learner", student_phone: d.phone || null, student_email: d.email || null, phone_key: pk,
+            postcode: d.postcode || null, area: d.area || null, lesson_type: /auto/i.test(d.gearbox || "") ? "Automatic" : "Manual",
+            note: "Entered online — ticked the draw box on sqdrivingschool.com Book in 60 seconds", status: "active", created_by: "sqdrivingschool.com" };
+          return fetch(B.sbUrl + "/rest/v1/draw_entries", { method: "POST", headers: Object.assign({ "Content-Type": "application/json", Prefer: "return=minimal" }, H), body: JSON.stringify(row) })
+            .then(function (r) {
+              if (r.ok) return { ok: true, ticket: tk, month: k, monthName: monthName(k) };
+              return r.text().then(function (txt) {
+                if (/one_per_phone/.test(txt)) return { ok: true, dup: true, month: k, monthName: monthName(k) };
+                if (/ticket_no/.test(txt) && n < 2) return attempt(n + 1);
+                return { ok: false };
+              });
+            }).catch(function () { return { ok: false }; });
+        }
+        return attempt(0);
+      });
+    }
+    return { status: status, enter: enter };
+  })();
+
+  /* ------------------------------------------------------
      THEME
      ------------------------------------------------------ */
   var savedTheme = store.get("sq-theme");
@@ -1555,6 +1611,9 @@
           });
         });
       }
+      var drawBox = $(".js-wdraw", root);
+      if (drawBox && SQ.draw) SQ.draw.status().then(function (s) { if (s && !s.open) { drawBox.classList.add("is-hidden"); var cb = $("[name='wdraw']", drawBox); if (cb) cb.checked = false; } });
+      function drawOn() { var cb = $("[name='wdraw']", root); return !!(cb && cb.checked && !(drawBox && drawBox.classList.contains("is-hidden"))); }
       function availText() {
         var times = $$("[name='wtime']:checked", root).map(function (c) { return c.value; });
         return [picked.length ? "Start " + picked.join(", ") : "", times.join(", ")].filter(Boolean).join(" · ") || "Flexible";
@@ -1606,7 +1665,7 @@
         var rows = [["Name", $("[name='wname']", root).value.trim()]].concat(ph ? [["Mobile", ph.value.trim()]] : []).concat(em && em.value.trim() ? [["Email", em.value.trim()]] : []).concat([["Gearbox", val("wtrans")], ["Postcode", (SQ.fullPostcode($("[name='wpostcode']", root).value) || r.outward || "") + (r.area ? " · " + r.area : "")]])
           .concat(street ? [["Pick-up", street]] : []).concat([
           ["Experience", val("wexp")], ["Package", val("wpkg")], ["Discount", r.offer ? "M16/M18/M19 offer" : (val("wdisc") || "None")], ["Availability", availText()],
-          ["Nervous?", $("[name='wnervous']", root).checked ? "Yes — please take it slow" : "No"]]).concat(note ? [["Your note", note]] : []).concat([["Estimated price", priceText()]]);
+          ["Nervous?", $("[name='wnervous']", root).checked ? "Yes — please take it slow" : "No"]]).concat(note ? [["Your note", note]] : []).concat([["Estimated price", priceText()]]).concat(drawBox ? [["£35 voucher draw", drawOn() ? "Yes, enter me" : "Not entered"]] : []);
         root._rows = rows;
         summary.innerHTML = rows.map(function (x) { return "<div><span>" + x[0] + "</span><b></b></div>"; }).join("");
         $$("b", summary).forEach(function (b, k) { b.textContent = rows[k][1] || "—"; });
@@ -1626,10 +1685,20 @@
           address: get("Pick-up"), message: noteText(),
           lines: ["Package: " + get("Package") + " — " + get("Estimated price"), "Experience: " + get("Experience"), "Discount: " + get("Discount"),
             "Nervous learner: " + (nerv ? "yes — please take it slow" : "no"), "Availability: " + availText(), r.area ? "Area: " + r.area : ""].filter(Boolean),
-          tail: ["🎟️ Free Hour Draw: ticket reserved — click Lesson booked once their first lesson is booked"] })
+          tail: [drawOn() ? "🎟️ £35 voucher draw: opted in on the website — ticket created automatically (see Free Hour Draw)" : ""] })
           .then(function (ok) {
             submit.disabled = false;
-            if (ok) { sentSig = sig; root.classList.add("is-sent"); if (q) q.textContent = "Booking received! 🎉"; status.className = "js-wstatus form-status is-ok"; status.innerHTML = "✅ <b>Booking request sent!</b> A real person from SQ Driving School will call or text you shortly. Want a faster reply? Send it on WhatsApp too."; }
+            if (ok) {
+              sentSig = sig; root.classList.add("is-sent"); if (q) q.textContent = "Booking received! 🎉"; status.className = "js-wstatus form-status is-ok";
+              status.innerHTML = "✅ <b>Booking request sent!</b> A real person from SQ Driving School will call or text you shortly. Want a faster reply? Send it on WhatsApp too.";
+              if (drawOn() && SQ.draw) SQ.draw.enter({ name: get("Name"), phone: get("Mobile"), email: get("Email"), postcode: SQ.fullPostcode($("[name='wpostcode']", root).value), area: get("Pick-up") || r.area || "", gearbox: val("wtrans") }).then(function (res) {
+                var p = document.createElement("p"); p.className = "form-status is-ok js-wticket";
+                if (res && res.ok && res.ticket) { p.innerHTML = "🎟️ You're in the <b>" + res.monthName + "</b> £35 voucher draw. Your ticket: <b class='mono'></b>"; $("b.mono", p).textContent = res.ticket; track("draw_entry", { method: "booking_wizard" }); }
+                else if (res && res.dup) p.innerHTML = "🎟️ You're already in the <b>" + res.monthName + "</b> £35 voucher draw — good luck!";
+                else p.innerHTML = "🎟️ We've noted you want to enter the £35 voucher draw — we'll add your ticket and confirm it when we contact you.";
+                var oldT = $(".js-wticket", root); if (oldT) oldT.remove(); status.parentNode.insertBefore(p, status.nextSibling);
+              });
+            }
             else { if (q) q.textContent = "Nearly there…"; submit.classList.remove("hide"); status.className = "js-wstatus form-status is-err"; status.innerHTML = "Sorry — we couldn't send that just now. Try again, send it on WhatsApp below or call <a href='tel:" + SQ.phoneIntl + "'>" + SQ.phone + "</a>."; }
           });
       }
