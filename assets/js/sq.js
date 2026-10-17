@@ -763,6 +763,7 @@
         }
         var html = rows.map(function (r) { return "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>"; }).join("");
         if (q.save > 0) html += "<tr class='save'><td>You save</td><td>−" + gbp(q.save) + "</td></tr>";
+        if (discounted && !single && /nhs|student/i.test(disc)) html += "<tr><td colspan='2' class='note'>We'll check your " + (/nhs/i.test(disc) ? "NHS ID" : "uni or college student ID") + " to confirm — then this is your price.</td></tr>";
         html += "<tr class='total'><td>Total · " + totalHours + " hr" + (totalHours > 1 ? "s" : "") + "</td><td>" + gbp(q.total) + "</td></tr>";
         table.innerHTML = html;
         totalBig.textContent = gbp(q.total);
@@ -1653,7 +1654,12 @@
         var pkg = val("wpkg"), r = pcInfo(), disc = val("wdisc");
         var discounted = (r.status === "covered" && r.offer) || disc === "NHS" || disc === "Student";
         if (pkg === "2-hour lessons") return "£" + SQ.prices.twoHour + " per 2-hour lesson";
-        if (pkg === "10-hour block") return discounted ? "£" + SQ.prices.blockDiscount + " (discounted)" : "£" + SQ.prices.block;
+        if (pkg === "10-hour block") {
+          if (r.status === "covered" && r.offer) return "£" + SQ.prices.blockDiscount + " (M16/M18/M19 offer)";
+          if (disc === "NHS") return "£" + SQ.prices.blockDiscount + " once we've checked your NHS ID";
+          if (disc === "Student") return "£" + SQ.prices.blockDiscount + " once we've checked your student ID";
+          return "£" + SQ.prices.block;
+        }
         if (pkg === "Single 1-hour session") return "£" + SQ.prices.single;
         if (pkg === "Intensive course") return "From £" + SQ.prices.hourly + "/hr — we'll build your course";
         return "We'll help you choose";
@@ -1664,7 +1670,7 @@
         var street = st ? st.value.trim().replace(/\s+/g, " ").slice(0, 120) : "", note = noteText();
         var rows = [["Name", $("[name='wname']", root).value.trim()]].concat(ph ? [["Mobile", ph.value.trim()]] : []).concat(em && em.value.trim() ? [["Email", em.value.trim()]] : []).concat([["Gearbox", val("wtrans")], ["Postcode", (SQ.fullPostcode($("[name='wpostcode']", root).value) || r.outward || "") + (r.area ? " · " + r.area : "")]])
           .concat(street ? [["Pick-up", street]] : []).concat([
-          ["Experience", val("wexp")], ["Package", val("wpkg")], ["Discount", r.offer ? "M16/M18/M19 offer" : (val("wdisc") || "None")], ["Availability", availText()],
+          ["Experience", val("wexp")], ["Package", val("wpkg")], ["Discount", r.offer ? "M16/M18/M19 offer" : val("wdisc") === "NHS" ? "NHS — we'll check your NHS ID" : val("wdisc") === "Student" ? "Student — we'll check your uni/college ID" : "None"], ["Availability", availText()],
           ["Nervous?", $("[name='wnervous']", root).checked ? "Yes — please take it slow" : "No"]]).concat(note ? [["Your note", note]] : []).concat([["Estimated price", priceText()]]).concat(drawBox ? [["£35 voucher draw", drawOn() ? "Yes, enter me" : "Not entered"]] : []);
         root._rows = rows;
         summary.innerHTML = rows.map(function (x) { return "<div><span>" + x[0] + "</span><b></b></div>"; }).join("");
@@ -1683,7 +1689,7 @@
         submit.classList.add("hide"); submit.disabled = true; status.className = "js-wstatus form-status"; status.textContent = "Sending your booking…";
         SQ.sendBooking({ source: "Book in 60 seconds", name: get("Name"), phone: get("Mobile"), email: get("Email"), postcode: SQ.fullPostcode($("[name='wpostcode']", root).value), gearbox: val("wtrans"),
           address: get("Pick-up"), message: noteText(),
-          lines: ["Package: " + get("Package") + " — " + get("Estimated price"), "Experience: " + get("Experience"), "Discount: " + get("Discount"),
+          lines: ["Package: " + get("Package") + " — " + get("Estimated price"), "Experience: " + get("Experience"), "Discount: " + (pcInfo().offer ? "M16/M18/M19 offer" : val("wdisc") === "NHS" ? "NHS — check NHS ID before confirming £" + SQ.prices.blockDiscount : val("wdisc") === "Student" ? "Student — check uni/college student ID before confirming £" + SQ.prices.blockDiscount : "None"),
             "Nervous learner: " + (nerv ? "yes — please take it slow" : "no"), "Availability: " + availText(), r.area ? "Area: " + r.area : ""].filter(Boolean),
           tail: [drawOn() ? "🎟️ £35 voucher draw: opted in on the website — ticket created automatically (see Free Hour Draw)" : ""] })
           .then(function (ok) {
