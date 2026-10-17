@@ -1154,3 +1154,14 @@ textarea.wnotes { min-height:92px; }
 .wdraw label { border-style:dashed; }
 .wdraw label a { color:var(--red); font-weight:600; }
 .wdraw.is-hidden { display:none; }
+/* Local learner data card (postcode + neighbourhood pages) */
+.localdata__score { display:flex; align-items:center; gap:10px; margin:6px 0 10px; }
+.localdata__num { font-family:var(--font-display); font-size:2.6rem; line-height:1; color:var(--red); }
+.localdata__score small { color:var(--grey); font-size:.75rem; }
+.lbar { display:inline-block; width:64px; height:6px; border-radius:6px; background:var(--line-2); vertical-align:middle; overflow:hidden; margin-right:4px; }
+.lbar span { display:block; height:100%; background:var(--red); border-radius:6px; }
+.localdata .summary td:last-child { text-align:right; }
+.localdata .summary { font-size:.9rem; }
+.localdata .summary td:first-child { overflow-wrap:normal; word-break:normal; width:44%; color:var(--grey); }
+.localdata .summary td:last-child { font-family:var(--font-body); }
+.localdata .summary td b { font-family:var(--font-mono); }
