@@ -1887,6 +1887,20 @@
   /* ------------------------------------------------------
      COOKIE CONSENT (Google Consent Mode v2) + CONVERSION EVENTS
      ------------------------------------------------------ */
+  /* Google Ads: every online booking (generate_lead) also counts as the
+     "Website booking request (DriveSQ + SQ)" conversion — shared with drivesq.co.uk. */
+  var ADS_ID = "AW-17483647790", ADS_LEAD_LABEL = "LJ5ECPypo58dEK6W7ZBB";
+  (function adsConversions() {
+    if (typeof window.gtag !== "function" || window.gtag.__sqAds) return;
+    var real = window.gtag;
+    try { real("config", ADS_ID); } catch (e) {}
+    var wrapped = function (a, b) {
+      real.apply(this, arguments);
+      if (a === "event" && b === "generate_lead") { try { real("event", "conversion", { send_to: ADS_ID + "/" + ADS_LEAD_LABEL }); } catch (e) {} }
+    };
+    wrapped.__sqAds = true;
+    window.gtag = wrapped;
+  })();
   function track(name, params) {
     try { if (typeof window.gtag === "function") window.gtag("event", name, params || {}); } catch (e) {}
   }
