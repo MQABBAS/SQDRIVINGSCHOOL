@@ -1216,3 +1216,8 @@ textarea.wnotes { min-height:92px; }
 .localdata .summary td:first-child { overflow-wrap:normal; word-break:normal; width:44%; color:var(--grey); }
 .localdata .summary td:last-child { font-family:var(--font-body); }
 .localdata .summary td b { font-family:var(--font-mono); }
+/* Footer social links (same Instagram & Facebook as DriveSQ) */
+.footer__social { display:flex; gap:10px; flex-wrap:wrap; }
+.footer__soc { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.14); color:#e9e6e2; text-decoration:none; font-size:.85rem; font-weight:600; transition:border-color .2s, transform .2s, color .2s; }
+.footer__soc svg { width:18px; height:18px; }
+.footer__soc:hover, .footer__soc:focus-visible { border-color:var(--red); color:#fff; transform:translateY(-1px); outline:none; }

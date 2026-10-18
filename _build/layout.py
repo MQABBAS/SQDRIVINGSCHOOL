@@ -111,7 +111,7 @@ def wa_url(msg):
 
 ORG_SCHEMA = json.dumps([
     {"@context": "https://schema.org", "@type": "Organization", "@id": SITE + "/#org", "name": "SQ Driving School", "url": SITE + "/", "logo": SITE + "/assets/img/icon-512.png",
-     "telephone": "+44 7352 932003", "parentOrganization": {"@type": "Organization", "name": "DriveSQ", "url": "https://www.drivesq.co.uk"},
+     "telephone": "+44 7352 932003", "sameAs": ["https://www.instagram.com/drive_sq_academy/", "https://www.facebook.com/profile.php?id=100092258175464"], "parentOrganization": {"@type": "Organization", "name": "DriveSQ", "url": "https://www.drivesq.co.uk"},
      "areaServed": [{"@type": "AdministrativeArea", "name": "Greater Manchester"}, {"@type": "AdministrativeArea", "name": "Metropolitan Borough of Solihull"}], "contactPoint": {"@type": "ContactPoint", "telephone": "+44 7352 932003", "contactType": "customer service", "areaServed": "GB", "availableLanguage": "English"}},
     {"@context": "https://schema.org", "@type": "WebSite", "@id": SITE + "/#website", "name": "SQ Driving School", "url": SITE + "/", "publisher": {"@id": SITE + "/#org"}, "inLanguage": "en-GB"},
 ], ensure_ascii=False)
@@ -217,6 +217,7 @@ def footer(root):
           <a class="btn btn--wa btn--sm" data-wa="Hi SQ Driving School!" href="https://wa.me/{WA}">{ICONS['wa']} WhatsApp</a>
           <a class="btn btn--ghost btn--sm" href="tel:{TEL}">{ICONS['phone']} {PHONE}</a>
         </div>
+        <div class="footer__social mt-2" aria-label="Follow us"><a class="footer__soc" href="https://www.instagram.com/drive_sq_academy/" target="_blank" rel="noopener" aria-label="SQ Driving School on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Instagram</span></a><a class="footer__soc" href="https://www.facebook.com/profile.php?id=100092258175464" target="_blank" rel="noopener" aria-label="SQ Driving School on Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8.5V6.8c0-.8.5-1 1-1h2.3V2.2L14.2 2C10.9 2 10 4.4 10 6.4v2.1H7.5V12H10v10h4V12h3l.5-3.5z"/></svg><span>Facebook</span></a></div>
       </div>
       <div>
         <h4>Learn</h4>
