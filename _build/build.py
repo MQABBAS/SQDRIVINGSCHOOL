@@ -11,7 +11,7 @@ pages = {
     "hazard-game.html": R.hazard_page(), "test-centres.html": R.centres_page(), "student-portal.html": R.portal_page(),
     "areas.html": R.areas_page(), "faq.html": R.faq_page(), "contact.html": R.contact_page(), "about.html": R.about_page(),
     "privacy.html": R.privacy_page(), "review-policy.html": R.review_page(), "404.html": R.notfound_page(),
-    "guides.html": X.guides_hub(), "comfort.html": C.comfort_page(), "book.html": K.book_page(), "free-prize-draw.html": K.draw_page(), "gift-vouchers.html": K.voucher_page(), "first-lesson.html": C.first_lesson_page(), "road-signs.html": X.signs_page(), "dashboard-lights.html": X.dash_page(),
+    "guides.html": X.guides_hub(), "comfort.html": C.comfort_page(), "book.html": K.book_page(), "passes.html": __import__("pages_media").passes_page(), "free-prize-draw.html": K.draw_page(), "gift-vouchers.html": K.voucher_page(), "first-lesson.html": C.first_lesson_page(), "road-signs.html": X.signs_page(), "dashboard-lights.html": X.dash_page(),
 }
 HOODS = SEO.neighbourhoods()
 for b in R.BOROUGHS:

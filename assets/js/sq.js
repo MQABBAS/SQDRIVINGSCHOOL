@@ -1498,6 +1498,71 @@
   /* ------------------------------------------------------
      HERO CAR — drives in and parks under the logo
      ------------------------------------------------------ */
+  /* ------------------------------------------------------
+     PASS WALL — video reviews + pass photos with a lightbox
+     ------------------------------------------------------ */
+  function mediaWall() {
+    var walls = $$("[data-media-wall]");
+    if (!walls.length) return;
+    var box = document.createElement("div");
+    box.className = "mw-lb"; box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true"); box.setAttribute("aria-label", "Pass photos and videos"); box.hidden = true;
+    box.innerHTML = '<button type="button" class="mw-lb__x" aria-label="Close">✕</button><button type="button" class="mw-lb__nav mw-lb__prev" aria-label="Previous">‹</button><div class="mw-lb__stage"></div><button type="button" class="mw-lb__nav mw-lb__next" aria-label="Next">›</button><a class="btn btn--red btn--sm mw-lb__cta" href="' + ($("link[rel='stylesheet'][href*='assets/css']") ? $("link[rel='stylesheet'][href*='assets/css']").getAttribute("href").replace("assets/css/sq.css", "") : "") + 'book.html">Book in 60 seconds</a>';
+    document.body.appendChild(box);
+    var stage = $(".mw-lb__stage", box), list = [], idx = 0, lastFocus = null;
+    function show(i) {
+      idx = (i + list.length) % list.length;
+      var el = list[idx]; stage.innerHTML = "";
+      if (el.hasAttribute("data-video")) {
+        var v = document.createElement("video");
+        v.src = el.getAttribute("data-video"); v.poster = el.getAttribute("data-poster") || ""; v.controls = true; v.playsInline = true; v.autoplay = true; v.preload = "auto";
+        v.setAttribute("aria-label", el.getAttribute("aria-label") || "Video review");
+        stage.appendChild(v); try { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {}
+        track("video_review_play", { video: el.getAttribute("data-video").split("/").pop() });
+      } else {
+        var im = document.createElement("img");
+        im.src = el.getAttribute("data-photo"); im.alt = ($("img", el) || {}).alt || "Pass photo";
+        stage.appendChild(im);
+      }
+    }
+    function open(group, el) {
+      list = group; lastFocus = el; box.hidden = false; document.documentElement.classList.add("mw-lock");
+      requestAnimationFrame(function () { box.classList.add("is-open"); });
+      show(group.indexOf(el)); $(".mw-lb__x", box).focus();
+    }
+    function close() {
+      box.classList.remove("is-open"); document.documentElement.classList.remove("mw-lock");
+      var v = $("video", stage); if (v) { try { v.pause(); } catch (e) {} }
+      setTimeout(function () { box.hidden = true; stage.innerHTML = ""; }, 220);
+      if (lastFocus) lastFocus.focus();
+    }
+    $(".mw-lb__x", box).addEventListener("click", close);
+    $(".mw-lb__prev", box).addEventListener("click", function () { show(idx - 1); });
+    $(".mw-lb__next", box).addEventListener("click", function () { show(idx + 1); });
+    box.addEventListener("click", function (e) { if (e.target === box) close(); });
+    document.addEventListener("keydown", function (e) {
+      if (box.hidden) return;
+      if (e.key === "Escape") close(); else if (e.key === "ArrowRight") show(idx + 1); else if (e.key === "ArrowLeft") show(idx - 1);
+    });
+    var sx = 0; box.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    box.addEventListener("touchend", function (e) { var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) show(idx + (dx < 0 ? 1 : -1)); }, { passive: true });
+    walls.forEach(function (w) {
+      var items = $$(".mw-vid, .mw-pic", w);
+      items.forEach(function (el) { el.addEventListener("click", function () { open(items, el); }); });
+      // silent preview on hover (desktop only)
+      if (!reduceMotion && window.matchMedia && matchMedia("(hover: hover)").matches) {
+        $$(".mw-vid", w).forEach(function (el) {
+          var pv = null;
+          el.addEventListener("mouseenter", function () {
+            if (!pv) { pv = document.createElement("video"); pv.className = "mw-vid__pv"; pv.muted = true; pv.loop = true; pv.playsInline = true; pv.preload = "metadata"; pv.src = el.getAttribute("data-video"); el.insertBefore(pv, el.firstChild.nextSibling); }
+            try { var pr = pv.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {}
+            el.classList.add("is-preview");
+          });
+          el.addEventListener("mouseleave", function () { if (pv) { pv.pause(); } el.classList.remove("is-preview"); });
+        });
+      }
+    });
+  }
+
   function heroCar() {
     /* The same SQ car, now a 3D model made of four faces: drives in, flashes its headlights,
        hazards blink, does a 360° turntable spin, settles on its suspension, then idles.
@@ -1970,6 +2035,7 @@
     chatbot();
     mascot();
     heroCar();
+    mediaWall();
     a11y();
     wizard();
     voucher();

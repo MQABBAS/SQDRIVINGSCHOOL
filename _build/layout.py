@@ -225,6 +225,7 @@ def footer(root):
           <li><a href="{root}book.html">Book in 60 seconds</a></li>
           <li><a href="{root}gift-vouchers.html">Gift vouchers</a></li>
           <li><a href="{root}first-lesson.html">Your first lesson</a></li>
+          <li><a href="{root}passes.html">Real passes &amp; video reviews</a></li>
           <li><a href="{root}comfort.html">Comfort Zone (nervous drivers)</a></li>
           <li><a href="{root}automatic-driving-lessons-manchester.html">Automatic lessons Manchester</a></li>
           <li><a href="{root}manual-driving-lessons-manchester.html">Manual lessons Manchester</a></li>
