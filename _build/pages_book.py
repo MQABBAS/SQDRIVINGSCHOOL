@@ -1,4 +1,5 @@
 from layout import *
+from pages_media import passes_strip
 
 
 def _choices(name, opts, kind="radio"):
@@ -76,7 +77,7 @@ def book_page():
     body = page_hero("Book now", "Book in 60 seconds.", "Answer a few quick questions and we'll have everything we need to get you started. No forms to email, no waiting.", ["Book now"], root,
                      '<div data-mascot style="--rope:60px" data-say="Quick and easy — <b>let\'s get you booked!</b> 🚗"></div>')
     body += reassure()
-    body += f'<section class="section--tight"><div class="container" style="max-width:900px">{draw_banner(root)}{wizard_html()}</div></section>'
+    body += f'<section class="section--tight"><div class="container" style="max-width:900px">{draw_banner(root)}{wizard_html()}{passes_strip(root)}</div></section>'
     body += f"""<section class="section section--alt"><div class="container"><div class="grid grid--3" data-stagger=".08">
 <a class="card" href="tel:{TEL}" data-reveal="up"><div class="card__icon">{icon('phone')}</div><h3>Prefer to call?</h3><p class="mb-0 mono">{PHONE}</p></a>
 <a class="card" data-wa="Hi SQ Driving School! I'd like to book lessons." href="https://wa.me/{WA}" data-reveal="up"><div class="card__icon">{icon('wa')}</div><h3>Just WhatsApp us</h3><p class="mb-0">Message us in your own words.</p></a>

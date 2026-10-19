@@ -5,6 +5,7 @@ import zlib
 def _pcid(label, big):
     return format(zlib.crc32(label.encode()), "x") + ("b" if big else "")
 from pages_book import wizard_html, draw_banner
+from pages_media import media_section
 
 AREAS = ["Manchester", "Salford", "Trafford", "Stockport", "Tameside", "Oldham", "Rochdale", "Bury", "Bolton", "Wigan",
          "Levenshulme", "Gorton", "Old Trafford", "Whalley Range", "Didsbury", "Chorlton", "Fallowfield", "Sale", "Altrincham", "Eccles", "Ashton-under-Lyne", "Middleton"]
@@ -244,6 +245,7 @@ def index():
     </div>
   </div>
 </section>
+{media_section()}
 <section class="section" id="book">
   <div class="container" style="max-width:960px">
     <div class="section__head center"><div class="eyebrow">Book in 60 seconds</div><h2 data-split>Ready? Let's get you booked.</h2><p class="lead">A few taps. We'll check your postcode, your discount and your price as you go.</p></div>
