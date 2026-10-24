@@ -227,6 +227,7 @@ def footer(root):
           <li><a href="{root}first-lesson.html">Your first lesson</a></li>
           <li><a href="{root}passes.html">Real passes &amp; video reviews</a></li>
           <li><a href="{root}comfort.html">Comfort Zone (nervous drivers)</a></li>
+          <li><a href="{root}driving-lessons-manchester.html"><b>Driving lessons Manchester</b></a></li>
           <li><a href="{root}automatic-driving-lessons-manchester.html">Automatic lessons Manchester</a></li>
           <li><a href="{root}manual-driving-lessons-manchester.html">Manual lessons Manchester</a></li>
           <li><a href="{root}lessons.html">Driving lessons</a></li>

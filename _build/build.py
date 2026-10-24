@@ -67,6 +67,21 @@ import pages_local as LOCAL
 pages.update(LOCAL.all_pages())
 for _d in ("driving-lessons", "automatic-driving-lessons", "manual-driving-lessons"):
     pages.pop(f"{_d}/chorlton.html", None)  # duplicate of chorlton-cum-hardy; a redirect file is kept in the repo
+import pages_manchester as MAN
+pages.update(MAN.all_pages())
+# areas/manchester.html is the borough hub (postcodes, neighbourhoods) — the pillar owns "driving lessons Manchester"
+_am = pages["areas/manchester.html"]
+_old_t = "Driving Lessons Manchester | SQ Driving School"
+assert _old_t in _am
+_am = _am.replace("<title>" + _old_t + "</title>", "<title>Manchester Areas &amp; Postcodes We Cover | SQ Driving School</title>").replace('content="' + _old_t + '"', 'content="Manchester Areas &amp; Postcodes We Cover | SQ Driving School"')
+_mk = '<div class="mt-3"><h3>Postcodes in Manchester</h3>'
+assert _mk in _am
+_am = _am.replace(_mk, '<div class="mt-3"><a class="btn btn--red" href="../driving-lessons-manchester.html">Driving lessons in Manchester — prices, test centres &amp; lesson planner →</a></div>' + _mk, 1)
+pages["areas/manchester.html"] = _am
+# chorlton.html is a redirect to chorlton-cum-hardy.html — point every link straight at the real page
+for _p in list(pages):
+    if "/chorlton.html\"" in pages[_p]:
+        pages[_p] = pages[_p].replace("/chorlton.html\"", "/chorlton-cum-hardy.html\"")
 pages["sitemap.html"] = SM.html_sitemap(pages)
 for path, html in pages.items():
     full = os.path.join(OUT, path)
@@ -82,7 +97,15 @@ for p in pages:
 index = ""
 for sec, plist in sorted(groups.items()):
     NEW = ("solihull", "driving-lessons-solihull", "research", "driving/", "test-routes", "test-faults", "learner-toolkit", "sitemap.html", "knowledge", "test-centres.html")
-    lm = lambda p: "2026-10-16" if p.startswith(NEW) or p in ("book.html", "contact.html", "privacy.html") else LASTMOD
+    lm = lambda p: "2026-10-24" if p in MAN.all_pages() or p == "areas/manchester.html" else "2026-10-16" if p.startswith(NEW) or p in ("book.html", "contact.html", "privacy.html") else LASTMOD
+    _prev = {}
+    try:
+        import re as _re
+        _prev = dict(_re.findall(r"<loc>([^<]+)</loc><lastmod>([^<]+)</lastmod>", open(os.path.join(OUT, f"sitemap-{sec}.xml")).read()))
+    except OSError:
+        pass
+    _lm = lm
+    lm = lambda p, _lm=_lm, _prev=_prev: max(_lm(p), _prev.get(f"{SITE}/{'' if p == 'index.html' else p}", ""))
     urls = "".join(f"  <url><loc>{SITE}/{'' if p == 'index.html' else p}</loc><lastmod>{lm(p)}</lastmod></url>\n" for p in sorted(plist))
     open(os.path.join(OUT, f"sitemap-{sec}.xml"), "w").write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     index += f"  <sitemap><loc>{SITE}/sitemap-{sec}.xml</loc><lastmod>{max(lm(p) for p in plist)}</lastmod></sitemap>\n"
