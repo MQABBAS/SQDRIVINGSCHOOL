@@ -238,6 +238,7 @@ def footer(root):
           <li><a href="{root}offer-m16-m18-m19.html">M16 · M18 · M19 offer</a></li>
           <li><a href="{root}free-prize-draw.html">Win a £35 voucher</a></li>
           <li><a href="{root}services.html">All lesson types</a></li>
+          <li><a href="{root}work.html">Lessons around your job</a></li>
           <li><a href="{root}areas.html">Areas we cover</a></li>
         </ul>
       </div>
@@ -255,6 +256,7 @@ def footer(root):
           <li><a href="{root}knowledge.html">Greater Manchester knowledge hub</a></li>
           <li><a href="{root}learner-toolkit.html">Learner toolkit (calculators &amp; planners)</a></li>
           <li><a href="{root}test-routes.html">Driving test routes by centre</a></li>
+          <li><a href="{root}roads.html">Road &amp; junction guides</a></li>
           <li><a href="{root}test-faults.html">Why people fail — fault by fault</a></li>
           <li><a href="{root}knowledge/greater-manchester-driving-test-centres.html">Test centre guides</a></li>
           <li><a href="{root}student-portal.html">DriveSQ Student Portal</a></li>

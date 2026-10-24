@@ -78,6 +78,21 @@ _mk = '<div class="mt-3"><h3>Postcodes in Manchester</h3>'
 assert _mk in _am
 _am = _am.replace(_mk, '<div class="mt-3"><a class="btn btn--red" href="../driving-lessons-manchester.html">Driving lessons in Manchester — prices, test centres &amp; lesson planner →</a></div>' + _mk, 1)
 pages["areas/manchester.html"] = _am
+import pages_roads as ROADS, pages_places as PLACES
+_new_places = PLACES.all_pages()
+assert not (set(_new_places) & set(pages)), set(_new_places) & set(pages)
+pages.update(ROADS.all_pages())
+pages.update(_new_places)
+# link the new pages from their hubs
+def _inject(path, marker, html):
+    assert marker in pages[path], (path, marker)
+    pages[path] = pages[path].replace(marker, html + marker, 1)
+_cards = lambda items: '<div class="grid grid--3" data-stagger=".05">' + "".join(f'<a class="rx-study" href="{h}" data-reveal="up"><span class="k-cat">{c}</span><h3>{t}</h3><p>{d}</p></a>' for h, c, t, d in items) + "</div>"
+_CTA = '<section class="section--tight">\n  <div class="container">\n    <div class="cta zone-dark" data-reveal="zoom">'
+_sec = lambda eyebrow, title, items: f'<section class="section"><div class="container"><div class="section__head"><div class="eyebrow">{eyebrow}</div><h2 data-split>{title}</h2></div>{_cards(items)}</div></section>\n'
+_inject("guides.html", _CTA, _sec("Greater Manchester", "Local driving guides.", [(f"guides/{g[0]}.html", "Guide", g[1], g[2]) for g in PLACES.GUIDES] + [("roads.html", "Roads", "Road & junction guides", f"{len(ROADS.R)} roads learners worry about.")]))
+_inject("student-driving-lessons-manchester.html", _CTA, _sec("Sixth forms &amp; schools", "More schools and sixth forms.", [(f"students/{x[0]}.html", "Students", x[1], x[2]) for x in PLACES.SCHOOLS]))
+_inject("driving-lessons-manchester.html", _CTA, _sec("Know your roads", "Guides for Manchester learners.", [("roads.html", "Roads", "Road &amp; junction guides", f"{len(ROADS.R)} roads and junctions, how we teach them."), ("work.html", "Work", "Lessons around your job", f"{len(PLACES.WORK)} big workplaces, around shifts."), ("guides.html", "Guides", "Local driving guides", "Matchdays, 20 mph zones, box junctions and more.")]))
 # chorlton.html is a redirect to chorlton-cum-hardy.html — point every link straight at the real page
 for _p in list(pages):
     if "/chorlton.html\"" in pages[_p]:
