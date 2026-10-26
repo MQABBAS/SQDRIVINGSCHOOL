@@ -267,7 +267,7 @@ def lesson_pages():
           ["£35 an hour, manual or automatic — same price.", "No booking fees, no fuel surcharges.", "10 hours £350, or £320 for NHS staff and students.", "Typical advertised Solihull rates: roughly £32–£42 an hour."],
           """<p class="lead">One clear price list — no booking fees, no "from" prices, no surcharge for automatic.</p>
 <div class="rx-table-wrap"><table class="rx-table"><thead><tr><th>What</th><th>Price</th><th>Per hour</th></tr></thead><tbody>
-<tr><td>1-hour lesson (manual or automatic)</td><td><b>£35</b></td><td>£35</td></tr><tr><td>2-hour lesson</td><td><b>£70</b></td><td>£35</td></tr>
+<tr><td>Single 1-hour lesson (manual or automatic)</td><td><b>£40</b></td><td>£40</td></tr><tr><td>2-hour lesson</td><td><b>£70</b></td><td>£35</td></tr>
 <tr><td>10-hour block</td><td><b>£350</b></td><td>£35</td></tr><tr><td>10-hour block — NHS staff and students</td><td><b>£320</b></td><td>£32</td></tr>
 <tr><td>DriveSQ Student Portal</td><td><b>Free</b></td><td>—</td></tr><tr><td>Booking fee</td><td><b>£0</b></td><td>—</td></tr></tbody></table></div>
 <h2>What does learning to drive cost in Solihull?</h2><p>Using the DVSA's average of about 45 hours of lessons, that's around £1,575 at £35/hr — less with blocks — plus the £23 theory test and £62 weekday practical test (£75 evenings, weekends and bank holidays). Use our <a href="../driving/learning-to-drive-timeline-planner.html">timeline planner</a> for your own numbers.</p>
@@ -382,6 +382,15 @@ def hub_extra():
     body += sec("Road guides", [(f"{r['slug']}.html", r["short"]) for r in RD.ROADS])
     body += sec("Schools & colleges", [(f"{s[0]}-driving-lessons.html", s[1]) for s in SCHOOLS])
     body += sec("Workplaces", [(f"{j[0]}-driving-lessons.html", j[1]) for j in JOBS])
+    # every lesson-type page (both batches + the gap pages)
+    import re as _re, pages_sol_gaps as GAPS
+    _lt = {}
+    for _src in (SOL.lesson_pages(), lesson_pages(), GAPS.gap_pages()):
+        for _p, _h in _src.items():
+            _m = _re.search(r"<h1[^>]*>(.*?)</h1>", _h, _re.S)
+            _lt[_p.split("/")[-1]] = _re.sub(r"<[^>]+>", "", _m.group(1)).strip().rstrip(".") if _m else _p
+    body += sec("Lesson types", sorted(_lt.items(), key=lambda x: x[1]))
+    body += sec("DriveSQ Solihull tools &amp; guides", [(u, t) for u, c, t, d in SOL.DSQ_ALL])
     body += portal_strip()
     return {path: S(path, "All Solihull Driving Guides | Areas, Tests, Roads & Schools | SQ", "Solihull guides", ("All guides", path), "Every Solihull driving guide",
                     "Directory of every SQ Driving School guide to Solihull: 33 areas, 9 postcode districts, 4 test centres, 10 road guides, 19 schools and colleges and 8 workplaces.",
