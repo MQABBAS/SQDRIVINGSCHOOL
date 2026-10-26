@@ -161,9 +161,55 @@ CENTRES = [
                    ("Lane changes on multi-lane roundabouts", "Changing lanes mid-roundabout.", "Pick your lane on approach and keep it."),
                    ("Country-road bends", "Entering bends too fast.", "Slow before the bend.")]),
 ]
-OTHER = [("Coventry", "Bayton Road area, CV7", 42.3, "pr_cov", "Balsall Common, Meriden, Berkswell"),
-         ("Warwick (Wedgenock House)", "Warwick", 48.4, "pr_war", "Knowle, Dorridge, Balsall Common"),
-         ("Redditch", "Elm Road, B97 6HJ", 46.7, "pr_red", "Hockley Heath, Earlswood, Tanworth-in-Arden")]
+# Coventry, Warwick and Redditch — the centres south and east Solihull learners also book. Route roads are the ones
+# reported on public route compilations (DVSA no longer publishes routes); kept to roads more than one source names.
+CENTRES += [
+    dict(slug="coventry", name="Coventry", full="Coventry", pc="CV7 9EJ", address="42 Bayton Road, Exhall, Coventry CV7 9EJ",
+         rate=42.3, note="2024-25, about 9,100 tests", src="pr_cov",
+         who="Balsall Common, Meriden, Berkswell, Hampton-in-Arden and the borough's eastern villages",
+         intro="Coventry test centre is on Bayton Road in Exhall, on the northern edge of Coventry close to the M6 and the A444. For learners in Meriden, Berkswell and Balsall Common it can be nearer than the Birmingham centres — but its 42.3% pass rate in 2024-25 was well below the UK average, so it rewards proper preparation.",
+         area="Reported routes leave Bayton Road's industrial estate and quickly reach busy roundabouts on the A444, then mix main roads like Foleshill Road with residential streets around Exhall and Longford.",
+         roads=[("", "Bayton Road", "Start and finish of every test — an industrial estate with lorries and vans.", ("Moving off", "Large vehicles")),
+                ("A444", "Phoenix Way / Holbrook bypass", "Fast dual carriageway with large roundabouts — the stretch most reported routes return to.", ("Dual carriageway", "Roundabouts")),
+                ("", "Old Church Road", "Reported early on routes, with junctions and parked cars.", ("Junctions",)),
+                ("", "Foleshill Road", "A busy main road with shops, buses and side roads.", ("Buses", "Side roads"))],
+         spokes=[("Bayton Rd", "test centre"), ("A444", "Coventry / M6"), ("Old Church Rd", "Exhall"), ("Foleshill Rd", "Foleshill")],
+         marks=[("M6 junction 3", "The motorway is very close to the centre."), ("Ricoh / Coventry Building Society Arena", "To the south, beside the A444."), ("Bayton Road industrial estate", "Where the centre is.")],
+         mistakes=[("Roundabout exits on the A444", "Taking the wrong exit or lane at speed.", "Count exits on approach and choose your lane from the markings."),
+                   ("Industrial-estate traffic", "Lorries reversing and pulling out on Bayton Road.", "Slow down, look well ahead and give large vehicles room."),
+                   ("Busy main-road junctions", "Pulling out on Foleshill Road without a safe gap.", "Wait for a real gap; creep and peep where views are blocked.")]),
+    dict(slug="warwick", name="Warwick", full="Warwick (Wedgenock House)", pc="CV34", address="Wedgenock House, Rothwell Road (off Wedgnock Lane), Warwick CV34",
+         rate=48.4, note="2024-25, about 10,900 tests", src="pr_war",
+         who="Knowle, Dorridge, Balsall Common and the southern villages",
+         intro="Warwick's test centre, Wedgenock House, sits on Rothwell Road just off Wedgnock Lane on the north side of Warwick, close to the Warwick bypass. For learners in Knowle, Dorridge and Balsall Common it's a straight run down the A4141 — and in 2024-25 its pass rate was close to the UK average.",
+         area="Reported routes use the residential estates around Woodloes and Hampton Magna, main roads like Birmingham Road into Warwick, and roundabouts near the bypass — plus narrow streets in the historic town centre.",
+         roads=[("", "Wedgnock Lane & Rothwell Road", "Every test starts and ends here, on the edge of an industrial area.", ("Moving off",)),
+                ("", "Birmingham Road", "Main road into Warwick, with junctions, crossings and changing limits.", ("Junctions", "Speed changes")),
+                ("", "Budbrooke Road & Old Budbrooke Road", "Reported on routes towards Hampton Magna — bends and rural sections.", ("Bends", "Rural roads")),
+                ("", "Blandford Way & Damson Road", "Residential roads on reported routes — parked cars and junctions.", ("Parked cars",)),
+                ("", "Friars Street", "Town-centre street with pedestrians and tight junctions.", ("Pedestrians", "Town centre"))],
+         spokes=[("Wedgnock Ln", "test centre"), ("Birmingham Rd", "Warwick"), ("Budbrooke Rd", "Hampton Magna"), ("Friars St", "town centre")],
+         marks=[("Warwick Castle", "In the town centre — narrow historic streets nearby."), ("Warwick bypass (A46)", "Close to the centre."), ("Hampton Magna", "A village on reported routes.")],
+         mistakes=[("Rural bends", "Entering bends towards Hampton Magna too fast.", "Brake before the bend, steer smoothly, accelerate gently out."),
+                   ("Town-centre streets", "Pedestrians and tight junctions near Friars Street.", "Keep speed down and look well ahead."),
+                   ("Changing limits", "Missing a change on Birmingham Road.", "Watch for every sign and repeater.")]),
+    dict(slug="redditch", name="Redditch", full="Redditch", pc="B97 6HJ", address="Elm Road, Redditch B97 6HJ",
+         rate=46.7, note="2024-25, about 4,700 tests", src="pr_red",
+         who="Hockley Heath, Earlswood, Tidbury Green and Tanworth-in-Arden",
+         intro="Redditch test centre is on Elm Road, just north of the town centre. It's a smaller centre — about 4,700 car tests in 2024-25 — and an option for learners on Solihull's southern edge around Hockley Heath and Tidbury Green. Redditch is known for its network of roundabouts and its ring road.",
+         area="Reported routes go from Elm Road onto Hewell Road and the Ringway, then use the town's fast 'highway' roads such as the Alvechurch Highway, plenty of roundabouts, and residential roads like Throckmorton Road and Walkwood Road.",
+         roads=[("", "Elm Road", "Where every test starts and ends.", ("Moving off",)),
+                ("", "Hewell Road", "Main road from the centre towards the town — junctions and traffic lights.", ("Junctions",)),
+                ("", "Ringway", "Redditch's ring road around the town centre — lane choice at every junction.", ("Ring road", "Lane choice")),
+                ("", "Alvechurch Highway", "One of Redditch's fast highways — merging and higher speeds.", ("Higher speed", "Merging")),
+                ("", "Throckmorton Road & Walkwood Road", "Residential distributor roads with roundabouts.", ("Roundabouts",))],
+         spokes=[("Elm Rd", "test centre"), ("Hewell Rd", "town centre"), ("Ringway", "ring road"), ("Alvechurch Hwy", "north")],
+         marks=[("Kingfisher Shopping Centre", "Inside the Ringway."), ("Redditch station", "Close to the town centre."), ("Arrow Valley Country Park", "To the east of the town.")],
+         mistakes=[("Roundabout after roundabout", "Losing track of lane and signal on Redditch's roundabout network.", "Treat each roundabout separately; pick your lane on approach."),
+                   ("Joining the highways", "Merging too slowly onto the fast highway roads.", "Use the slip road to build speed and check your blind spot."),
+                   ("Ringway lane choice", "Ending in the wrong lane on the ring road.", "Read the signs early and move across in good time.")]),
+]
+OTHER = []
 
 
 def centre_page(c):
@@ -185,6 +231,8 @@ def centre_page(c):
 {mistakes(c['mistakes'])}
 <h2>Who tests at {c['name']}?</h2>
 <p>Solihull learners from {c['who']} commonly book here. You can book any centre, but since June 2026 a booked test can only move to one of the three centres nearest it. Compare every option in our <a href="solihull-driving-test-centres-compared.html">Solihull test centres comparison</a>.</p>
+<h2>Other test centres near Solihull</h2>
+<div class="hero__badges">{''.join(f'<a class="chip" href="{x["slug"]}-driving-test-centre-routes.html">{x["name"]} ({x["rate"]}%)</a>' for x in CENTRES if x["slug"] != c["slug"])}<a class="chip" href="solihull-driving-test-centres-compared.html">Compare all</a><a class="chip" href="https://www.drivesq.co.uk/solihull-driving-test-centre-finder.html">Find yours by postcode</a></div>
 <h2>How we prepare you for {c['name']}</h2>
 <ol class="rx-steps"><li data-n="1"><h4>Road types first</h4><p>Roundabouts, dual carriageways and busy high streets on quieter Solihull roads.</p></li>
 <li data-n="2"><h4>The roads around {c['name']}</h4><p>In the final weeks we drive the roads above, at the time of day of your test.</p></li>

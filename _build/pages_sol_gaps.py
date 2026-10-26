@@ -8,6 +8,8 @@ DSQ = SOL.DSQ
 SRC.setdefault("nongb", ("GOV.UK — Driving in Great Britain on a non-GB licence", "https://www.gov.uk/driving-nongb-licence"))
 SRC.setdefault("exchange", ("GOV.UK — Exchange a foreign driving licence", "https://www.gov.uk/exchange-foreign-driving-licence"))
 SRC.setdefault("change", ("GOV.UK — Change your driving test appointment", "https://www.gov.uk/change-driving-test"))
+SRC.setdefault("during", ("GOV.UK — Driving test: what happens during the test", "https://www.gov.uk/driving-test/what-happens-during-test"))
+SRC.setdefault("bring", ("GOV.UK — Driving test: what to take", "https://www.gov.uk/driving-test/what-to-take"))
 SRC.setdefault("result", ("GOV.UK — Driving test: what happens if you fail", "https://www.gov.uk/driving-test/test-result"))
 
 
@@ -77,5 +79,36 @@ def gap_pages():
 <h2>The fastest honest route in Solihull</h2><ol class="rx-steps"><li data-n="1"><h4>Start lessons now</h4><p>You only need a provisional licence.</p></li><li data-n="2"><h4>Book your theory</h4><p>Revise while you learn to drive — see our <a href="../theory-quiz.html">theory quiz</a>.</p></li><li data-n="3"><h4>Book the practical early</h4><p>Waiting times are the biggest delay. Consider any of the seven nearby centres — <a href="solihull-driving-test-centres-compared.html">compared here</a>.</p></li><li data-n="4"><h4>Look for earlier dates legally</h4><p>Use GOV.UK's change-your-test service — see <a href="driving-test-cancellations-shirley.html">Shirley cancellations</a>. Be wary of paid "guaranteed" early tests.</p></li><li data-n="5"><h4>Go intensive</h4><p>Concentrate your hours in the weeks before your date — <a href="intensive-driving-courses-solihull.html">intensive</a> or <a href="semi-intensive-driving-course-solihull.html">semi-intensive</a>.</p></li></ol>
 <h2>Automatic can be quicker</h2><p>Many learners reach test standard sooner without a clutch — but an automatic licence only covers automatics. <a href="automatic-driving-lessons-solihull.html">Automatic lessons</a>.</p>""" + tool("solihull-learner-driver-lesson-plan.html", "Build a week-by-week plan with a test-ready date"),
           [("How fast can I pass my driving test in Solihull?", "Mostly down to how soon you can get a practical test date and how much driving you've done. Start lessons and theory together and book the practical early."), ("Can I have lessons before my theory test?", "Yes — you only need a provisional licence."), ("Do intensive courses work?", "Best once you have a test date and some experience.")], ("lessons", "book", "change")),
+        L("what-happens-on-a-driving-lesson-solihull", "What happens on a driving lesson in Solihull", "What Happens on a Driving Lesson? A Solihull 2-Hour Lesson Explained | SQ",
+          "What a typical 2-hour driving lesson with SQ in Solihull looks like, minute by minute: pick-up, recap, the main skill, real roads, a debrief and notes in your DriveSQ Student Portal.",
+          [("2 hrs", "typical lesson"), ("Door", "to-door pick-up"), ("23", "skills tracked"), ("£70", "for 2 hours")],
+          ["Pick-up from home, college or work.", "Every lesson has one main goal.", "You finish with a debrief and notes in the Student Portal.", "Nothing new until you're ready."],
+          """<p class="lead">Wondering what actually happens on a driving lesson? Here's a typical 2-hour lesson with SQ in Solihull. Every learner is different, but the shape is the same.</p>
+<h2>A 2-hour lesson, step by step</h2><ol class="rx-steps">
+<li data-n="1"><h4>Pick-up (5 min)</h4><p>Your instructor collects you from home, college or work — Shirley, Solihull town centre, Chelmsley Wood or wherever suits.</p></li>
+<li data-n="2"><h4>Recap and today's goal (10 min)</h4><p>A quick chat about last time, and one clear goal: maybe roundabouts, maybe bay parking.</p></li>
+<li data-n="3"><h4>Warm-up drive (15 min)</h4><p>Something you can already do, to settle in.</p></li>
+<li data-n="4"><h4>The main skill (45–60 min)</h4><p>Explained, demonstrated if needed, then practised — first somewhere quiet, then on real Solihull roads like Monkspath's roundabouts or the A34.</p></li>
+<li data-n="5"><h4>Putting it together (20 min)</h4><p>A drive that uses today's skill with everything else — sometimes following a sat-nav, like on the test.</p></li>
+<li data-n="6"><h4>Debrief (10 min)</h4><p>What went well, what to work on, and what's next. Your skills are updated in the DriveSQ Student Portal so you can see your progress.</p></li></ol>
+<h2>Why 2 hours?</h2><p>The first 20 minutes of any lesson are settling in. In a 2-hour lesson you get far more real practice for each pick-up — which is why most of our learners book 2 hours (£70).</p>
+<h2>What to bring</h2><ul><li>Your provisional licence.</li><li>Glasses or contacts if you need them to read a number plate at 20 metres.</li><li>Comfortable, flat shoes.</li></ul>
+<p>First time? Read <a href="beginner-driving-lessons-solihull.html">beginner lessons in Solihull</a>.</p>""" + tool("solihull-learner-driver-lesson-plan.html", "See how lessons build up week by week"),
+          [("How long is a driving lesson?", "Most of our learners book 2 hours; single hours are available too (£40)."), ("Will I drive on busy roads in my first lesson?", "No — we start somewhere quiet and only move on when you're ready."), ("Can I see my progress?", "Yes, in the free DriveSQ Student Portal after every lesson.")]),
+        L("driving-test-day-solihull", "Your driving test day in Solihull, step by step", "Driving Test Day Solihull: What Happens, Step by Step | SQ",
+          "What happens on your driving test at Shirley or another Solihull-area centre: the warm-up lesson, eyesight check, 'show me, tell me', independent driving, the manoeuvre, the result and what comes next.",
+          [("~40 min", "the test drive"), ("20 m", "eyesight check"), ("~20 min", "independent driving"), ("15", "max driving faults")],
+          ["Warm-up lesson that finishes at the test centre.", "Eyesight check, then 'tell me' and 'show me' questions.", "About 20 minutes of independent driving — usually following a sat-nav.", "Up to 15 driving faults and no serious ones to pass."],
+          """<p class="lead">Knowing exactly what will happen takes a lot of the nerves out of test day. Here's how it goes for our learners testing at <a href="shirley-driving-test-centre-routes.html">Shirley</a>, <a href="garretts-green-driving-test-centre-routes.html">Garretts Green</a> and the other centres near Solihull.</p>
+<h2>Before the test</h2><ul><li><b>A warm-up lesson</b> that ends at the test centre with time to spare.</li><li><b>Bring your licence</b> — check GOV.UK for exactly what to take.</li><li>Use the car's toilet stop and calm down before you go in.</li></ul>
+<h2>The test, step by step</h2><ol class="rx-steps">
+<li data-n="1"><h4>Eyesight check</h4><p>Read a number plate from 20 metres.</p></li>
+<li data-n="2"><h4>"Tell me" question</h4><p>One vehicle safety question before you drive.</p></li>
+<li data-n="3"><h4>General driving</h4><p>Normal roads and traffic — for Shirley, often the A34 and the roundabouts around Monkspath.</p></li>
+<li data-n="4"><h4>Independent driving (~20 min)</h4><p>Following a sat-nav, or road signs in about 1 in 5 tests.</p></li>
+<li data-n="5"><h4>"Show me" question</h4><p>Asked while you're driving — like working the rear demister.</p></li>
+<li data-n="6"><h4>One manoeuvre</h4><p>Parallel parking, bay parking (forwards or reverse) or pulling up on the right and reversing. About 1 in 3 tests also includes an emergency stop.</p></li></ol>
+<h2>The result</h2><p>You pass with <b>no more than 15 driving faults</b> and no serious or dangerous faults. The examiner explains how it went — your instructor can listen in if you'd like. Passed? See <a href="pass-plus-solihull.html">Pass Plus</a> and our <a href="https://www.drivesq.co.uk/solihull-new-drivers-first-year.html">first-year guide</a>. Not this time? See <a href="failed-driving-test-lessons-solihull.html">what to do next</a>.</p>""" + tool("solihull-driving-test-readiness-check.html", "Check you're ready before test day"),
+          [("How long is the driving test?", "The drive takes about 40 minutes."), ("Will I have to do an emergency stop?", "About 1 in 3 tests include one."), ("How many faults can I get?", "Up to 15 driving faults, with no serious or dangerous faults.")], ("during", "bring", "book")),
     ]
     return dict(pages)
