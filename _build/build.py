@@ -110,6 +110,30 @@ _inject("guides.html", _CTA, _sec("Questions people search", "Niche questions, s
 for _p in list(pages):
     if "/chorlton.html\"" in pages[_p]:
         pages[_p] = pages[_p].replace("/chorlton.html\"", "/chorlton-cum-hardy.html\"")
+# every page gets checkable facts: GOV.UK fees, DVSA pass-rate data and its local test centre, with sources
+import re as _re
+_CENTRES = {"west didsbury": "west-didsbury", "cheetham hill": "cheetham-hill", "sale": "sale", "bredbury": "bredbury", "chadderton": "chadderton",
+            "bolton": "bolton", "bury": "bury", "rochdale": "rochdale", "atherton": "atherton"}
+def _facts(path, html):
+    root = "../" * path.count("/")
+    txt = _re.sub(r"<[^>]+>", " ", html).lower()
+    found = [(n, sl) for n, sl in _CENTRES.items() if _re.search(r"\b" + n + r"\b (driving )?test centre", txt)][:2]
+    cen = "".join(f'<li><b>{n.title()} test centre:</b> routes, roads and pass rate in our <a href="{root}knowledge/test-centre-{sl}.html">{n.title()} guide</a>.</li>' for n, sl in found)
+    return f"""<section class="section--tight"><div class="container"><div class="rx-method" data-reveal="up"><h3>Key facts, checked</h3><ul>
+<li><b>Provisional licence:</b> £34 online — apply from 15 years 9 months.</li>
+<li><b>Theory test:</b> £23. <b>Practical test:</b> £62 on weekdays, £75 evenings, weekends and bank holidays.</li>
+<li><b>National car test pass rate:</b> 48.7% in 2024-25 (DVSA data).</li>{cen}
+<li><b>Our prices:</b> see <a href="{root}prices.html">lesson prices</a> — manual and automatic are the same.</li></ul>
+<p class="rx-cite">Sources: <a href="https://www.gov.uk/apply-first-provisional-driving-licence" target="_blank" rel="noopener">GOV.UK provisional licence</a> · <a href="https://www.gov.uk/driving-test-cost" target="_blank" rel="noopener">GOV.UK test fees</a> · <a href="https://www.gov.uk/government/statistical-data-sets/car-driving-test-data-by-test-centre" target="_blank" rel="noopener">DVSA test data by centre</a> · <a href="https://passrates.uk/guide/driving-test-pass-rate-2024-2025" target="_blank" rel="noopener">passrates.uk national figure</a></p></div></div></section>
+"""
+_nf = 0
+for _p in list(pages):
+    _h = pages[_p]
+    if "Sources" in _h or "sources" in _h.lower() or _CTA not in _h or _p in ("404.html", "privacy.html", "sitemap.html"):
+        continue
+    pages[_p] = _h.replace(_CTA, _facts(_p, _h) + _CTA, 1)
+    _nf += 1
+print("facts boxes", _nf)
 pages["sitemap.html"] = SM.html_sitemap(pages)
 for path, html in pages.items():
     full = os.path.join(OUT, path)
