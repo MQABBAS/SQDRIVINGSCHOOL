@@ -65,6 +65,10 @@ import pages_sol_gaps as SOLG
 _g = SOLG.gap_pages()
 assert not (set(_g) & set(pages)), set(_g) & set(pages)
 pages.update(_g)
+import pages_sol_local as SOLL
+_l = SOLL.all_pages()
+assert not (set(_l) & set(pages)), set(_l) & set(pages)
+pages.update(_l)
 import pages_sitemap as SM
 # hand-written inner-Manchester, Wythenshawe & Altrincham pages replace the templated versions
 import pages_local as LOCAL

@@ -145,6 +145,12 @@ PCS = [
 ]
 
 
+def _sectors(code):
+    import pages_sol_local as LOC
+    cs = sorted(k for k in LOC.SECTORS if k.split()[0] == code)
+    return '<div class="hero__badges">' + "".join(f'<a class="chip" href="{LOC.slug(k)}.html">{k}</a>' for k in cs) + '<a class="chip" href="solihull-postcode-sectors.html">All sectors</a></div>'
+
+
 def pc_page(code, areas, centre, roads, near, slugs, lead):
     path = f"solihull/{code.lower()}-driving-lessons.html"
     c = CEN[centre]
@@ -155,6 +161,7 @@ def pc_page(code, areas, centre, roads, near, slugs, lead):
 <h2>Areas we cover in {code}</h2><div class="hero__badges">{links}</div>
 <h2>Main roads in {code}</h2><ul>{''.join(f'<li>{r}</li>' for r in roads)}</ul>
 <p>Our <a href="solihull-road-guides.html">Solihull road guides</a> cover limits, cameras and roadworks for each.</p>
+<h2>Postcode sectors in {code}</h2>{_sectors(code)}
 <h2>Schools, colleges and landmarks</h2>{landmarks([(x, code) for x in near])}
 <h2>Your nearest test centre</h2><p>Most {code} learners book <a href="{c['slug']}-driving-test-centre-routes.html">{c['full']}</a> ({c['address']}). Compare all options in our <a href="solihull-driving-test-centres-compared.html">test centre comparison</a>.</p>
 {portal_strip()}"""
@@ -380,6 +387,9 @@ def hub_extra():
     body += sec("Test centres", [(f"{c['slug']}-driving-test-centre-routes.html", c["name"]) for c in CENTRES] + [("solihull-driving-test-centres-compared.html", "Compare all")])
     import pages_sol_roads as RD
     body += sec("Road guides", [(f"{r['slug']}.html", r["short"]) for r in RD.ROADS])
+    import pages_sol_local as LOC
+    body += sec("Postcode sectors", [(f"{LOC.slug(k)}.html", k) for k in sorted(LOC.SECTORS)])
+    body += sec("Fuel, parking, signs &amp; tricky roads", LOC.DIRECTORY)
     body += sec("Schools & colleges", [(f"{s[0]}-driving-lessons.html", s[1]) for s in SCHOOLS])
     body += sec("Workplaces", [(f"{j[0]}-driving-lessons.html", j[1]) for j in JOBS])
     # every lesson-type page (both batches + the gap pages)
