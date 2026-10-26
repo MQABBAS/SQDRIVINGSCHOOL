@@ -12,6 +12,12 @@ DSQ_PAGES = [
     (DSQ + "solihull-driving-school.html", "DriveSQ", "DriveSQ driving school in Solihull", "Meet the DriveSQ Solihull team, the Student Portal and how lessons work."),
     (DSQ + "solihull-driving-test-pass-rates.html", "DriveSQ data", "Solihull driving test pass rates 2026", "Every test centre near Solihull ranked, with what the numbers mean."),
     (DSQ + "driving-instructor-jobs-solihull.html", "Careers", "Driving instructor jobs in Solihull", "Teach with DriveSQ: pupils matched by postcode, Instructor Portal."),
+    (DSQ + "solihull-driving-test-centre-finder.html", "DriveSQ tool", "Solihull test centre finder", "Your postcode → the best of the 7 centres by distance and pass rate."),
+    (DSQ + "solihull-learner-driver-cost-calculator.html", "DriveSQ tool", "Full licence cost calculator", "Provisional, lessons, tests, retakes and insurance — added up."),
+    (DSQ + "solihull-learner-driver-lesson-plan.html", "DriveSQ tool", "Week-by-week lesson plan", "From quiet estates to the M42, with a test-ready date."),
+    (DSQ + "solihull-driving-test-readiness-check.html", "DriveSQ tool", "Am I ready for my test?", "A 15-question self-check built around Solihull's test routes."),
+    (DSQ + "solihull-daylight-driving-planner.html", "DriveSQ tool", "Daylight & sun-glare planner", "Sunrise, sunset and dazzle times in Solihull for any date."),
+    (DSQ + "solihull.html", "DriveSQ", "Every DriveSQ Solihull tool & guide", "Parents' guide, theory test, new drivers and instructor training."),
 ]
 SRC = {
     "pr_shirley": ("passrates.uk — Birmingham (Shirley) test centre, 2024-25", "https://passrates.uk/centres/birmingham-shirley"),
