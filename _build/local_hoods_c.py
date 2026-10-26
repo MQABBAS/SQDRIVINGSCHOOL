@@ -98,7 +98,7 @@ HOODS_C = {
     "first": "Quiet residential streets in Brooklands for the basics.",
     "roads": [("Brooklands Road", "junctions and traffic lights"), ("Altrincham Road (A560)", "buses"), ("Washway Road (A56)", "multi-lane traffic")],
     "spot": ("Tram crossings", "The Metrolink crosses roads nearby. We teach tram signals."),
-    "fact": "Brooklands is one of the closest areas to Sale test centre.",
+    "fact": "Brooklands is a short drive from Sale test centre.",
     "faqs": [("Do you cover Brooklands?", "Yes — both the Manchester and Sale sides."), ("Which test centre?", "Sale.")],
 },
 "northern-moor": {
@@ -168,7 +168,7 @@ HOODS_C = {
     "first": "Quiet residential roads in Timperley for the basics.",
     "roads": [("Park Road", "local traffic"), ("Thorley Lane", "junctions"), ("Stockport Road", "towards Altrincham")],
     "spot": ("Village centre", "Parked cars and pedestrians. We practise slow speed and observation."),
-    "fact": "Timperley is one of the closest areas to Sale test centre.",
+    "fact": "Timperley is a short drive from Sale test centre.",
     "faqs": [("How close is Sale test centre?", "Just a short drive."), ("Do you cover Timperley?", "Yes.")],
 },
 }

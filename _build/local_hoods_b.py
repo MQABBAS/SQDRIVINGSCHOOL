@@ -28,7 +28,7 @@ HOODS_B = {
     "first": "West Gorton's newer streets are quiet and well laid out — great for first lessons.",
     "roads": [("Hyde Road (A57)", "multi-lane traffic"), ("Gorton Road", "local traffic"), ("Pottery Lane", "junctions and traffic lights")],
     "spot": ("Joining Hyde Road", "Busy traffic in both directions. We practise judging safe gaps."),
-    "fact": "West Gorton is close to both West Didsbury and Hyde test centres.",
+    "fact": "West Gorton is close to both West Didsbury and Bredbury test centres.",
     "faqs": [("Do you cover West Gorton?", "Yes."), ("Is it good for nervous learners?", "Yes — quiet newer streets.")],
 },
 "belle-vue": {
@@ -39,7 +39,7 @@ HOODS_B = {
     "roads": [("Hyde Road (A57)", "dual carriageway sections"), ("Kirkmanshulme Lane", "local junctions"), ("Mount Road", "parked cars and schools")],
     "spot": ("Evening events", "Sports venues can bring extra traffic in the evenings. We plan around them."),
     "fact": "Every learner picked up in M18 gets 10 hours for £320 — no ID needed.",
-    "faqs": [("Does Belle Vue get the M18 offer?", "If your pick-up postcode is M18, yes."), ("Which test centre?", "Hyde or West Didsbury.")],
+    "faqs": [("Does Belle Vue get the M18 offer?", "If your pick-up postcode is M18, yes."), ("Which test centre?", "Bredbury or West Didsbury.")],
 },
 "gorton": {
     "line": "Hyde Road, Gorton station and busy local streets.",
@@ -49,7 +49,7 @@ HOODS_B = {
     "roads": [("Hyde Road (A57)", "dual carriageway and traffic lights"), ("Gorton Lane", "local junctions"), ("Mount Road", "parked cars and schools")],
     "spot": ("Hyde Road lane changes", "We practise mirrors, signals and safe lane changes on this busy dual carriageway."),
     "fact": "Gorton learners get the M18 offer — 10 hours for £320 without needing a student or NHS ID.",
-    "faqs": [("What's the M18 offer?", "10 hours for £320 for anyone picked up in M18."), ("Which test centre?", "Hyde or West Didsbury.")],
+    "faqs": [("What's the M18 offer?", "10 hours for £320 for anyone picked up in M18."), ("Which test centre?", "Bredbury or West Didsbury.")],
 },
 "abbey-hey": {
     "line": "Quiet streets near Debdale Park.",
@@ -148,7 +148,7 @@ HOODS_B = {
     "first": "Burnage's quiet suburban roads are perfect for first lessons.",
     "roads": [("Kingsway (A34)", "dual carriageway"), ("Burnage Lane", "local traffic"), ("Mauldeth Road", "junctions and traffic lights")],
     "spot": ("Kingsway and Mauldeth Road junction", "A big junction with traffic lights. We practise lane choice and right turns."),
-    "fact": "Burnage is one of the closest areas to West Didsbury test centre.",
+    "fact": "Burnage is a short drive from West Didsbury test centre.",
     "faqs": [("Does Burnage get the M19 offer?", "Yes — 10 hours for £320."), ("How close is the test centre?", "About 10 minutes.")],
 },
 "didsbury": {
