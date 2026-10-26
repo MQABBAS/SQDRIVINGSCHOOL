@@ -69,6 +69,10 @@ import pages_sol_local as SOLL
 _l = SOLL.all_pages()
 assert not (set(_l) & set(pages)), set(_l) & set(pages)
 pages.update(_l)
+import pages_niche2 as NICHE2
+_n2 = NICHE2.all_pages()
+assert not (set(_n2) & set(pages)), set(_n2) & set(pages)
+pages.update(_n2)
 import pages_sitemap as SM
 # hand-written inner-Manchester, Wythenshawe & Altrincham pages replace the templated versions
 import pages_local as LOCAL
@@ -101,6 +105,7 @@ _sec = lambda eyebrow, title, items: f'<section class="section"><div class="cont
 _inject("guides.html", _CTA, _sec("Greater Manchester", "Local driving guides.", [(f"guides/{g[0]}.html", "Guide", g[1], g[2]) for g in PLACES.GUIDES] + [("roads.html", "Roads", "Road & junction guides", f"{len(ROADS.R)} roads learners worry about.")]))
 _inject("student-driving-lessons-manchester.html", _CTA, _sec("Sixth forms &amp; schools", "More schools and sixth forms.", [(f"students/{x[0]}.html", "Students", x[1], x[2]) for x in PLACES.SCHOOLS]))
 _inject("driving-lessons-manchester.html", _CTA, _sec("Know your roads", "Guides for Manchester learners.", [("roads.html", "Roads", "Road &amp; junction guides", f"{len(ROADS.R)} roads and junctions, how we teach them."), ("work.html", "Work", "Lessons around your job", f"{len(PLACES.WORK)} big workplaces, around shifts."), ("guides.html", "Guides", "Local driving guides", "Matchdays, 20 mph zones, box junctions and more.")]))
+_inject("guides.html", _CTA, _sec("Questions people search", "Niche questions, straight answers.", [(f"guides/{g[0]}.html", "Guide", g[1], g[2][:90] + "…") for g in NICHE2.GUIDES]))
 # chorlton.html is a redirect to chorlton-cum-hardy.html — point every link straight at the real page
 for _p in list(pages):
     if "/chorlton.html\"" in pages[_p]:
