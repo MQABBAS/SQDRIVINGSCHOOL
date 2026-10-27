@@ -410,6 +410,7 @@ def area_page(a):
 {near}
 <h2>Your nearest driving test centre</h2>
 {centre_html}
+<div class="callout"><b>Booking in {n}?</b> See <a href="{DSQ}driving-lessons-{a['slug']}.html">DriveSQ's {n} page</a> — distances to all 7 test centres, a {n} lesson plan and the free Student Portal.</div>
 <h2>Manual and automatic lessons in {n}</h2>
 <p>Both cost the same: £35 an hour, £70 for 2 hours, £350 for 10 hours. Automatic is popular with nervous learners and anyone who wants to pass faster — see <a href="automatic-driving-lessons-solihull.html">automatic driving lessons in Solihull</a>. In a hurry? Try an <a href="intensive-driving-courses-solihull.html">intensive course</a>.</p>
 <h2>What makes SQ different in {n}</h2>
