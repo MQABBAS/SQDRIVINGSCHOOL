@@ -214,6 +214,7 @@ def footer(root):
         <a class="brand" href="{root}index.html"><span class="sq-logo sq-logo--nav">SQ</span><span class="brand__text"><span class="brand__name">Driving School</span><span class="brand__sub">Powered by DriveSQ</span></span></a>
         <p class="mt-2">Fast, modern driving lessons across all of Greater Manchester. Manual &amp; automatic. Free DriveSQ Student Portal for every learner.</p>
         <p class="mt-1" style="font-size:.85em">Our team includes <b>ADIs</b> (DVSA Approved Driving Instructors, green badge) and <b>PDIs</b> (trainee instructors with a DVSA pink-badge licence). We tell you which you're booking, and motorway lessons are always with an ADI.</p>
+        <p class="mt-1" style="font-size:.85em"><a href="https://www.drivesq.co.uk/driving-lessons-solihull.html"><b>Driving lessons in Solihull</b></a> · <a href="https://www.drivesq.co.uk/student.html">Free DriveSQ Student Portal</a> · <a href="https://www.drivesq.co.uk/dashboard.html">Instructor Portal</a></p>
         <div class="btn-row mt-2">
           <a class="btn btn--wa btn--sm" data-wa="Hi SQ Driving School!" href="https://wa.me/{WA}">{ICONS['wa']} WhatsApp</a>
           <a class="btn btn--ghost btn--sm" href="tel:{TEL}">{ICONS['phone']} {PHONE}</a>

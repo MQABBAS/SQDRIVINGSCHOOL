@@ -9,6 +9,9 @@ from hub_shell import *
 
 DSQ = "https://www.drivesq.co.uk/"
 DSQ_PAGES = [
+    (DSQ + "driving-lessons-solihull.html", "DriveSQ", "Book driving lessons in Solihull with DriveSQ", "£35/hr manual or auto, plus the free Student Portal: progress tracking, 700+ theory questions and 14 mock tests."),
+    (DSQ + "free-learner-driver-resources-solihull.html", "DriveSQ", "Free learner driver resources", "The Student Portal, 11 free tools and official guides in one place."),
+    (DSQ + "solihull-driving-schools-compared.html", "DriveSQ", "Solihull driving schools compared", "What 12 Solihull schools publish — and which have a student portal."),
     (DSQ + "solihull-driving-school.html", "DriveSQ", "DriveSQ driving school in Solihull", "Meet the DriveSQ Solihull team, the Student Portal and how lessons work."),
     (DSQ + "solihull-driving-test-pass-rates.html", "DriveSQ data", "Solihull driving test pass rates 2026", "Every test centre near Solihull ranked, with what the numbers mean."),
     (DSQ + "driving-instructor-jobs-solihull.html", "Careers", "Driving instructor jobs in Solihull", "Teach with DriveSQ: pupils matched by postcode, Instructor Portal."),
@@ -21,6 +24,11 @@ DSQ_PAGES = [
 ]
 # every DriveSQ Solihull page — listed on the SQ Solihull directory so the two sites link page to page
 DSQ_ALL = [(DSQ + f, "DriveSQ", t, "") for f, t in [
+    ("driving-lessons-solihull.html", "Driving lessons in Solihull (DriveSQ)"), ("free-learner-driver-resources-solihull.html", "Free learner resources"),
+    ("solihull-driving-schools-compared.html", "Solihull driving schools compared"), ("learner-driver-age-checker.html", "When can I start driving?"),
+    ("driving-test-fault-counter.html", "Would I have passed?"), ("passing-distance-guide.html", "Passing distance guide"),
+    ("which-lights-should-i-use.html", "Which lights should I use?"), ("cockpit-drill-checklist.html", "Cockpit drill checklist"),
+    ("manual-or-automatic-decider.html", "Manual or automatic?"),
     ("solihull.html", "Every DriveSQ Solihull tool & guide"), ("solihull-driving-school.html", "DriveSQ driving school Solihull"),
     ("driving-instructors-solihull.html", "Driving instructors Solihull"), ("solihull-driving-test-pass-rates.html", "Solihull driving test pass rates"),
     ("solihull-driving-test-centre-finder.html", "Test centre finder"), ("solihull-learner-driver-cost-calculator.html", "Licence cost calculator"),
@@ -73,9 +81,15 @@ def _dsq_box():
     return f'<div class="rx-method" data-reveal="up"><h3>SQ Driving School is part of DriveSQ</h3><p>Lessons in Solihull are run by SQ Driving School and DriveSQ together — the same instructors, prices and Student Portal. More from DriveSQ:</p><ul>{links}</ul></div>'
 
 
+PROMO = (f'<div class="callout" style="border-left:4px solid #D10A11"><b>Learning in Solihull?</b> Book with <a href="{DSQ}driving-lessons-solihull.html">DriveSQ</a> — £35/hr manual or automatic, '
+         f'with the <a href="{DSQ}student.html">free DriveSQ Student Portal</a>: progress tracking, 700+ theory questions, 14 mock tests and instructor messaging. '
+         f'Instructors get the free <a href="{DSQ}dashboard.html">Instructor Portal</a>.</div>')
+
+
 def S(path, seo, cat, crumb, title, desc, stats, keys, body, faqs, src, related, root=ROOT, extra_schema=None, after=""):
     rel = list(related) + [(DSQ_PAGES[0][0], "DriveSQ", DSQ_PAGES[0][2], DSQ_PAGES[0][3])]
     crumbs = [("Solihull", "driving-lessons-solihull.html")] + ([crumb] if crumb else [])
+    body = body.replace("</p>", "</p>" + PROMO, 1) if "</p>" in body else PROMO + body
     html = shell(path, seo, cat, crumbs, title, desc, stats, keys, body + _dsq_box(), faqs, [SRC[k] if isinstance(k, str) else k for k in src], rel,
                  side_title="Lessons in Solihull", portal_mode="wm", booking_heading=BOOK_H, active="areas.html", side_html=SIDE, root=root,
                  extra_schema=extra_schema, after_body=after)
