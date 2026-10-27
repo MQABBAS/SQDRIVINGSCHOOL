@@ -123,6 +123,7 @@ def _facts(path, html):
 <li><b>Provisional licence:</b> £34 online — apply from 15 years 9 months.</li>
 <li><b>Theory test:</b> £23. <b>Practical test:</b> £62 on weekdays, £75 evenings, weekends and bank holidays.</li>
 <li><b>National car test pass rate:</b> 48.7% in 2024-25 (DVSA data).</li>{cen}
+<li><b>Instructors:</b> ADIs (green badge) and PDIs (trainee, pink badge) — always disclosed before you book.</li>
 <li><b>Our prices:</b> see <a href="{root}prices.html">lesson prices</a> — manual and automatic are the same.</li></ul>
 <p class="rx-cite">Sources: <a href="https://www.gov.uk/apply-first-provisional-driving-licence" target="_blank" rel="noopener">GOV.UK provisional licence</a> · <a href="https://www.gov.uk/driving-test-cost" target="_blank" rel="noopener">GOV.UK test fees</a> · <a href="https://www.gov.uk/government/statistical-data-sets/car-driving-test-data-by-test-centre" target="_blank" rel="noopener">DVSA test data by centre</a> · <a href="https://passrates.uk/guide/driving-test-pass-rate-2024-2025" target="_blank" rel="noopener">passrates.uk national figure</a></p></div></div></section>
 """
