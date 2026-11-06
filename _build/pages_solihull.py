@@ -43,7 +43,15 @@ DSQ_ALL = [(DSQ + f, "DriveSQ", t, "") for f, t in [
     ("adi-vs-pdi-driving-instructor-solihull.html", "ADI vs PDI explained"), ("theory-test-centre-near-solihull.html", "Theory test centres near Solihull"),
     ("solihull-taxi-private-hire-driver-lessons.html", "Taxi & private hire drivers"), ("driving-lesson-gift-vouchers-solihull.html", "Driving lesson gift vouchers"),
     ("solihull-postcode-checker.html", "Solihull postcode checker"), ("solihull-pass-by-date-planner.html", "Pass-by-date planner"),
-    ("show-me-tell-me-questions-trainer.html", "Show me, tell me trainer")]]
+    ("show-me-tell-me-questions-trainer.html", "Show me, tell me trainer"),
+    ("solihull-driving-test-centres-data.html", "Test centre data explorer (DVSA)"),
+    ("shirley-driving-test-centre-pass-rate-wait-time.html", "Shirley test centre data"),
+    ("garretts-green-driving-test-centre-pass-rate-wait-time.html", "Garretts Green test centre data"),
+    ("south-yardley-driving-test-centre-pass-rate-wait-time.html", "South Yardley test centre data"),
+    ("kings-heath-driving-test-centre-pass-rate-wait-time.html", "Kings Heath test centre data"),
+    ("coventry-driving-test-centre-pass-rate-wait-time.html", "Coventry test centre data"),
+    ("redditch-driving-test-centre-pass-rate-wait-time.html", "Redditch test centre data"),
+    ("warwick-driving-test-centre-pass-rate-wait-time.html", "Warwick test centre data")]]
 SRC = {
     "pr_shirley": ("passrates.uk — Birmingham (Shirley) test centre, 2024-25", "https://passrates.uk/centres/birmingham-shirley"),
     "pr_bham": ("passrates.uk — Birmingham test centres pass rates", "https://passrates.uk/guide/birmingham-driving-test-centres-pass-rates"),
