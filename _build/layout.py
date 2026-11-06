@@ -1,4 +1,5 @@
 """Shared layout for SQ Driving School pages."""
+import re
 import json
 
 SITE = "https://sqdrivingschool.com"
@@ -360,7 +361,22 @@ def page(path, title, desc, body, root="", active=None, schema=None, noindex=Fal
         title = title.replace(" | SQ Driving School", " | SQ Driving")
     if len(title) > 62:
         title = title.replace(" | SQ Driving", "")
+    if not re.search(r"""data-tool=['"](wizard|contact)['"]""", body):
+        body = _with_booking(body, root)
     return head(title, desc, path, root, schema, noindex) + header(active or path, root) + body + footer(root)
+
+
+def _with_booking(body, root):
+    """Every page gets the 60-second booking wizard (DriveSQ admin + email + push) unless it already has one."""
+    import pages_book as K
+    sid = "" if re.search(r"""id=['"]book['"]""", body) else ' id="book"'
+    blk = (f'<section class="section section--alt"{sid}><div class="container" style="max-width:900px">'
+           '<div class="section__head center"><div class="eyebrow">Book with SQ · part of DriveSQ</div><h2>Book a lesson in 60 seconds</h2>'
+           '<p class="lead">Tell us what you need — it goes straight to the SQ Driving School team and a real person replies, usually within the hour.</p></div>'
+           + K.wizard_html().replace('href="privacy.html"', f'href="{root}privacy.html"') +
+           '<p class="note center mt-2">Prefer to talk? WhatsApp or call us any time — details below.</p></div></section>')
+    k = body.rfind("</main>")
+    return body[:k] + blk + body[k:] if k >= 0 else body + blk
 
 
 def reassure():
