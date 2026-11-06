@@ -36,7 +36,13 @@ DSQ_ALL = [(DSQ + f, "DriveSQ", t, "") for f, t in [
     ("solihull-learner-driver-lesson-plan.html", "Week-by-week lesson plan"), ("solihull-parents-guide-learner-drivers.html", "Parents' guide"),
     ("solihull-new-drivers-first-year.html", "First year after passing"), ("solihull-theory-test-guide.html", "Theory test from Solihull"),
     ("solihull-learner-driver-insurance.html", "Learner driver insurance"), ("driving-instructor-training-solihull.html", "Become a driving instructor"),
-    ("driving-instructor-jobs-solihull.html", "Driving instructor jobs Solihull")]]
+    ("driving-instructor-jobs-solihull.html", "Driving instructor jobs Solihull"),
+    ("driving-test-rule-changes-2026-solihull.html", "2026 driving test rule changes"), ("best-month-driving-test-solihull.html", "Best month for your test"),
+    ("winter-driving-solihull.html", "Winter driving & gritting routes"), ("solihull-school-term-dates-driving-lessons.html", "Term dates & lesson timing"),
+    ("birmingham-clean-air-zone-solihull-drivers.html", "Clean Air Zone first-car checker"), ("m42-junction-5a-a4545-new-road-solihull.html", "M42 J5A & A4545 explained"),
+    ("adi-vs-pdi-driving-instructor-solihull.html", "ADI vs PDI explained"), ("theory-test-centre-near-solihull.html", "Theory test centres near Solihull"),
+    ("solihull-taxi-private-hire-driver-lessons.html", "Taxi & private hire drivers"), ("driving-lesson-gift-vouchers-solihull.html", "Driving lesson gift vouchers"),
+    ("solihull-postcode-checker.html", "Solihull postcode checker")]]
 SRC = {
     "pr_shirley": ("passrates.uk — Birmingham (Shirley) test centre, 2024-25", "https://passrates.uk/centres/birmingham-shirley"),
     "pr_bham": ("passrates.uk — Birmingham test centres pass rates", "https://passrates.uk/guide/birmingham-driving-test-centres-pass-rates"),
