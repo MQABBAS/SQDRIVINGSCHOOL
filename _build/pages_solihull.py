@@ -52,7 +52,12 @@ DSQ_ALL = [(DSQ + f, "DriveSQ", t, "") for f, t in [
     ("kings-heath-driving-test-centre-pass-rate-wait-time.html", "Kings Heath test centre data"),
     ("coventry-driving-test-centre-pass-rate-wait-time.html", "Coventry test centre data"),
     ("redditch-driving-test-centre-pass-rate-wait-time.html", "Redditch test centre data"),
-    ("warwick-driving-test-centre-pass-rate-wait-time.html", "Warwick test centre data")]]
+    ("warwick-driving-test-centre-pass-rate-wait-time.html", "Warwick test centre data"),
+    ("driving-test-pass-rate-by-age-solihull.html", "Pass rate by age (DVSA)"),
+    ("automatic-vs-manual-pass-rate-solihull.html", "Automatic vs manual pass rates"),
+    ("first-time-pass-rate-solihull.html", "First-time pass rates"),
+    ("driving-test-cancellations-solihull.html", "DVSA test cancellations"),
+    ("driving-test-waiting-times-solihull.html", "Test waiting times tracker")]]
 SRC = {
     "dvsa_centres": ("DVSA via GOV.UK — car driving test data by test centre, 2025-26", "https://www.gov.uk/government/statistical-data-sets/car-driving-test-data-by-test-centre"),
     "pr_shirley": ("passrates.uk — Birmingham (Shirley) test centre, 2024-25", "https://passrates.uk/centres/birmingham-shirley"),
