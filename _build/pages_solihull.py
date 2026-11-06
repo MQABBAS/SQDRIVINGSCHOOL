@@ -42,7 +42,8 @@ DSQ_ALL = [(DSQ + f, "DriveSQ", t, "") for f, t in [
     ("birmingham-clean-air-zone-solihull-drivers.html", "Clean Air Zone first-car checker"), ("m42-junction-5a-a4545-new-road-solihull.html", "M42 J5A & A4545 explained"),
     ("adi-vs-pdi-driving-instructor-solihull.html", "ADI vs PDI explained"), ("theory-test-centre-near-solihull.html", "Theory test centres near Solihull"),
     ("solihull-taxi-private-hire-driver-lessons.html", "Taxi & private hire drivers"), ("driving-lesson-gift-vouchers-solihull.html", "Driving lesson gift vouchers"),
-    ("solihull-postcode-checker.html", "Solihull postcode checker")]]
+    ("solihull-postcode-checker.html", "Solihull postcode checker"), ("solihull-pass-by-date-planner.html", "Pass-by-date planner"),
+    ("show-me-tell-me-questions-trainer.html", "Show me, tell me trainer")]]
 SRC = {
     "pr_shirley": ("passrates.uk — Birmingham (Shirley) test centre, 2024-25", "https://passrates.uk/centres/birmingham-shirley"),
     "pr_bham": ("passrates.uk — Birmingham test centres pass rates", "https://passrates.uk/guide/birmingham-driving-test-centres-pass-rates"),
