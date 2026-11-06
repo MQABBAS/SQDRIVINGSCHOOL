@@ -277,6 +277,7 @@ def sector_page(code):
     links = [(f"driving-lessons-{s}.html", NAMES[s]) for s in aslugs if s in NAMES]
     if district in ("B90", "B91", "B92", "B93", "B94", "B36", "B37", "B40") or district == "CV7":
         links.append((f"{district.lower()}-driving-lessons.html", f"All of {district}"))
+    body += f'<div class="callout"><b>Booking in {code}?</b> <a href="{DSQ}driving-lessons-{code.lower().replace(" ", "-")}.html">DriveSQ\'s {code} page</a> has a map of every postcode in {code}, a lesson plan and the free Student Portal — or <a href="{DSQ}solihull-postcode-checker.html">check any postcode</a>.</div>'
     body += f"<h2>Nearby</h2>{chips(links)}"
     faqs = [(f"Do you give driving lessons in {code}?", f"Yes — across {areas.split(' (')[0]}, manual or automatic, from £35 an hour."),
             (f"What is the nearest driving test centre to {code}?", f"{c1['full']}, about {d1:.1f} miles in a straight line. {c2['full']} is next at about {d2:.1f} miles."),

@@ -217,6 +217,7 @@ def pc_page(code, areas, centre, roads, near, slugs, lead):
 <h2>Main roads in {code}</h2><ul>{''.join(f'<li>{r}</li>' for r in roads)}</ul>
 <p>Our <a href="solihull-road-guides.html">Solihull road guides</a> cover limits, cameras and roadworks for each.</p>
 <h2>Postcode sectors in {code}</h2>{_sectors(code)}
+<p>{(f'DriveSQ\'s <a href="{SOL.DSQ}driving-lessons-{code.lower()}.html">{code} page</a> maps every postcode in {code} by sector.') if code != 'B40' else f'Check any postcode with DriveSQ\'s <a href="{SOL.DSQ}solihull-postcode-checker.html">postcode checker</a>.'}</p>
 <h2>Schools, colleges and landmarks</h2>{landmarks([(x, code) for x in near])}
 <h2>Your nearest test centre</h2><p>Most {code} learners book <a href="{c['slug']}-driving-test-centre-routes.html">{c['full']}</a> ({c['address']}). Compare all options in our <a href="solihull-driving-test-centres-compared.html">test centre comparison</a>.</p>
 {portal_strip()}"""
