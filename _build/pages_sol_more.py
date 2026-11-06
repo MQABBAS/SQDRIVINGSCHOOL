@@ -212,7 +212,7 @@ def pc_page(code, areas, centre, roads, near, slugs, lead):
     names = {a["slug"]: a["name"] for a in SOL.AREAS}
     links = "".join(f'<a class="chip" href="driving-lessons-{s}.html">{names[s]}</a>' for s in slugs if s in names)
     body = f"""<p class="lead">Driving lessons in {code}: {areas}. {lead}</p>
-{RS._figs([("£35", "per hour, manual or automatic", ""), (c['name'], "usual nearest test centre", f"{c['rate']}% pass rate 2024-25"), (str(len(slugs)), "areas in this guide", ""), ("Free", "DriveSQ Student Portal", "")])}
+{RS._figs([("£35", "per hour, manual or automatic", ""), (c['name'], "usual nearest test centre", f"{c['rate']}% pass rate 2025-26 (DVSA)"), (str(len(slugs)), "areas in this guide", ""), ("Free", "DriveSQ Student Portal", "")])}
 <h2>Areas we cover in {code}</h2><div class="hero__badges">{links}</div>
 <h2>Main roads in {code}</h2><ul>{''.join(f'<li>{r}</li>' for r in roads)}</ul>
 <p>Our <a href="solihull-road-guides.html">Solihull road guides</a> cover limits, cameras and roadworks for each.</p>
@@ -262,7 +262,7 @@ def school_page(s):
     body = f"""<p class="lead">Driving lessons for students at {name}, {addr}. We pick up from the school gates after lessons (once you're 17), plan around your timetable and exams, and give students 10 hours for £320.</p>
 <h2>About {name}</h2><p>{note} {sixth_txt}</p>
 <h2>Roads around {name}</h2><ul>{''.join(f'<li>{r}</li>' for r in roads)}</ul><p>Solihull is rolling out 20mph limits at every school location (the first order took effect on 28 August 2025). Driving past schools at home time is excellent hazard-perception training.</p>
-<h2>When to start</h2><ol class="rx-steps"><li data-n="1"><h4>Apply for your provisional licence at 15 years 9 months</h4><p>So it arrives in time for your 17th birthday.</p></li><li data-n="2"><h4>Start theory early</h4><p>The DriveSQ Student Portal includes a theory library and 50-question mock tests.</p></li><li data-n="3"><h4>First lesson on your 17th birthday</h4><p>We pick up from school, home or college.</p></li><li data-n="4"><h4>Test around exams</h4><p>Most students test at <a href="{c['slug']}-driving-test-centre-routes.html">{c['name']}</a> ({c['rate']}% pass rate in 2024-25). Avoid booking during exam season.</p></li></ol>
+<h2>When to start</h2><ol class="rx-steps"><li data-n="1"><h4>Apply for your provisional licence at 15 years 9 months</h4><p>So it arrives in time for your 17th birthday.</p></li><li data-n="2"><h4>Start theory early</h4><p>The DriveSQ Student Portal includes a theory library and 50-question mock tests.</p></li><li data-n="3"><h4>First lesson on your 17th birthday</h4><p>We pick up from school, home or college.</p></li><li data-n="4"><h4>Test around exams</h4><p>Most students test at <a href="{c['slug']}-driving-test-centre-routes.html">{c['name']}</a> ({c['rate']}% pass rate in 2025-26, DVSA). Avoid booking during exam season.</p></li></ol>
 {portal_strip()}
 <p class="note">SQ Driving School is independent of {name}; this page is a guide for its students and parents.</p>"""
     faqs = [(f"Can you pick me up from {name}?", "Yes — from the school gates once you're 17, as well as from home."), ("Is there a student discount?", "Yes: 10 hours for £320 instead of £350."),
@@ -325,13 +325,13 @@ def lesson_pages():
     out = {}
     pages = [
         L("driving-lesson-prices-solihull", "Driving lesson prices in Solihull", "Driving Lesson Prices Solihull 2026 | £35/hr, No Booking Fees | SQ",
-          "Driving lesson prices in Solihull for 2026: £35/hr manual or automatic, £70 for 2 hours, £350 for 10 hours (£320 NHS & students), no booking fees — plus what Solihull schools typically charge.",
-          [("£35", "per hour"), ("£0", "booking fees"), ("£350", "10 hours"), ("£320", "NHS & students")],
-          ["£35 an hour, manual or automatic — same price.", "No booking fees, no fuel surcharges.", "10 hours £350, or £320 for NHS staff and students.", "Typical advertised Solihull rates: roughly £32–£42 an hour."],
+          "Driving lesson prices in Solihull for 2026: £35/hr manual or automatic, £70 for 2 hours, £350 for 10 hours (£330 for new learners' first block, £320 NHS & students), no booking fees — plus what Solihull schools typically charge.",
+          [("£35", "per hour"), ("£330", "first 10 hours — new learners"), ("£350", "10 hours"), ("£320", "NHS & students")],
+          ["£35 an hour, manual or automatic — same price.", "No booking fees, no fuel surcharges.", "New learners: first 10 hours £330. Then 10 hours £350, or £320 for NHS staff and students.", "Typical advertised Solihull rates: roughly £32–£42 an hour."],
           """<p class="lead">One clear price list — no booking fees, no "from" prices, no surcharge for automatic.</p>
 <div class="rx-table-wrap"><table class="rx-table"><thead><tr><th>What</th><th>Price</th><th>Per hour</th></tr></thead><tbody>
 <tr><td>Single 1-hour lesson (manual or automatic)</td><td><b>£40</b></td><td>£40</td></tr><tr><td>2-hour lesson</td><td><b>£70</b></td><td>£35</td></tr>
-<tr><td>10-hour block</td><td><b>£350</b></td><td>£35</td></tr><tr><td>10-hour block — NHS staff and students</td><td><b>£320</b></td><td>£32</td></tr>
+<tr><td>🎉 New learner offer — your first 10-hour block</td><td><b>£330</b></td><td>£33</td></tr><tr><td>10-hour block</td><td><b>£350</b></td><td>£35</td></tr><tr><td>10-hour block — NHS staff and students</td><td><b>£320</b></td><td>£32</td></tr>
 <tr><td>DriveSQ Student Portal</td><td><b>Free</b></td><td>—</td></tr><tr><td>Booking fee</td><td><b>£0</b></td><td>—</td></tr></tbody></table></div>
 <h2>What does learning to drive cost in Solihull?</h2><p>Using the DVSA's average of about 45 hours of lessons, that's around £1,575 at £35/hr — less with blocks — plus the £23 theory test and £62 weekday practical test (£75 evenings, weekends and bank holidays). Use our <a href="../driving/learning-to-drive-timeline-planner.html">timeline planner</a> for your own numbers.</p>
 <h2>How Solihull prices compare</h2><p>We looked at advertised prices from driving schools and national providers covering Solihull in October 2026. Advertised single-hour rates mostly clustered around £32–£36, with a range of roughly £27–£42; 10-hour blocks ranged from about £300 to £410. Some providers don't publish a price at all, and some add a booking fee. Check exactly what's included before you compare.</p>
@@ -374,7 +374,7 @@ def lesson_pages():
           "How to find an earlier driving test at Shirley or nearby centres safely: checking GOV.UK yourself, the 2026 booking rules, avoiding paid 'cancellation finder' traps, and being test-ready first.",
           [("2", "changes per booking (2026)"), ("3", "nearest-centre rule"), ("GOV.UK", "only official site"), ("£62", "weekday test")],
           ["Only book and change tests on GOV.UK.", "Since 2026 you can usually change a booking twice.", "A booked test can only move to one of the three nearest centres.", "Make sure you're ready before chasing an early date."],
-          """<p class="lead">Shirley had the area's best pass rate in 2024-25, so it's popular. Here's how to find an earlier date — honestly and safely.</p>
+          """<p class="lead">Shirley had the best pass rate of the centres Solihull learners use in 2025-26 (56.6%, DVSA), so it's popular. Here's how to find an earlier date — honestly and safely.</p>
 <h2>Check GOV.UK yourself</h2><p>Cancellations appear on the official booking service. Checking regularly — especially early mornings — is free.</p>
 <h2>Know the 2026 rules</h2><p>Since 31 March 2026 a booking can normally be changed twice, and since 9 June 2026 a booked test can only move to one of the three centres nearest it. See <a href="../knowledge/driving-test-booking-rules-2026.html">the 2026 rules</a>.</p>
 <h2>Be careful with paid services</h2><p>Some third-party services charge to find or resell tests. The DVSA has acted against test resellers. Never share your licence details with a site you don't trust.</p>
@@ -398,7 +398,7 @@ def lesson_pages():
           [("Do you offer weekend driving lessons in Solihull?", "Yes."), ("Do evening and weekend tests cost more?", "Yes — £75 instead of £62 for a weekday test.")], ("lessons", "cost", "book")),
         L("semi-intensive-driving-course-solihull", "Semi-intensive driving courses in Solihull", "Semi-Intensive Driving Course Solihull | 6–10 Hours a Week | SQ",
           "Semi-intensive driving courses in Solihull — 6 to 10 hours a week, ideal for beginners who want to pass in weeks rather than months, at £35/hr.",
-          [("6–10", "hours a week"), ("£35", "per hour"), ("Weeks", "not months"), ("Shirley", "58.1%")],
+          [("6–10", "hours a week"), ("£35", "per hour"), ("Weeks", "not months"), ("Shirley", "56.6%")],
           ["Faster than weekly lessons, gentler than a one-week intensive.", "Ideal for beginners.", "Same £35 an hour.", "Planned around a test date."],
           """<p class="lead">A semi-intensive course is the sweet spot for many beginners: 6–10 hours a week, so you don't forget between lessons, without the pressure of a one-week crash course.</p>
 <h2>How it compares</h2><div class="rx-table-wrap"><table class="rx-table"><thead><tr><th>Plan</th><th>Hours a week</th><th>45 hours takes</th></tr></thead><tbody><tr><td>Weekly lessons</td><td>2</td><td>About 23 weeks</td></tr><tr><td><b>Semi-intensive</b></td><td><b>6–10</b></td><td><b>About 5–8 weeks</b></td></tr><tr><td>Intensive</td><td>15–30</td><td>About 2–3 weeks</td></tr></tbody></table></div>
@@ -415,10 +415,10 @@ def lesson_pages():
                 ["Free for every SQ Driving School learner in Solihull.", "See all 23 skills move from introduced to independent.", "Theory library and mock tests built in.", "Know when you're ready for Shirley or Garretts Green."],
                 f"""<p class="lead">Most driving schools give you a lesson and a "see you next week". With SQ — part of DriveSQ — you get the DriveSQ Student Portal: a clear record of where you are, what's left and when you're test-ready.</p>
 <h2>What's inside</h2><div class="rt-marks"><div class="rt-mark"><b>23 driving skills</b><small>Recorded by your instructor after every lesson — from moving off to roundabouts and manoeuvres.</small></div><div class="rt-mark"><b>Theory library</b><small>Revise the Highway Code and road signs.</small></div><div class="rt-mark"><b>50-question mock tests</b><small>Like the real multiple-choice test (pass mark 43).</small></div><div class="rt-mark"><b>Test-readiness checklist</b><small>Know when to book Shirley — not guess.</small></div><div class="rt-mark"><b>Instructor messaging</b><small>Lesson times and questions in one place.</small></div></div>
-<h2>Why it matters in Solihull</h2><p>Shirley test centre had the area's best pass rate in 2024-25 (58.1%) — but only for learners who turn up ready. The portal makes "ready" visible.</p>
+<h2>Why it matters in Solihull</h2><p>Shirley test centre had the area's best pass rate in 2025-26 (56.6%, DVSA) — but only for learners who turn up ready. The portal makes "ready" visible.</p>
 <p><a class="btn btn--red" href="{STUDENT}" target="_blank" rel="noopener">Student login ↗</a> <a class="btn btn--ghost" href="../student-portal.html">How it works</a></p>{portal_strip()}""",
                 [("Is the DriveSQ Student Portal free?", "Yes, for every SQ Driving School learner."), ("Can my parents see my progress?", "You can share your progress with them from the portal.")],
-                [SRC["lessons"], SRC["pr_shirley"]], [("solihull/drivesq-instructor-portal-solihull.html", "Instructors", "DriveSQ Instructor Portal", "For Solihull instructors.")])
+                [SRC["lessons"], SRC["dvsa_centres"]], [("solihull/drivesq-instructor-portal-solihull.html", "Instructors", "DriveSQ Instructor Portal", "For Solihull instructors.")])
     ip = "solihull/drivesq-instructor-portal-solihull.html"
     out[ip] = S(ip, "DriveSQ Instructor Portal | Driving Instructors in Solihull | SQ", "DriveSQ Instructor Portal", ("Instructor Portal", ip),
                 "The DriveSQ Instructor Portal for Solihull instructors", "How the DriveSQ Instructor Portal works for driving instructors in Solihull: learners matched by postcode, diary and bookings, skill records, messaging — and how to join.",

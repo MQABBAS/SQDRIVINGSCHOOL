@@ -253,10 +253,10 @@ def sector_page(code):
     fuel = [t for t in fuel if t[0] <= 2.0][:4]
     rows = "".join(f'<tr><td><a href="{x["slug"]}-driving-test-centre-routes.html">{x["full"]}</a></td><td>{d:.1f} miles</td><td>{x["rate"]}%</td></tr>' for d, x in rk)
     body = f"""<p class="lead">Driving lessons in {code}: {areas}. {note}</p>
-{RS._figs([(f"{d1:.1f} mi", f"to {c1['name']} test centre", "straight line from the middle of " + code), (f"{c1['rate']}%", f"{c1['name']} pass rate", "2024-25"), (f"{d2:.1f} mi", f"to {c2['name']}", "next nearest"), ("£35", "per hour", "manual or automatic")])}
+{RS._figs([(f"{d1:.1f} mi", f"to {c1['name']} test centre", "straight line from the middle of " + code), (f"{c1['rate']}%", f"{c1['name']} pass rate", "2025-26 (DVSA)"), (f"{d2:.1f} mi", f"to {c2['name']}", "next nearest"), ("£35", "per hour", "manual or automatic")])}
 <h2>Which test centre for {code}?</h2>
 <p>From the middle of {code}, {c1['full']} is closest at about {d1:.1f} miles in a straight line, then {c2['full']} at {d2:.1f} miles. {"Within your three nearest, " + best[1]['name'] + " has the highest recent pass rate (" + str(best[1]['rate']) + "%)." if best[1] is not c1 else c1['name'] + " is also the best pass rate of your three nearest."} Most learners do best at the centre whose roads they've practised most, so pick early and train there.</p>
-<div class="table-wrap"><table><thead><tr><th>Test centre</th><th>Distance</th><th>Pass rate 2024-25</th></tr></thead><tbody>{rows}</tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Test centre</th><th>Distance</th><th>Pass rate 2025-26</th></tr></thead><tbody>{rows}</tbody></table></div>
 <p class="note">Distances are straight-line from the centre of the postcode sector; driving distances are longer. Pass rates from passrates.uk (DVSA data).</p>
 <h2>Roads you'll learn on in {code}</h2><ul>{''.join(f'<li>{r}</li>' for r in roads)}</ul>
 {('<p>Road guides for this area: ' + ', '.join(f'<a href="{ROADG[r]}">{SHORT.get(R[r], R[r])}</a>' for r in rg) + '.</p>') if rg else ''}
@@ -307,7 +307,7 @@ def sectors_hub():
              ["Find your sector's nearest test centre.", "Each sector has its own local guide.", "Fuel and parking near you.", "Book from any page."],
              body, [("How do I find my postcode sector?", "Take the first half of your postcode and the first number of the second half: B91 3QJ is B91 3."),
                     ("Do you cover the Birmingham side of Solihull too?", "Yes — Sheldon, Acocks Green, Hall Green, Garretts Green, Shard End, Castle Vale and nearby sectors.")],
-             ["pcdata", "pr_shirley", "pr_gg", "pr_sy", "find"], cat="Postcode sector")
+             ["pcdata", "dvsa_centres", "find"], cat="Postcode sector")
 
 
 # ============================================================ GUIDES
@@ -476,7 +476,7 @@ def guides():
 <h2>Fast-changing roads</h2><p>HS2 works on the A452 and around Stonebridge, and new layouts near the airport, mean what you practised last month may have changed. See <a href="stonebridge-island-a446-hs2-roundabout.html">Stonebridge</a> and <a href="birmingham-airport-roads-and-drop-off.html">airport roads</a>.</p>""",
                  [("What's the hardest part of driving in Solihull for learners?", "Busy junctions and multi-lane roundabouts on the A34, A41 and A45 — and the signalled M42 junctions."),
                   ("Where's best for a first driving lesson in Solihull?", "Quiet residential roads such as Dorridge, Monkspath or Cheswick Green.")],
-                 ["faults", "faults2", "during", "pr_shirley"]))
+                 ["faults", "faults2", "during", "dvsa_centres"]))
     return out
 
 

@@ -6,6 +6,7 @@ Facts come from Census 2021, Solihull Council, National Highways/TfWM and passra
 route roads come from public route sheets (DVSA no longer publishes routes). No invented reviews or claims.
 Each page is written around the phrases people actually search for, and links to the DriveSQ Solihull pages."""
 from hub_shell import *
+import json, os
 
 DSQ = "https://www.drivesq.co.uk/"
 DSQ_PAGES = [
@@ -53,6 +54,7 @@ DSQ_ALL = [(DSQ + f, "DriveSQ", t, "") for f, t in [
     ("redditch-driving-test-centre-pass-rate-wait-time.html", "Redditch test centre data"),
     ("warwick-driving-test-centre-pass-rate-wait-time.html", "Warwick test centre data")]]
 SRC = {
+    "dvsa_centres": ("DVSA via GOV.UK — car driving test data by test centre, 2025-26", "https://www.gov.uk/government/statistical-data-sets/car-driving-test-data-by-test-centre"),
     "pr_shirley": ("passrates.uk — Birmingham (Shirley) test centre, 2024-25", "https://passrates.uk/centres/birmingham-shirley"),
     "pr_bham": ("passrates.uk — Birmingham test centres pass rates", "https://passrates.uk/guide/birmingham-driving-test-centres-pass-rates"),
     "pr_gg": ("passrates.uk — Birmingham (Garretts Green), 2024-25", "https://passrates.uk/centres/birmingham-garretts-green"),
@@ -81,8 +83,8 @@ SRC = {
     "lessons": ("GOV.UK — Driving lessons and learning to drive", "https://www.gov.uk/driving-lessons-learning-to-drive"),
     "cost": ("GOV.UK — Driving test cost", "https://www.gov.uk/driving-test-cost"),
 }
-NAT = 48.7
-SIDE = (f'<p>£35/hr manual or automatic · 2 hours £70 · 10 hours £350 (£320 for NHS staff and students) · free DriveSQ Student Portal · door-to-door pick-up across Solihull.</p>'
+NAT = 50.0  # Great Britain car pass rate 2025-26 (DVSA DRT122A)
+SIDE = (f'<p><b>🎉 New learners: your first 10 hours for £330.</b></p><p>£35/hr manual or automatic · 2 hours £70 · 10 hours £350 (£320 for NHS staff and students) · free DriveSQ Student Portal · door-to-door pick-up across Solihull.</p>'
         f'<a class="btn btn--red btn--block" href="#book">{icon("calendar")} Book in 60 seconds</a>')
 BOOK_H = "Book driving lessons in Solihull in 60 seconds"
 
@@ -116,7 +118,7 @@ def _biz(path, area, pcs):
     return [{"@context": "https://schema.org", "@type": "DrivingSchool", "name": f"SQ Driving School — {area}", "url": f"{SITE}/{path}", "telephone": "+44 7352 932003",
              "priceRange": "£35–£350", "parentOrganization": {"@type": "Organization", "name": "DriveSQ", "url": DSQ},
              "areaServed": [{"@type": "Place", "name": f"{area}, Solihull"}] + [{"@type": "Place", "name": p} for p in pcs],
-             "makesOffer": [{"@type": "Offer", "name": "Single 1-hour driving lesson", "price": "40", "priceCurrency": "GBP"}, {"@type": "Offer", "name": "Driving lesson (2 hours or more), per hour", "price": "35", "priceCurrency": "GBP"}, {"@type": "Offer", "name": "10-hour block", "price": "350", "priceCurrency": "GBP"}]}]
+             "makesOffer": [{"@type": "Offer", "name": "Single 1-hour driving lesson", "price": "40", "priceCurrency": "GBP"}, {"@type": "Offer", "name": "Driving lesson (2 hours or more), per hour", "price": "35", "priceCurrency": "GBP"}, {"@type": "Offer", "name": "New learner offer: first 10 hours", "price": "330", "priceCurrency": "GBP"}, {"@type": "Offer", "name": "10-hour block", "price": "350", "priceCurrency": "GBP"}]}]
 
 
 # ============================================================ TEST CENTRES
@@ -124,7 +126,7 @@ CENTRES = [
     dict(slug="shirley", name="Shirley", full="Birmingham (Shirley)", pc="B90 4AA", address="401 Stratford Road (A34), Shirley, Solihull B90 4AA",
          rate=58.1, note="2024-25, about 9,600 tests", src="pr_shirley",
          who="Shirley, Monkspath, Dickens Heath, Cheswick Green, Hillfield, Solihull town centre, Olton, Knowle, Dorridge, Hockley Heath and Hall Green",
-         intro="Shirley is the only DVSA car test centre inside the borough of Solihull — and in the 2024-25 test year it had the highest pass rate of any Birmingham-area centre, 58.1%, nearly ten points above the UK average. It sits on the A34 Stratford Road in Shirley, and almost every reported route spends time on that road.",
+         intro="Shirley is the only DVSA car test centre inside the borough of Solihull — and in 2025-26 it had the highest pass rate of the seven centres Solihull learners use — {SH}% in DVSA's official figures, against {GB}% across Great Britain. It sits on the A34 Stratford Road in Shirley, and almost every reported route spends time on that road.",
          area="Routes start with a service road onto the A34 and then mix the busy Stratford Road corridor with Monkspath's modern estates and roundabouts, residential Shirley, and the lanes towards Dickens Heath. Expect lots of roundabouts — large ones on the boulevards and mini-roundabouts in the estates.",
          roads=[("A34", "Stratford Road", "On 13 of 15 routes in one public route collection. Busy, with bus stops, frequent side roads, shops and roundabouts — mirrors and lane discipline all the way.", ("Bus stops", "Roundabouts", "Side roads")),
                 ("", "Marshall Lake Road and Cranmore Road", "Reported early on routes — residential and industrial traffic near the A34.", ("Junctions",)),
@@ -145,7 +147,7 @@ CENTRES = [
     dict(slug="garretts-green", name="Garretts Green", full="Birmingham (Garretts Green)", pc="B33 0SD", address="Granby Avenue, Garretts Green, Birmingham B33 0SD",
          rate=42.0, note="2024-25, 21,871 tests", src="pr_gg",
          who="Chelmsley Wood, Kingshurst, Smith's Wood, Fordbridge, Castle Bromwich, Marston Green and nearby east Birmingham",
-         intro="Garretts Green, on Granby Avenue in east Birmingham, is the busiest test centre in Birmingham — almost 22,000 car tests in 2024-25 — and the closest for many learners in north Solihull. Its pass rate, 42.0%, is well below the UK average. Learners from Chelmsley Wood, Kingshurst and Marston Green often book here, so this is where our north Solihull lessons focus.",
+         intro="Garretts Green, on Granby Avenue in east Birmingham, is the busiest test centre near Solihull — {GGN} car tests in 2025-26 — and the closest for many learners in north Solihull. Its pass rate, {GG}%, is below the Great Britain average of {GB}%. Learners from Chelmsley Wood, Kingshurst and Marston Green often book here, so this is where our north Solihull lessons focus.",
          area="Routes leave Granby Avenue for Garretts Green Lane and Meadway, then use Cooks Lane, Stechford Road and the fast A45 Coventry Road dual carriageway, with multi-lane roundabouts and some tight residential streets.",
          roads=[("", "Granby Avenue", "Start and finish of every test, through a business park — vans and lorries.", ("Moving off", "Large vehicles")),
                 ("", "Garretts Green Lane", "Reached at a roundabout straight out of the centre.", ("Roundabout",)),
@@ -162,7 +164,7 @@ CENTRES = [
     dict(slug="south-yardley", name="South Yardley", full="Birmingham (South Yardley)", pc="B26 1EA", address="Clay Lane, South Yardley, Birmingham B26 1EA",
          rate=41.6, note="2024-25, 12,709 tests", src="pr_sy",
          who="Sheldon, Yardley, Acocks Green, Elmdon, Olton and west Solihull border areas",
-         intro="South Yardley, on Clay Lane, is close to Solihull's western edge and had the lowest pass rate of the Birmingham centres in 2024-25 at 41.6%. Some Olton and Elmdon learners book it for an earlier date — this guide tells you what you'd be taking on.",
+         intro="South Yardley, on Clay Lane, is close to Solihull's western edge and had a {SY}% pass rate in 2025-26 (DVSA), below the Great Britain average of {GB}%. Some Olton and Elmdon learners book it for an earlier date — this guide tells you what you'd be taking on.",
          area="Most routes start on Clay Lane and quickly reach the A45 Coventry Road, with fast dual-carriageway sections, then dense urban junctions around Yardley.",
          roads=[("", "Clay Lane", "Where most routes start.", ("Moving off",)),
                 ("A45", "Coventry Road", "Fast dual-carriageway sections — lane changes and speed management.", ("Dual carriageway",)),
@@ -176,7 +178,7 @@ CENTRES = [
     dict(slug="kings-heath", name="Kings Heath", full="Birmingham (Kings Heath)", pc="B14 5JA", address="955 Alcester Road South, Birmingham B14 5JA",
          rate=47.0, note="2024-25, 8,488 tests", src="pr_kh",
          who="Shirley West, Hall Green, Hollywood, Majors Green and Solihull's south-western edge",
-         intro="Kings Heath test centre is on the A435 Alcester Road South near the Druids Lane roundabout. It's an alternative for learners on Solihull's south-western side. There's no on-site parking and no toilets — plan your warm-up lesson accordingly. Pass rate in 2024-25: 47.0%.",
+         intro="Kings Heath test centre is on the A435 Alcester Road South near the Druids Lane roundabout. It's an alternative for learners on Solihull's south-western side. There's no on-site parking and no toilets — plan your warm-up lesson accordingly. Pass rate in 2025-26: {KH}% (DVSA).",
          area="Expect fast multi-lane roundabouts such as Druids Lane and the Maypole, the Hollywood Bypass, Yardley Wood Road, and residential streets, with some country-road sections.",
          roads=[("A435", "Alcester Road South", "The centre's main road — busy, with shops and buses.", ("Buses", "Shops")),
                 ("", "Druids Lane roundabout", "Fast and multi-lane, close to the centre.", ("Multi-lane roundabout",)),
@@ -196,7 +198,7 @@ CENTRES += [
     dict(slug="coventry", name="Coventry", full="Coventry", pc="CV7 9EJ", address="42 Bayton Road, Exhall, Coventry CV7 9EJ",
          rate=42.3, note="2024-25, about 9,100 tests", src="pr_cov",
          who="Balsall Common, Meriden, Berkswell, Hampton-in-Arden and the borough's eastern villages",
-         intro="Coventry test centre is on Bayton Road in Exhall, on the northern edge of Coventry close to the M6 and the A444. For learners in Meriden, Berkswell and Balsall Common it can be nearer than the Birmingham centres — but its 42.3% pass rate in 2024-25 was well below the UK average, so it rewards proper preparation.",
+         intro="Coventry test centre is on Bayton Road in Exhall, on the northern edge of Coventry close to the M6 and the A444. For learners in Meriden, Berkswell and Balsall Common it can be nearer than the Birmingham centres — but its {CV}% pass rate in 2025-26 was the lowest of the seven centres Solihull learners use, so it rewards proper preparation.",
          area="Reported routes leave Bayton Road's industrial estate and quickly reach busy roundabouts on the A444, then mix main roads like Foleshill Road with residential streets around Exhall and Longford.",
          roads=[("", "Bayton Road", "Start and finish of every test — an industrial estate with lorries and vans.", ("Moving off", "Large vehicles")),
                 ("A444", "Phoenix Way / Holbrook bypass", "Fast dual carriageway with large roundabouts — the stretch most reported routes return to.", ("Dual carriageway", "Roundabouts")),
@@ -210,7 +212,7 @@ CENTRES += [
     dict(slug="warwick", name="Warwick", full="Warwick (Wedgenock House)", pc="CV34", address="Wedgenock House, Rothwell Road (off Wedgnock Lane), Warwick CV34",
          rate=48.4, note="2024-25, about 10,900 tests", src="pr_war",
          who="Knowle, Dorridge, Balsall Common and the southern villages",
-         intro="Warwick's test centre, Wedgenock House, sits on Rothwell Road just off Wedgnock Lane on the north side of Warwick, close to the Warwick bypass. For learners in Knowle, Dorridge and Balsall Common it's a straight run down the A4141 — and in 2024-25 its pass rate was close to the UK average.",
+         intro="Warwick's test centre, Wedgenock House, sits on Rothwell Road just off Wedgnock Lane on the north side of Warwick, close to the Warwick bypass. For learners in Knowle, Dorridge and Balsall Common it's a straight run down the A4141 — and in 2025-26 its pass rate ({WA}%) was close to the Great Britain average.",
          area="Reported routes use the residential estates around Woodloes and Hampton Magna, main roads like Birmingham Road into Warwick, and roundabouts near the bypass — plus narrow streets in the historic town centre.",
          roads=[("", "Wedgnock Lane & Rothwell Road", "Every test starts and ends here, on the edge of an industrial area.", ("Moving off",)),
                 ("", "Birmingham Road", "Main road into Warwick, with junctions, crossings and changing limits.", ("Junctions", "Speed changes")),
@@ -225,7 +227,7 @@ CENTRES += [
     dict(slug="redditch", name="Redditch", full="Redditch", pc="B97 6HJ", address="Elm Road, Redditch B97 6HJ",
          rate=46.7, note="2024-25, about 4,700 tests", src="pr_red",
          who="Hockley Heath, Earlswood, Tidbury Green and Tanworth-in-Arden",
-         intro="Redditch test centre is on Elm Road, just north of the town centre. It's a smaller centre — about 4,700 car tests in 2024-25 — and an option for learners on Solihull's southern edge around Hockley Heath and Tidbury Green. Redditch is known for its network of roundabouts and its ring road.",
+         intro="Redditch test centre is on Elm Road, just north of the town centre. It's a smaller centre — about 4,500 car tests in 2025-26 — and an option for learners on Solihull's southern edge around Hockley Heath and Tidbury Green. Redditch is known for its network of roundabouts and its ring road.",
          area="Reported routes go from Elm Road onto Hewell Road and the Ringway, then use the town's fast 'highway' roads such as the Alvechurch Highway, plenty of roundabouts, and residential roads like Throckmorton Road and Walkwood Road.",
          roads=[("", "Elm Road", "Where every test starts and ends.", ("Moving off",)),
                 ("", "Hewell Road", "Main road from the centre towards the town — junctions and traffic lights.", ("Junctions",)),
@@ -238,6 +240,17 @@ CENTRES += [
                    ("Joining the highways", "Merging too slowly onto the fast highway roads.", "Use the slip road to build speed and check your blind spot."),
                    ("Ringway lane choice", "Ending in the wrong lane on the ring road.", "Read the signs early and move across in good time.")]),
 ]
+
+# Official DVSA 2025-26 figures (DRT122A, GOV.UK, OGL) — copied from DriveSQ's _data/dvsa_centres.json
+_DV = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "dvsa_centres.json"), encoding="utf-8"))
+_Y = "2025-26"
+_FMT = {"GB": _DV["national"]["years"][_Y]["p"], "SH": _DV["centres"]["shirley"]["years"][_Y]["p"], "GG": _DV["centres"]["garretts-green"]["years"][_Y]["p"],
+        "GGN": f'{_DV["centres"]["garretts-green"]["years"][_Y]["n"]:,}', "SY": _DV["centres"]["south-yardley"]["years"][_Y]["p"], "KH": _DV["centres"]["kings-heath"]["years"][_Y]["p"],
+        "CV": _DV["centres"]["coventry"]["years"][_Y]["p"], "WA": _DV["centres"]["warwick"]["years"][_Y]["p"]}
+for _c in CENTRES:
+    _d = _DV["centres"][_c["slug"]]["years"][_Y]
+    _c["rate"], _c["note"], _c["src"] = _d["p"], f"2025-26, {_d['n']:,} tests (DVSA)", "dvsa_centres"
+    _c["intro"] = _c["intro"].format(**_FMT)
 OTHER = []
 
 
@@ -278,7 +291,7 @@ def centre_page(c):
              f"{c['name']} driving test centre: routes, roads and pass rate", f"{c['full']} driving test centre ({c['pc']}): reported test-route roads, roundabouts, landmarks, the {c['rate']}% pass rate and the mistakes to avoid — for Solihull learners.",
              [(f"{c['rate']}%", "pass rate"), (c["pc"], "postcode"), (str(len(c["roads"])), "roads profiled"), (str(len(c["mistakes"])), "mistakes to avoid")],
              [f"{c['full']}: {c['address']}.", f"Pass rate {c['rate']}% ({c['note']}).", f"Reported routes use {c['roads'][0][1]} and {c['roads'][1][1]}.", "Routes aren't published — prepare for the road types."],
-             body, faqs, [c["src"], "pr_nat", "dvsa", "find", "book"], rel, extra_schema=sch, after=feedback_form(c["name"]))
+             body, faqs, [c["src"], "dvsa", "find", "book"], rel, extra_schema=sch, after=feedback_form(c["name"]))
 
 
 def compare_page():
@@ -286,12 +299,12 @@ def compare_page():
     rows = [(c["full"], c["address"].split(",")[-1].strip(), c["rate"], c["src"], c["who"], f'{c["slug"]}-driving-test-centre-routes.html') for c in CENTRES] + [(n, a, r, s, w, "") for n, a, r, s, w in OTHER]
     rows.sort(key=lambda x: -x[2])
     tr = "".join(f'<tr><td>{f"<a href={chr(34)}{h}{chr(34)}>{n}</a>" if h else n}</td><td class="mono">{a}</td><td class="mono"><b>{r}%</b></td><td>{w}</td></tr>' for n, a, r, s, w, h in rows)
-    bars = RS._bars([(n.replace("Birmingham ", ""), "", r, "rx-bar__fill--green" if r >= NAT else "") for n, a, r, s, w, h in rows] + [("UK average", "2024-25", NAT, "rx-bar__fill--grey")], "%", 70)
+    bars = RS._bars([(n.replace("Birmingham ", ""), "", r, "rx-bar__fill--green" if r >= NAT else "") for n, a, r, s, w, h in rows] + [("GB average", "2025-26", NAT, "rx-bar__fill--grey")], "%", 70)
     body = f"""
 <p class="lead">Solihull has one driving test centre of its own — Shirley — but learners here regularly book six or seven others. Which one you choose changes the roads you're tested on, and the pass rates differ by more than 16 points. Here is every centre a Solihull learner realistically uses, ranked.</p>
 {bars}
-<div class="rx-table-wrap" data-reveal="up"><table class="rx-table"><thead><tr><th>Centre</th><th>Location</th><th>Pass rate 2024-25</th><th>Handy for</th></tr></thead><tbody>{tr}</tbody></table></div>
-<p class="note">Pass rates: passrates.uk's analysis of DVSA data for 2024-25. UK average {NAT}%.</p>
+<div class="rx-table-wrap" data-reveal="up"><table class="rx-table"><thead><tr><th>Centre</th><th>Location</th><th>Pass rate 2025-26</th><th>Handy for</th></tr></thead><tbody>{tr}</tbody></table></div>
+<p class="note">Pass rates: DVSA's official figures for 2025-26 (April 2025 to March 2026). Great Britain average {NAT}%. <a href="https://www.drivesq.co.uk/solihull-driving-test-centres-data.html">Charts for every centre on DriveSQ →</a></p>
 <h2>Which test centre is closest to my Solihull postcode?</h2>
 <ul><li><b>B90 (Shirley, Monkspath, Dickens Heath, Cheswick Green)</b> — <a href="shirley-driving-test-centre-routes.html">Shirley</a> is on your doorstep.</li>
 <li><b>B91 (Solihull town centre)</b> — Shirley is closest; South Yardley is an alternative.</li>
@@ -301,18 +314,18 @@ def compare_page():
 <li><b>B36 / B37 (Chelmsley Wood, Kingshurst, Smith's Wood, Castle Bromwich, Marston Green)</b> — <a href="garretts-green-driving-test-centre-routes.html">Garretts Green</a> is usually nearest.</li>
 <li><b>CV7 (Balsall Common, Meriden)</b> — Coventry or Warwick, or Shirley.</li></ul>
 <h2>Should you chase the highest pass rate?</h2>
-<p>Shirley's 58.1% is the best in the area, and if you live in south Solihull it's also your nearest centre — ideal. But driving across the borough to a centre whose roads you've never practised usually cancels out a pass-rate advantage. Our <a href="{ROOT}research/driving-test-pass-rates-explained-manchester.html">pass-rate study</a> shows how to read these numbers properly.</p>
+<p>Shirley's 56.6% (DVSA, 2025-26) is the best in the area, and if you live in south Solihull it's also your nearest centre — ideal. But driving across the borough to a centre whose roads you've never practised usually cancels out a pass-rate advantage. Our <a href="{ROOT}research/driving-test-pass-rates-explained-manchester.html">pass-rate study</a> shows how to read these numbers properly.</p>
 <h2>Theory test centres for Solihull</h2>
 <p>Solihull's own theory test centre closed on 31 August 2011. Learners now usually take the theory test in Birmingham city centre or Coventry — check the address on your booking.</p>"""
     faqs = [("Which driving test centre is in Solihull?", "Birmingham (Shirley), at 401 Stratford Road, Shirley B90 4AA — the only DVSA car test centre inside Solihull borough."),
-            ("Which test centre near Solihull has the highest pass rate?", "Shirley, with 58.1% in 2024-25 — the highest of the Birmingham-area centres."),
+            ("Which test centre near Solihull has the highest pass rate?", "Shirley, with 56.6% in 2025-26 according to DVSA — the highest of the seven centres Solihull learners use."),
             ("Where do north Solihull learners take their test?", "Usually Garretts Green (B33 0SD), the nearest centre to Chelmsley Wood, Kingshurst and Marston Green."),
             ("Is there a theory test centre in Solihull?", "No. It closed in 2011; learners use Birmingham or Coventry.")]
     return S(path, "Solihull Driving Test Centres Compared: Pass Rates 2026 | SQ Driving School", "Test centres", ("Test centres compared", path),
              "Solihull driving test centres compared", "Every driving test centre Solihull learners use — Shirley, Garretts Green, South Yardley, Kings Heath, Coventry, Warwick, Redditch — with pass rates and which suits your postcode.",
-             [("58.1%", "Shirley — highest"), ("7", "centres compared"), ("16+ pts", "pass-rate spread"), ("B90", "Shirley postcode")],
-             ["Shirley is Solihull's only test centre and had the highest pass rate nearby (58.1%).", "North Solihull learners usually book Garretts Green.", "Pick the centre whose roads you can practise.", "Solihull's theory test centre closed in 2011."],
-             body, faqs, ["pr_bham", "pr_shirley", "pr_gg", "pr_sy", "pr_kh", "pr_cov", "pr_war", "pr_red", "pr_nat", "theory_close"],
+             [("56.6%", "Shirley — highest"), ("7", "centres compared"), ("16+ pts", "pass-rate spread"), ("B90", "Shirley postcode")],
+             ["Shirley is Solihull's only test centre and had the highest pass rate nearby (56.6% in 2025-26).", "North Solihull learners usually book Garretts Green.", "Pick the centre whose roads you can practise.", "Solihull's theory test centre closed in 2011."],
+             body, faqs, ["dvsa_centres", "theory_close"],
              [("solihull/shirley-driving-test-centre-routes.html", "Test routes", "Shirley test routes", "Roads, roundabouts and mistakes."), ("solihull/garretts-green-driving-test-centre-routes.html", "Test routes", "Garretts Green test routes", "For north Solihull learners.")])
 
 
@@ -323,7 +336,7 @@ AREAS = [
          local="The A34 Stratford Road runs through the heart of Shirley with its shops, bus stops and side roads. Off it you'll find quiet residential streets for early lessons, and the roundabouts of Monkspath and Cranmore Boulevard for later ones.",
          roads=["Stratford Road (A34)", "Haslucks Green Road", "Tanworth Lane", "Bills Lane", "Blackford Road"],
          near=["Shirley station", "Stratford Road shops", "Blythe Valley Park (M42 J4)"],
-         angle="Because the test centre is in Shirley, most of our Shirley learners book Shirley test centre — the area's highest pass rate in 2024-25."),
+         angle="Because the test centre is in Shirley, most of our Shirley learners book Shirley test centre — the area's highest pass rate in 2025-26 (DVSA)."),
     dict(slug="solihull-town-centre", name="Solihull town centre", pcs=["B91"], centre="shirley",
          intro="Learning to drive in Solihull town centre means Touchwood, the High Street, Warwick Road and some of the busiest junctions in the borough — great practice once the basics are solid.",
          local="Early lessons start on the quieter residential roads around the town centre; later we tackle the Warwick Road (A41), Lode Lane and the junctions around Touchwood and Solihull station.",
@@ -411,7 +424,7 @@ def area_page(a):
     c = next((x for x in CENTRES if x["slug"] == a["centre"]), None)
     roads = "".join(f"<li>{r}</li>" for r in a["roads"])
     near = landmarks([(x, f"Near {n}") for x in a["near"]])
-    centre_html = (f'<p>{a["angle"]} Read our <a href="{c["slug"]}-driving-test-centre-routes.html">{c["name"]} test route guide</a> — {c["rate"]}% pass rate in 2024-25.</p>' if c
+    centre_html = (f'<p>{a["angle"]} Read our <a href="{c["slug"]}-driving-test-centre-routes.html">{c["name"]} test route guide</a> — {c["rate"]}% pass rate in 2025-26 (DVSA).</p>' if c
                    else f'<p>{a["angle"]} <a href="solihull-driving-test-centres-compared.html">Compare Solihull test centres</a>.</p>')
     body = f"""
 <p class="lead">{a['intro']}</p>
@@ -446,7 +459,7 @@ def area_page(a):
 # ============================================================ LESSON TYPES
 def lesson_pages():
     out = {}
-    common_src = ["lessons", "cost", "book", "pr_shirley"]
+    common_src = ["lessons", "cost", "book", "dvsa_centres"]
     defs = [
         ("automatic-driving-lessons-solihull", "Automatic driving lessons in Solihull", "Automatic Driving Lessons Solihull | £35/hr | SQ Driving School",
          "Automatic driving lessons across Solihull — Shirley, Solihull, Knowle, Chelmsley Wood and more — at £35/hr, the same as manual.",
@@ -460,7 +473,7 @@ def lesson_pages():
          "Intensive and semi-intensive driving courses in Solihull — several hours a week, planned around a test at Shirley, Garretts Green or nearby.",
          """<p class="lead">An intensive driving course in Solihull packs your lessons into a few weeks instead of months. The hours are the same; the gaps between them shrink — so you spend less time relearning.</p>
 <h2>How our Solihull intensive courses work</h2>
-<ol class="rx-steps"><li data-n="1"><h4>Assessment</h4><p>A first lesson to see where you are.</p></li><li data-n="2"><h4>A plan around a test date</h4><p>Ideally at Shirley (58.1% pass rate in 2024-25). We'll help you find a date.</p></li><li data-n="3"><h4>Several lessons a week</h4><p>Usually 2-hour lessons, several days a week.</p></li><li data-n="4"><h4>Mock test and test day</h4><p>Including a warm-up lesson ending at the test centre.</p></li></ol>
+<ol class="rx-steps"><li data-n="1"><h4>Assessment</h4><p>A first lesson to see where you are.</p></li><li data-n="2"><h4>A plan around a test date</h4><p>Ideally at Shirley (56.6% pass rate in 2025-26, DVSA). We'll help you find a date.</p></li><li data-n="3"><h4>Several lessons a week</h4><p>Usually 2-hour lessons, several days a week.</p></li><li data-n="4"><h4>Mock test and test day</h4><p>Including a warm-up lesson ending at the test centre.</p></li></ol>
 <h2>Is intensive right for you?</h2><p>It suits people with some experience, a theory pass and a test date. Complete beginners usually do better with a semi-intensive plan (6–10 hours a week). Prices are the same as normal lessons: £35/hr, £350 for 10 hours.</p>""",
          [("How fast can I pass with an intensive course in Solihull?", "It depends on experience and test availability. With a theory pass and a test date, a few weeks is realistic for many learners."), ("Do intensive courses cost more?", "No — the same £35/hr.")]),
         ("motorway-driving-lessons-m42-solihull", "Motorway lessons on the M42 near Solihull", "Motorway Driving Lessons M42 Solihull | Learners & New Drivers | SQ",
@@ -493,7 +506,7 @@ def lesson_pages():
         rel = [("solihull/shirley-driving-test-centre-routes.html", "Test routes", "Shirley test routes", "Solihull's own test centre."), ("solihull/solihull-driving-test-centres-compared.html", "Compare", "Solihull test centres compared", "Pass rates and postcodes.")]
         src = common_src + (["m42", "tfwm", "motorway"] if "motorway" in slug else []) + (["college", "story"] if "student" in slug else [])
         out[path] = S(path, seo, "Lessons in Solihull", (title.replace(" in Solihull", "").replace(" near Solihull", ""), path), title, desc,
-                      [("£35", "per hour"), ("£350", "10 hours"), ("58.1%", "Shirley pass rate"), ("Free", "Student Portal")],
+                      [("£35", "per hour"), ("£330", "first 10 hours (new learners)"), (f"{_FMT['SH']}%", "Shirley pass rate"), ("Free", "Student Portal")],
                       [desc.split(" — ")[0] + ".", "Manual and automatic both £35/hr.", "Lessons planned around your test centre's roads.", "Free DriveSQ Student Portal with every lesson."],
                       body, faqs, src, rel, extra_schema=_biz(path, "Solihull", ["B90", "B91", "B92", "B93", "B94", "B36", "B37"]))
     return out
@@ -504,7 +517,7 @@ def guide():
     path = "solihull/learning-to-drive-in-solihull.html"
     body = f"""
 <p class="lead">Solihull is not Manchester, and it's not Birmingham either. It has more cars per household than most of England, the country's first smart motorway on its doorstep, an airport and the NEC inside its borders, and a test centre with one of the best pass rates in the region. Here is what that means for learning to drive here — with every figure sourced.</p>
-{RS._figs([("216,245", "Solihull residents (Census 2021)", "Up 4.6% since 2011"), ("~18%", "households with no car or van (2021)", "England: about 23.5%"), ("58.1%", "Shirley test pass rate, 2024-25", "UK: 48.7%"), ("2006", "M42 became the UK's first smart-motorway pilot", "J3a–J7")])}
+{RS._figs([("216,245", "Solihull residents (Census 2021)", "Up 4.6% since 2011"), ("~18%", "households with no car or van (2021)", "England: about 23.5%"), ("56.6%", "Shirley test pass rate, 2025-26", "GB: 50.0% (DVSA)"), ("2006", "M42 became the UK's first smart-motorway pilot", "J3a–J7")])}
 <h2>A borough of drivers</h2>
 <p>At the 2021 Census, Solihull Council reports that just 18% of households — about 15,750 — had no car or van, compared with roughly 23.5% across England. North Solihull has more households without a car than the south. With a median age of 43, Solihull is older than England as a whole, and 16–24 year olds make up about 9% of residents. Most young people grow up in car-owning households — which means more chances for <a href="{ROOT}knowledge/practising-with-family-supervisor-rules.html">private practice</a> between lessons.</p>
 <h2>The roads that shape Solihull drivers</h2>
@@ -516,7 +529,7 @@ def guide():
 <h2>Roadworks: M42 junction 6 and HS2</h2>
 <p>National Highways' M42 junction 6 improvement and the HS2 Interchange station (between the M42, A45 and A452) mean changing layouts and temporary limits around the NEC and airport. TfWM now expects HS2 services to start between 2029 and 2033.</p>
 <h2>Theory and practical tests</h2>
-<p>Solihull's theory test centre closed in August 2011 — take your theory test in Birmingham or Coventry. For the practical, <a href="shirley-driving-test-centre-routes.html">Shirley</a> is the borough's only centre and had the area's highest pass rate in 2024-25. See all options in our <a href="solihull-driving-test-centres-compared.html">comparison</a>.</p>
+<p>Solihull's theory test centre closed in August 2011 — take your theory test in Birmingham or Coventry. For the practical, <a href="shirley-driving-test-centre-routes.html">Shirley</a> is the borough's only centre and had the area's highest pass rate in 2025-26 (DVSA). See all options in our <a href="solihull-driving-test-centres-compared.html">comparison</a>.</p>
 <h2>Jobs that need a licence</h2>
 <p>JLR's Solihull plant on Lode Lane — its largest, covering about 300 acres and building Range Rover and Discovery models — plus the airport, the NEC, Resorts World and Blythe Valley Park are major employers. Many shifts start before buses run.</p>"""
     faqs = [("How many people live in Solihull?", "216,245 at the 2021 Census, up 4.6% since 2011."),
@@ -525,9 +538,9 @@ def guide():
             ("Where can I take my theory test near Solihull?", "Birmingham or Coventry. Solihull's theory centre closed in 2011.")]
     return S(path, "Learning to Drive in Solihull: Local Guide & Data 2026 | SQ Driving School", "Solihull guide", ("Learning to drive in Solihull", path),
              "Learning to drive in Solihull: the local guide", "Everything about learning to drive in Solihull: car ownership, the M42 smart motorway, 20mph limits, the Clean Air Zone, test and theory centres and local roads — all sourced.",
-             [("216k", "residents"), ("18%", "no-car households"), ("58.1%", "Shirley pass rate"), ("3", "M42 junctions")],
+             [("216k", "residents"), ("18%", "no-car households"), ("56.6%", "Shirley pass rate"), ("3", "M42 junctions")],
              ["About 18% of Solihull households had no car in 2021 — fewer than England overall.", "The M42 here was the UK's first smart-motorway pilot (2006).", "Birmingham's Clean Air Zone doesn't apply in Solihull.", "Shirley is the only test centre in the borough."],
-             body, faqs, ["census", "story", "ons_cars", "speed", "safety", "caz", "brum", "m42", "tfwm", "theory_close", "jlr", "pr_shirley"],
+             body, faqs, ["census", "story", "ons_cars", "speed", "safety", "caz", "brum", "m42", "tfwm", "theory_close", "jlr", "dvsa_centres"],
              [("solihull/solihull-driving-test-centres-compared.html", "Compare", "Test centres compared", "Pass rates and postcodes."), ("solihull/motorway-driving-lessons-m42-solihull.html", "Lessons", "M42 motorway lessons", "Smart-motorway skills.")])
 
 
@@ -538,7 +551,7 @@ def pillar():
     cen = "".join(f'<a class="rx-study" href="solihull/{c["slug"]}-driving-test-centre-routes.html" data-reveal="up"><span class="k-cat">{c["pc"]} · {c["rate"]}%</span><h3>{c["name"]} test centre</h3><p>{len(c["roads"])} roads, mistakes and landmarks.</p></a>' for c in CENTRES)
     body = f"""
 <p class="lead">SQ Driving School — part of DriveSQ — now teaches across Solihull, from Shirley, Solihull town centre, Olton, Knowle and Dorridge to Chelmsley Wood, Castle Bromwich, Kingshurst, Marston Green, Balsall Common, Meriden and every village in between. Manual or automatic, £35 an hour, door-to-door pick-up and the free DriveSQ Student Portal.</p>
-{RS._figs([("£35", "per hour, manual or automatic", "Same price either way"), ("£350", "10-hour block", "£320 NHS staff & students"), ("58.1%", "Shirley test pass rate 2024-25", "UK 48.7%"), (str(len(AREAS)), "Solihull areas covered", "B90–B94, B36, B37, B40, CV7")])}
+{RS._figs([("£35", "per hour, manual or automatic", "Same price either way"), ("£330", "your first 10 hours", "new learners · £350 standard"), (f"{_FMT['SH']}%", "Shirley test pass rate 2025-26", f"GB {_FMT['GB']}% (DVSA)"), (str(len(AREAS)), "Solihull areas covered", "B90–B94, B36, B37, B40, CV7")])}
 <h2>Driving lessons in every part of Solihull</h2>
 <div class="grid grid--3" data-stagger=".04">{areas}</div>
 <h2>Driving test centres for Solihull learners</h2>
@@ -551,14 +564,14 @@ def pillar():
 <h2>How lessons work</h2>
 <ol class="rx-steps"><li data-n="1"><h4>Book in 60 seconds</h4><p>Choose manual or automatic and enter your postcode below — a real person replies fast.</p></li><li data-n="2"><h4>First lesson from your door</h4><p>We pick you up anywhere in Solihull.</p></li><li data-n="3"><h4>Track every skill</h4><p>Your instructor logs 23 skills in your DriveSQ Student Portal after every lesson.</p></li><li data-n="4"><h4>Test-route practice and mock test</h4><p>On the real roads around your test centre.</p></li></ol>"""
     faqs = [("Do you offer driving lessons in Solihull?", "Yes. SQ Driving School, part of DriveSQ, teaches across Solihull — manual and automatic."),
-            ("How much are driving lessons in Solihull?", "£35 an hour, £70 for 2 hours and £350 for 10 hours (£320 for NHS staff and students)."),
-            ("Which driving test centre is in Solihull?", "Birmingham (Shirley), 401 Stratford Road, B90 4AA — 58.1% pass rate in 2024-25."),
+            ("How much are driving lessons in Solihull?", "£35 an hour, £70 for 2 hours and £350 for 10 hours (£320 for NHS staff and students). New learners get their first 10 hours for £330."),
+            ("Which driving test centre is in Solihull?", "Birmingham (Shirley), 401 Stratford Road, B90 4AA — 56.6% pass rate in 2025-26."),
             ("Which Solihull areas do you cover?", ", ".join(a["name"] for a in AREAS) + ".")]
     return S(path, "Driving Lessons Solihull | £35/hr Manual & Automatic | SQ Driving School", "Driving lessons Solihull", None,
              "Driving lessons in Solihull", "Driving lessons across Solihull from £35/hr — manual and automatic, door-to-door pick-up, Shirley test-route practice and the free DriveSQ Student Portal. Part of DriveSQ.",
-             [("£35", "per hour"), (str(len(AREAS)), "areas"), ("58.1%", "Shirley pass rate"), ("Free", "Student Portal")],
-             ["Lessons across Solihull from £35/hr, manual or automatic.", "10 hours £350 — £320 for NHS staff and students.", "Shirley test centre had the area's best pass rate in 2024-25 (58.1%).", "Part of DriveSQ — free Student Portal with every lesson."],
-             body, faqs, ["census", "story", "pr_shirley", "pr_bham", "cost", "book"],
+             [("£35", "per hour"), (str(len(AREAS)), "areas"), ("56.6%", "Shirley pass rate"), ("Free", "Student Portal")],
+             ["Lessons across Solihull from £35/hr, manual or automatic.", "10 hours £350 — £330 for new learners' first block, £320 for NHS staff and students.", f"Shirley test centre had the area's best pass rate in 2025-26 ({_FMT['SH']}%, DVSA).", "Part of DriveSQ — free Student Portal with every lesson."],
+             body, faqs, ["census", "story", "dvsa_centres", "cost", "book"],
              [("solihull/learning-to-drive-in-solihull.html", "Guide", "Learning to drive in Solihull", "Local data and roads."), ("solihull/solihull-driving-test-centres-compared.html", "Compare", "Solihull test centres compared", "Pass rates by centre.")],
              root="", extra_schema=_biz(path, "Solihull", ["B90", "B91", "B92", "B93", "B94", "B36", "B37", "CV7"]))
 
